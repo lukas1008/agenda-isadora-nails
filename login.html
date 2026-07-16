@@ -82,7 +82,6 @@
         
         <form id="loginForm">
             <input type="text" id="nome" placeholder="Seu Nome Completo" required>
-            <!-- Novo campo de WhatsApp com máscara simples -->
             <input type="tel" id="whatsapp" placeholder="Seu WhatsApp (ex: 88999999999)" required pattern="[0-9]{10,11}">
             <input type="email" id="email" placeholder="Seu E-mail" required>
             <input type="password" id="senha" placeholder="Sua Senha" required>
@@ -97,7 +96,7 @@
             const usuarioLogado = localStorage.getItem("usuarioLogado");
             
             if (usuarioLogado) {
-                if (usuarioLogado === "isadora@admin.com") {
+                if (usuarioLogado === "isadoragomes.luk@gmail.com") {
                     window.location.href = "admin.html";
                 } else {
                     window.location.href = "agendar.html";
@@ -110,11 +109,12 @@
 
             const nomeInput = document.getElementById("nome").value.trim();
             const whatsappInput = document.getElementById("whatsapp").value.trim();
-            const emailInput = document.getElementById("email").value.trim();
+            const emailInput = document.getElementById("email").value.trim().toLowerCase();
             const senhaInput = document.getElementById("senha").value;
 
-            const emailAdmin = "isadora@admin.com";
-            const senhaAdmin = "admin123";
+            // Suas novas credenciais oficiais
+            const emailAdmin = "isadoragomes.luk@gmail.com";
+            const senhaAdmin = "lukisa1008";
 
             if (emailInput === emailAdmin && senhaInput === senhaAdmin) {
                 localStorage.setItem("usuarioLogado", emailInput);
