@@ -39,6 +39,7 @@
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
             border: 1px solid #2d2d2d;
+            margin-bottom: 25px;
         }
         h2 {
             color: white;
@@ -74,6 +75,58 @@
             color: white;
             font-weight: bold;
         }
+        
+        /* Nova Seção de Contatos e Endereço */
+        .contato-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #2d2d2d;
+            text-align: left;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+        }
+        .contato-container h3 {
+            color: #007bff;
+            margin-top: 0;
+            border-bottom: 1px solid #2d2d2d;
+            padding-bottom: 8px;
+            font-size: 18px;
+        }
+        .info-item {
+            margin: 12px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .info-item strong {
+            color: white;
+        }
+        .redes-sociais {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn-rede {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+            transition: opacity 0.3s;
+        }
+        .btn-rede:hover {
+            opacity: 0.9;
+        }
+        .instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+        .whatsapp {
+            background-color: #25d366;
+        }
     </style>
 </head>
 <body>
@@ -104,6 +157,29 @@
         </div>
 
         <a href="login.html" class="btn">Agendar um Horário</a>
+    </div>
+
+    <!-- Seção de Contatos e Endereço -->
+    <div class="contato-container">
+        <h3>📍 Nosso Espaço & Contato</h3>
+        
+        <div class="info-item">
+            <strong>Endereço:</strong><br>
+            Rua das Flores, nº 123 - Centro, Sua Cidade - UF
+        </div>
+
+        <div class="info-item">
+            <strong>Horário de Funcionamento:</strong><br>
+            Terça a Sábado, das 09h às 18h
+        </div>
+
+        <div class="redes-sociais">
+            <!-- Botão do Instagram (Insira seu link no lugar do #) -->
+            <a href="https://instagram.com/" target="_blank" class="btn-rede instagram">📸 Instagram</a>
+            
+            <!-- Botão do WhatsApp (Insira seu link no lugar do #) -->
+            <a href="https://wa.me/5500000000000" target="_blank" class="btn-rede whatsapp">💬 WhatsApp</a>
+        </div>
     </div>
 
 </body>
