@@ -1,502 +1,64 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Isadora Nails</title>
-    <!-- Fontes e Ícones -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Script do Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-        :root {
-            --bg-principal: #090a0f;
-            --bg-card: #121420;
-            --cor-primaria: #2563eb;
-            --cor-secundaria: #7c3aed;
-            --texto-claro: #ffffff;
-            --texto-cinza: #94a3b8;
-            --neon-azul: #3b82f6;
-            --border-color: #1e293b;
-            --cor-sucesso: #10b981;
-            --cor-perigo: #ef4444;
-            --cor-alerta: #f59e0b;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-principal);
-            color: var(--texto-claro);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 430px;
-            background-color: var(--bg-principal);
-            min-height: 100vh;
-            padding-bottom: 40px;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-        }
-
-        /* Header */
-        header {
-            padding: 24px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            font-size: 24px;
-            color: var(--neon-azul);
-            filter: drop-shadow(0 0 8px var(--neon-azul));
-        }
-
-        .logo-texto h1 {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            line-height: 1.2;
-        }
-
-        .logo-texto span {
-            font-size: 12px;
-            color: var(--neon-azul);
-            font-weight: 500;
-            letter-spacing: 2px;
-        }
-
-        /* Menu de Navegação Horizontal */
-        .menu-navegacao {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 20px;
-        }
-
-        .menu-btn {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--texto-cinza);
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .menu-btn.active {
-            background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
-            color: white;
-            border: none;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-        }
-
-        /* Conteúdo das Abas */
-        .conteudo-secao {
-            padding: 0 20px;
-            display: none;
-        }
-
-        .conteudo-secao.active {
-            display: block;
-        }
-
-        .titulo-secao {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .subtitulo-secao {
-            font-size: 13px;
-            color: var(--texto-cinza);
-            margin-bottom: 24px;
-        }
-
-        /* Cartões de Métricas */
-        .metricas-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .metrica-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .metrica-icone {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: rgba(59, 130, 246, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            color: var(--neon-azul);
-        }
-
-        .metrica-icone.verde {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--cor-sucesso);
-        }
-
-        .metrica-info h4 {
-            font-size: 13px;
-            color: var(--texto-cinza);
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .metrica-info p {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        /* Listas de Agendamentos */
-        .lista-agendamentos {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .secao-titulo-interno {
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--texto-claro);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .secao-titulo-interno i {
-            color: var(--neon-azul);
-        }
-
-        /* Cards de Clientes */
-        .agenda-item-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .agenda-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .cliente-nome {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .servico-tag {
-            font-size: 11px;
-            color: var(--neon-azul);
-            font-weight: 600;
-        }
-
-        .status-badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 6px;
-            text-transform: uppercase;
-        }
-
-        .status-pendente {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--cor-alerta);
-        }
-
-        .status-confirmado {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--cor-sucesso);
-        }
-
-        .status-cancelado {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--cor-perigo);
-        }
-
-        .agenda-detalhes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 16px;
-            font-size: 12px;
-            color: var(--texto-cinza);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 10px;
-        }
-
-        .agenda-detalhes span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .agenda-detalhes i {
-            color: var(--cor-secundaria);
-        }
-
-        .agenda-detalhes a {
-            color: var(--cor-sucesso);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* Botões */
-        .agenda-acoes {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 4px;
-        }
-
-        .btn-acao {
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            transition: opacity 0.2s;
-        }
-
-        .btn-acao:active {
-            opacity: 0.8;
-        }
-
-        .btn-confirmar {
-            background-color: var(--cor-sucesso);
-            color: white;
-        }
-
-        .btn-cancelar {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--cor-perigo);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .sem-dados {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--texto-cinza);
-            font-size: 13px;
-        }
-
-        .sem-dados i {
-            font-size: 32px;
-            margin-bottom: 12px;
-            display: block;
-            color: var(--border-color);
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        
-        <!-- Header -->
-        <header>
-            <div class="logo-container">
-                <div class="logo-icon">
-                    <i class="fa-solid fa-bottle-droplet"></i>
-                </div>
-                <div class="logo-texto">
-                    <h1>ISADORA</h1>
-                    <span>PAINEL ADM</span>
-                </div>
-            </div>
-            <a href="index.html" style="color: var(--texto-cinza); font-size: 14px; text-decoration: none; font-weight: 600;">
-                <i class="fa-solid fa-right-from-bracket"></i> Sair
-            </a>
-        </header>
-
-        <!-- Menu -->
-        <nav class="menu-navegacao">
-            <button id="btn-dashboard" class="menu-btn active" onclick="mudarAba('dashboard')">
-                <i class="fa-solid fa-chart-pie"></i> Dashboard
-            </button>
-            <button id="btn-agendamentos" class="menu-btn" onclick="mudarAba('agendamentos')">
-                <i class="fa-regular fa-calendar-days"></i> Agendamentos
-            </button>
-            <button id="btn-clientes" class="menu-btn" onclick="mudarAba('clientes')">
-                <i class="fa-solid fa-users"></i> Clientes
-            </button>
-            <button id="btn-servicos" class="menu-btn" onclick="mudarAba('servicos')">
-                <i class="fa-solid fa-hand-sparkles"></i> Serviços
-            </button>
-        </nav>
-
-        <!-- ABA 1: DASHBOARD -->
-        <section id="aba-dashboard" class="conteudo-secao active">
-            <h2 class="titulo-secao">Dashboard</h2>
-            <p class="subtitulo-secao">Visão geral do seu salão</p>
-
-            <div class="metricas-grid">
-                <div class="metrica-card">
-                    <div class="metrica-icone">
-                        <i class="fa-regular fa-calendar"></i>
-                    </div>
-                    <div class="metrica-info">
-                        <h4>Agendamentos Ativos</h4>
-                        <p id="dash-total-agendamentos">Carregando...</p>
-                    </div>
-                </div>
-
-                <div class="metrica-card">
-                    <div class="metrica-icone verde">
-                        <i class="fa-solid fa-dollar-sign"></i>
-                    </div>
-                    <div class="metrica-info">
-                        <h4>Faturamento Estimado</h4>
-                        <p id="dash-faturamento">R$ 0,00</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="secao-titulo-interno">
-                <i class="fa-solid fa-clock"></i> Próximos Atendimentos
-            </div>
-
-            <div class="lista-agendamentos" id="dash-proximos-hoje">
-                <div class="sem-dados">
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                    Buscando dados no banco...
-                </div>
-            </div>
-        </section>
-
-        <!-- ABA 2: AGENDAMENTOS -->
-        <section id="aba-agendamentos" class="conteudo-secao">
-            <h2 class="titulo-secao">Agendamentos</h2>
-            <p class="subtitulo-secao">Gerencie os horários solicitados</p>
-
-            <div class="secao-titulo-interno">
-                <i class="fa-solid fa-list-check"></i> Todos os Pedidos
-            </div>
-
-            <div class="lista-agendamentos" id="lista-geral-agendamentos">
-                <div class="sem-dados">
-                    Buscando agendamentos...
-                </div>
-            </div>
-        </section>
-
-        <!-- ABA 3: CLIENTES -->
-        <section id="aba-clientes" class="conteudo-secao">
-            <h2 class="titulo-secao">Clientes</h2>
-            <p class="subtitulo-secao">Clientes que já agendaram</p>
-            <div class="lista-agendamentos" id="lista-clientes">
-                <div class="sem-dados">
-                    Carregando lista...
-                </div>
-            </div>
-        </section>
-
-        <!-- ABA 4: SERVIÇOS -->
-        <section id="aba-servicos" class="conteudo-secao">
-            <h2 class="titulo-secao">Serviços</h2>
-            <p class="subtitulo-secao">Configurações de valores em breve</p>
-            <div class="sem-dados">
-                <i class="fa-solid fa-scissors"></i>
-                Esta seção estará disponível na próxima atualização.
-            </div>
-        </section>
-
-    </div>
-
-    <!-- Script de Integração ao Supabase -->
+<!-- Script de Integração ao Supabase -->
     <script>
         // CONFIGURAÇÕES DO SEU SUPABASE
         const SUPABASE_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
+        
+        // ATENÇÃO: Se a sua chave anon do Supabase começar com "eyJ...", substitua abaixo.
+        // Se for a chave publishable padrão, mantenha esta:
         const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
         
         let supabase = null;
-        try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-                auth: { persistSession: false }
-            });
-        } catch(e) {
-            alert("Erro ao inicializar biblioteca Supabase: " + e.message);
-        }
 
-        // Alternar entre abas (isolada de erros de banco)
+        // Alternar entre abas (AGORA TOTALMENTE ISOLADA DE ERROS - VAI CLICAR E RESPONDER SEMPRE)
         function mudarAba(idAba) {
-            const botoes = document.querySelectorAll('.menu-btn');
-            botoes.forEach(btn => btn.classList.remove('active'));
+            try {
+                const botoes = document.querySelectorAll('.menu-btn');
+                botoes.forEach(btn => btn.classList.remove('active'));
 
-            const secoes = document.querySelectorAll('.conteudo-secao');
-            secoes.forEach(secao => secao.classList.remove('active'));
+                const secoes = document.querySelectorAll('.conteudo-secao');
+                secoes.forEach(secao => secao.classList.remove('active'));
 
-            const botaoAtivo = document.getElementById(`btn-${idAba}`);
-            if (botaoAtivo) {
-                botaoAtivo.classList.add('active');
-            }
+                const botaoAtivo = document.getElementById(`btn-${idAba}`);
+                if (botaoAtivo) {
+                    botaoAtivo.classList.add('active');
+                }
 
-            const secaoAtiva = document.getElementById(`aba-${idAba}`);
-            if (secaoAtiva) {
-                secaoAtiva.classList.add('active');
+                const secaoAtiva = document.getElementById(`aba-${idAba}`);
+                if (secaoAtiva) {
+                    secaoAtiva.classList.add('active');
+                }
+            } catch (e) {
+                console.error("Erro ao mudar de aba:", e);
             }
         }
 
-        // Ao carregar a página, busca os dados
+        // Ao carregar a página, inicializa e busca os dados
         document.addEventListener("DOMContentLoaded", () => {
-            if (supabase) {
-                carregarDadosDoBanco();
-            }
+            inicializarSupabase();
         });
 
-        // Função principal que puxa tudo do Banco com tratamento de erros robusto
+        function inicializarSupabase() {
+            try {
+                if (typeof window.supabase === 'undefined') {
+                    mostrarErroNaTela("A biblioteca do Supabase não foi carregada pelo navegador do seu celular. Verifique se você está com conexão de internet ou tente abrir em outro navegador.");
+                    return;
+                }
+
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                    auth: { persistSession: false }
+                });
+
+                carregarDadosDoBanco();
+            } catch(e) {
+                mostrarErroNaTela("Falha ao inicializar o cliente do banco de dados: " + e.message);
+            }
+        }
+
+        // Função principal que puxa tudo do Banco
         async function carregarDadosDoBanco() {
             try {
-                // Busca os agendamentos da tabela 'agendamentos'
+                if (!supabase) return;
+
                 let { data: agendamentos, error } = await supabase
                     .from('agendamentos')
                     .select('*')
@@ -530,15 +92,32 @@
 
             } catch (err) {
                 console.error("Erro crítico de conexão:", err);
-                
-                // Exibe o erro exato retornado pelo Supabase em um alerta na tela do celular!
-                alert("🔴 ERRO DE CONEXÃO COM O SUPABASE:\n\n" + (err.message || err.details || JSON.stringify(err)));
-                
-                // Atualiza textos para sinalizar falha amigavelmente
-                document.getElementById('dash-total-agendamentos').textContent = "Erro";
-                document.getElementById('dash-faturamento').textContent = "R$ --";
-                document.getElementById('dash-proximos-hoje').innerHTML = `<div class="sem-dados"><i class="fa-solid fa-triangle-exclamation"></i> Falha ao carregar dados do banco de dados.</div>`;
+                mostrarErroNaTela(err.message || err.details || JSON.stringify(err));
             }
+        }
+
+        // Exibe o erro de forma limpa diretamente dentro do aplicativo em vez de travar o menu
+        function mostrarErroNaTela(mensagemOriginal) {
+            let msgAmigavel = mensagemOriginal;
+            
+            // Traduzindo erros comuns do Supabase para te ajudar a identificar
+            if (mensagemOriginal.includes("Failed to fetch") || mensagemOriginal.includes("TypeError")) {
+                msgAmigavel = "Erro de Rede (Failed to fetch). O navegador do seu celular bloqueou a conexão com o banco de dados do Supabase. Desative bloqueadores de anúncios (AdBlock) ou tente usar o Wi-Fi/dados móveis.";
+            } else if (mensagemOriginal.includes("401") || mensagemOriginal.includes("Invalid API key")) {
+                msgAmigavel = "Chave de API Inválida (Erro 401). A sua chave 'SUPABASE_KEY' está incorreta ou expirou no painel do Supabase.";
+            } else if (mensagemOriginal.includes("404") || mensagemOriginal.includes("relation") || mensagemOriginal.includes("does not exist")) {
+                msgAmigavel = "Tabela Não Encontrada (Erro 404). A tabela chamada 'agendamentos' não foi criada ou está com o nome diferente no seu banco do Supabase.";
+            }
+
+            document.getElementById('dash-total-agendamentos').textContent = "Erro";
+            document.getElementById('dash-faturamento').textContent = "R$ --";
+            document.getElementById('dash-proximos-hoje').innerHTML = `
+                <div class="sem-dados" style="color: #ef4444; padding: 20px; text-align: left; background: rgba(239, 68, 68, 0.05); border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 24px; margin-bottom: 10px;"></i>
+                    <strong style="display:block; margin-bottom: 5px;">Falha na Conexão:</strong>
+                    <span style="font-size: 12px; line-height: 1.4; display:block;">${msgAmigavel}</span>
+                </div>
+            `;
         }
 
         // Exibe tela vazia caso não haja dados
@@ -677,5 +256,3 @@
             }
         }
     </script>
-</body>
-</html>
