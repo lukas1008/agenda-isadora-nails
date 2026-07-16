@@ -127,14 +127,6 @@
                 window.location.href = "login.html";
                 return;
             }
-
-            const hoje = new Date();
-            const yyyy = hoje.getFullYear();
-            const mm = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dd = String(hoje.getDate()).padStart(2, '0');
-            const dataMinima = `${yyyy}-${mm}-${dd}`;
-            
-            document.getElementById("data").setAttribute("min", dataMinima);
         };
 
         document.getElementById("data").addEventListener("input", function() {
@@ -172,7 +164,7 @@
             const novoAgendamento = {
                 id: Date.now(),
                 cliente: nomeCliente,
-                whatsapp: whatsappCliente, // Guarda o WhatsApp dela
+                whatsapp: whatsappCliente,
                 servico: servico,
                 data: dataFormatada,
                 hora: hora,
