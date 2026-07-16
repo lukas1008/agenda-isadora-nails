@@ -86,14 +86,14 @@
         <h2>Escolha seu Horário</h2>
         
         <form id="agendamentoForm">
-            <!-- Seleção de Serviço Atualizada -->
+            <!-- Seleção de Serviço -->
             <label for="servico">Selecione o Serviço:</label>
             <select id="servico" required>
                 <option value="">Selecione...</option>
-                <option value="manicure">💅 Manicure - R$ 27,00</option>
-                <option value="pedicure">🦶 Pedicure - R$ 33,00</option>
-                <option value="combo">🔄 Manicure + Pedicure - R$ 60,00</option>
-                <option value="postica">✨ Unha Postiça - R$ 30,00</option>
+                <option value="💅 Manicure - R$ 27,00">💅 Manicure - R$ 27,00</option>
+                <option value="🦶 Pedicure - R$ 33,00">🦶 Pedicure - R$ 33,00</option>
+                <option value="🔄 Manicure + Pedicure - R$ 60,00">🔄 Manicure + Pedicure - R$ 60,00</option>
+                <option value="✨ Unha Postiça - R$ 30,00">✨ Unha Postiça - R$ 30,00</option>
             </select>
 
             <!-- Seleção de Data -->
@@ -114,16 +114,61 @@
             <button type="submit" class="btn-confirmar">Confirmar Agendamento</button>
         </form>
 
-        <!-- Botão Sair com inteligência de logout -->
         <button onclick="fazerLogout()" class="back-link">Sair / Voltar ao Início</button>
     </div>
 
     <script>
-        // Função para apagar a memória de login e voltar ao início
+        // Função de Logout
         function fazerLogout() {
             localStorage.removeItem("usuarioLogado");
             window.location.href = "index.html";
         }
+
+        // Segurança extra: se alguém tentar acessar sem estar logado, joga pro login
+        window.onload = function() {
+            if (!localStorage.getItem("usuarioLogado")) {
+                window.location.href = "login.html";
+            }
+        };
+
+        // Lógica para Salvar o Agendamento
+        document.getElementById("agendamentoForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Pega quem é o usuário que está logado fazendo a marcação
+            const cliente = localStorage.getItem("usuarioLogado");
+            const servico = document.getElementById("servico").value;
+            const data = document.getElementById("data").value;
+            const hora = document.getElementById("hora").value;
+
+            // Formata a data de AAAA-MM-DD para DD/MM/AAAA para ficar mais amigável
+            const dataFormatada = data.split("-").reverse().join("/");
+
+            // Cria um objeto com as informações do agendamento
+            const novoAgendamento = {
+                id: Date.now(), // gera um ID único usando a hora atual
+                cliente: cliente,
+                servico: servico,
+                data: dataFormatada,
+                hora: hora,
+                status: "Pendente"
+            };
+
+            // Busca os agendamentos já existentes ou cria uma lista vazia se for o primeiro
+            let listaAgendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+            
+            // Adiciona o novo na lista
+            listaAgendamentos.push(novoAgendamento);
+
+            // Salva a lista atualizada de volta no navegador
+            localStorage.setItem("agendamentos", JSON.stringify(listaAgendamentos));
+
+            // Feedback visual de sucesso!
+            alert(`Sucesso! Seu agendamento de ${servico} para o dia ${dataFormatada} às ${hora} foi registrado.`);
+            
+            // Limpa o formulário após salvar
+            document.getElementById("agendamentoForm").reset();
+        });
     </script>
 
 </body>
