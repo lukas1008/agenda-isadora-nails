@@ -70,6 +70,10 @@
             color: #aaa;
             text-decoration: none;
             font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
         }
         .back-link:hover {
             color: #007bff;
@@ -81,7 +85,8 @@
     <div class="container">
         <h2>Escolha seu Horário</h2>
         
-        <form>
+        <form id="agendamentoForm">
+            <!-- Seleção de Serviço Atualizada -->
             <label for="servico">Selecione o Serviço:</label>
             <select id="servico" required>
                 <option value="">Selecione...</option>
@@ -91,9 +96,11 @@
                 <option value="postica">✨ Unha Postiça - R$ 30,00</option>
             </select>
 
+            <!-- Seleção de Data -->
             <label for="data">Escolha a Data:</label>
             <input type="date" id="data" required>
 
+            <!-- Seleção de Horário -->
             <label for="hora">Escolha o Horário:</label>
             <select id="hora" required>
                 <option value="">Selecione...</option>
@@ -107,8 +114,17 @@
             <button type="submit" class="btn-confirmar">Confirmar Agendamento</button>
         </form>
 
-        <a href="index.html" class="back-link">Sair / Voltar ao Início</a>
+        <!-- Botão Sair com inteligência de logout -->
+        <button onclick="fazerLogout()" class="back-link">Sair / Voltar ao Início</button>
     </div>
+
+    <script>
+        // Função para apagar a memória de login e voltar ao início
+        function fazerLogout() {
+            localStorage.removeItem("usuarioLogado");
+            window.location.href = "index.html";
+        }
+    </script>
 
 </body>
 </html>
