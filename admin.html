@@ -28,7 +28,7 @@
             letter-spacing: 1px;
         }
         .admin-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: #1e1e1e;
             padding: 20px;
@@ -87,7 +87,19 @@
         .btn-cancelar:hover {
             background-color: #c82333;
         }
-        
+        .btn-whatsapp-cliente {
+            background-color: #25d366;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .btn-whatsapp-cliente:hover {
+            opacity: 0.9;
+        }
         .menu-admin {
             margin-bottom: 20px;
             display: flex;
@@ -125,7 +137,7 @@
 
     <div class="admin-container">
         <div class="menu-admin">
-            <button onclick="fazerLogout()">Sair do Painel</button>
+            <button onclick="fazerLogout()">Sair do Panel</button>
         </div>
 
         <h2>Agendamentos Recebidos</h2>
@@ -134,6 +146,7 @@
             <thead>
                 <tr>
                     <th>Cliente</th>
+                    <th>WhatsApp</th>
                     <th>Serviço</th>
                     <th>Data</th>
                     <th>Horário</th>
@@ -142,33 +155,40 @@
                 </tr>
             </thead>
             <tbody id="tabelaCorpo">
-                </tbody>
+            </tbody>
         </table>
     </div>
 
     <script>
-        // Função para carregar e exibir os agendamentos salvos
         function carregarAgendamentos() {
             const tabelaCorpo = document.getElementById("tabelaCorpo");
-            tabelaCorpo.innerHTML = ""; // Limpa a tabela antes de atualizar
+            tabelaCorpo.innerHTML = "";
 
-            // Busca os agendamentos salvos ou cria lista vazia
             const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
 
             if (agendamentos.length === 0) {
-                tabelaCorpo.innerHTML = `<tr><td colspan="6" class="sem-agendamentos">Nenhum agendamento realizado ainda.</td></tr>`;
+                tabelaCorpo.innerHTML = `<tr><td colspan="7" class="sem-agendamentos">Nenhum agendamento realizado ainda.</td></tr>`;
                 return;
             }
 
-            // Cria uma linha para cada agendamento cadastrado
             agendamentos.forEach(agendamento => {
                 const tr = document.createElement("tr");
-
-                // Define a cor do status baseado no valor
                 const classeStatus = agendamento.status === "Confirmado" ? "status-confirmado" : "status-pendente";
+                
+                // Formata o número do whatsapp para o link (garante que tenha o código do país se necessário)
+                let numeroFormatado = agendamento.whatsapp ? agendamento.whatsapp.replace(/\D/g, '') : '';
+                if (numeroFormatado.length === 11 || numeroFormatado.length === 10) {
+                    numeroFormatado = "55" + numeroFormatado;
+                }
+
+                // Cria o botão do WhatsApp se o número existir
+                const botaoWhatsapp = numeroFormatado 
+                    ? `<a href="https://wa.me/${numeroFormatado}" target="_blank" class="btn-whatsapp-cliente">💬 ${agendamento.whatsapp}</a>`
+                    : '<span style="color: #aaa; font-style: italic;">Não informado</span>';
 
                 tr.innerHTML = `
                     <td>${agendamento.cliente}</td>
+                    <td>${botaoWhatsapp}</td>
                     <td>${agendamento.servico}</td>
                     <td>${agendamento.data}</td>
                     <td>${agendamento.hora}</td>
@@ -183,48 +203,38 @@
             });
         }
 
-        // Função para confirmar o agendamento
         function confirmarAgendamento(id) {
             let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
-            
-            // Encontra o agendamento específico pelo ID e muda o status
             agendamentos = agendamentos.map(agendamento => {
                 if (agendamento.id === id) {
                     agendamento.status = "Confirmado";
                 }
                 return agendamento;
             });
-
             localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
-            carregarAgendamentos(); // Atualiza a tabela na tela
+            carregarAgendamentos();
         }
 
-        // Função para excluir um agendamento da lista
         function removerAgendamento(id) {
             if (confirm("Tem certeza que deseja excluir esse agendamento?")) {
                 let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
-                
-                // Filtra a lista mantendo apenas quem NÃO tem o ID que queremos excluir
                 agendamentos = agendamentos.filter(agendamento => agendamento.id !== id);
-
                 localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
-                carregarAgendamentos(); // Atualiza a tabela na tela
+                carregarAgendamentos();
             }
         }
 
-        // Função para sair e deslogar
         function fazerLogout() {
             localStorage.removeItem("usuarioLogado");
             window.location.href = "index.html";
         }
 
-        // Segurança: Só permite acessar se for a conta da Isadora
         window.onload = function() {
             if (localStorage.getItem("usuarioLogado") !== "isadora@admin.com") {
                 alert("Acesso restrito para administradores.");
                 window.location.href = "login.html";
             } else {
-                carregarAgendamentos(); // Se for admin, carrega as informações
+                carregarAgendamentos();
             }
         };
     </script>
