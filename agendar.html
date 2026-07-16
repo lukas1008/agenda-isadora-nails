@@ -118,17 +118,16 @@
         function fazerLogout() {
             localStorage.removeItem("usuarioLogado");
             localStorage.removeItem("nomeUsuario");
+            localStorage.removeItem("whatsappUsuario");
             window.location.href = "index.html";
         }
 
-        // Configurações ao carregar a tela
         window.onload = function() {
             if (!localStorage.getItem("usuarioLogado")) {
                 window.location.href = "login.html";
                 return;
             }
 
-            // Trava para não permitir selecionar datas passadas
             const hoje = new Date();
             const yyyy = hoje.getFullYear();
             const mm = String(hoje.getMonth() + 1).padStart(2, '0');
@@ -138,45 +137,42 @@
             document.getElementById("data").setAttribute("min", dataMinima);
         };
 
-        // Bloqueio de Domingos (Atendimento apenas de segunda a sábado)
         document.getElementById("data").addEventListener("input", function() {
             const dataSelecionada = new Date(this.value + "T00:00:00");
-            const diaSemana = dataSelecionada.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+            const diaSemana = dataSelecionada.getDay();
 
             if (diaSemana === 0) {
                 alert("Olá! Não atendemos aos domingos. Por favor, escolha uma data de segunda a sábado. 😉");
-                this.value = ""; // Limpa a data inválida
+                this.value = "";
             }
         });
 
-        // Processo de Confirmação do Agendamento
         document.getElementById("agendamentoForm").addEventListener("submit", function(event) {
             event.preventDefault();
 
             const nomeCliente = localStorage.getItem("nomeUsuario") || localStorage.getItem("usuarioLogado");
+            const whatsappCliente = localStorage.getItem("whatsappUsuario") || "";
             const servico = document.getElementById("servico").value;
             const data = document.getElementById("data").value;
             const hora = document.getElementById("hora").value;
 
             const dataFormatada = data.split("-").reverse().join("/");
 
-            // --- SEGURANÇA 1: EVITAR CONFLITO DE HORÁRIO ---
             let listaAgendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
             
-            // Verifica se já existe um agendamento na mesma data e mesma hora
             const horarioOcupado = listaAgendamentos.some(agendamento => 
                 agendamento.data === dataFormatada && agendamento.hora === hora
             );
 
             if (horarioOcupado) {
                 alert(`⚠️ Atenção: O horário de ${hora} no dia ${dataFormatada} já foi preenchido por outra cliente. Por favor, escolha outro horário ou outro dia.`);
-                return; // Para a execução e não deixa agendar
+                return;
             }
 
-            // --- SALVAR SE TUDO ESTIVER OK ---
             const novoAgendamento = {
                 id: Date.now(),
                 cliente: nomeCliente,
+                whatsapp: whatsappCliente, // Guarda o WhatsApp dela
                 servico: servico,
                 data: dataFormatada,
                 hora: hora,
@@ -188,24 +184,19 @@
 
             alert(`Agendamento registrado no sistema! Agora vamos te direcionar ao WhatsApp da Isadora para enviar o comprovante.`);
 
-            // --- SEGURANÇA 2: GERAR TEXTO PARA O WHATSAPP ---
-            const telefoneDona = "5588981215376"; // Seu WhatsApp com DDI e DDD
+            const telefoneDona = "5588981215376";
             const textoMensagem = encodeURIComponent(
                 `Olá Isadora! Meu nome é ${nomeCliente}.\n` +
                 `Gostaria de confirmar o agendamento feito pelo site:\n\n` +
                 `💅 *Serviço:* ${servico}\n` +
                 `📅 *Data:* ${dataFormatada}\n` +
                 `🕒 *Horário:* ${hora}\n\n` +
+                `Meu WhatsApp de contato é: ${whatsappCliente}\n\n` +
                 `Aguardo sua confirmação! ✨`
             );
 
-            // Redireciona para o WhatsApp da Isadora com o texto pronto
             const linkWhatsapp = `https://wa.me/${telefoneDona}?text=${textoMensagem}`;
-            
-            // Limpa o formulário antes de ir para o WhatsApp
             document.getElementById("agendamentoForm").reset();
-
-            // Abre o WhatsApp em uma nova aba para o usuário enviar a mensagem
             window.open(linkWhatsapp, "_blank");
         });
     </script>
