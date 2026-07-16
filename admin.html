@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Isadora Nails</title>
+    <!-- Script para carregar a conexão direta do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,14 +58,6 @@
             background-color: #121212;
             color: #007bff;
         }
-        .status-pendente {
-            color: #ffc107;
-            font-weight: bold;
-        }
-        .status-confirmado {
-            color: #28a745;
-            font-weight: bold;
-        }
         .btn-acao {
             padding: 6px 12px;
             border: none;
@@ -72,13 +66,6 @@
             font-size: 12px;
             margin-right: 5px;
             font-weight: bold;
-        }
-        .btn-aprovar { 
-            background-color: #28a745; 
-            color: white; 
-        }
-        .btn-aprovar:hover {
-            background-color: #218838;
         }
         .btn-cancelar { 
             background-color: #dc3545; 
@@ -150,7 +137,6 @@
                     <th>Serviço</th>
                     <th>Data</th>
                     <th>Horário</th>
-                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -160,65 +146,78 @@
     </div>
 
     <script>
-        function carregarAgendamentos() {
+        // Inicialização do Supabase
+        const SUPABASE_URL = "https://htdgxhgnjiqvktunspbx.supabase.com";
+        const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function carregarAgendamentos() {
             const tabelaCorpo = document.getElementById("tabelaCorpo");
-            tabelaCorpo.innerHTML = "";
+            tabelaCorpo.innerHTML = "<tr><td colspan='6' class='sem-agendamentos'>Carregando agendamentos...</td></tr>";
 
-            const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+            try {
+                // Puxa todos os dados ordenados por data de inserção
+                const { data: agendamentos, error } = await _supabase
+                    .from('agendamentos')
+                    .select('*')
+                    .order('criado_em', { ascending: false });
 
-            if (agendamentos.length === 0) {
-                tabelaCorpo.innerHTML = `<tr><td colspan="7" class="sem-agendamentos">Nenhum agendamento realizado ainda.</td></tr>`;
-                return;
+                if (error) throw error;
+
+                tabelaCorpo.innerHTML = "";
+
+                if (!agendamentos || agendamentos.length === 0) {
+                    tabelaCorpo.innerHTML = `<tr><td colspan="6" class="sem-agendamentos">Nenhum agendamento realizado ainda.</td></tr>`;
+                    return;
+                }
+
+                agendamentos.forEach(agendamento => {
+                    const tr = document.createElement("tr");
+                    
+                    let numeroFormatado = agendamento.whatsapp ? agendamento.whatsapp.replace(/\D/g, '') : '';
+                    if (numeroFormatado.length === 11 || numeroFormatado.length === 10) {
+                        numeroFormatado = "55" + numeroFormatado;
+                    }
+
+                    const botaoWhatsapp = numeroFormatado 
+                        ? `<a href="https://wa.me/${numeroFormatado}" target="_blank" class="btn-whatsapp-cliente">💬 ${agendamento.whatsapp}</a>`
+                        : '<span style="color: #aaa; font-style: italic;">Não informado</span>';
+
+                    tr.innerHTML = `
+                        <td>${agendamento.cliente_nome}</td>
+                        <td>${botaoWhatsapp}</td>
+                        <td>${agendamento.servico} ${agendamento.preco ? '- ' + agendamento.preco : ''}</td>
+                        <td>${agendamento.data}</td>
+                        <td>${agendamento.horario}</td>
+                        <td>
+                            <button class="btn-acao btn-cancelar" onclick="removerAgendamento('${agendamento.id}')">Excluir</button>
+                        </td>
+                    `;
+
+                    tabelaCorpo.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error(err);
+                tabelaCorpo.innerHTML = "<tr><td colspan='6' class='sem-agendamentos' style='color: #dc3545;'>Falha ao carregar agendamentos da nuvem.</td></tr>";
             }
-
-            agendamentos.forEach(agendamento => {
-                const tr = document.createElement("tr");
-                const classeStatus = agendamento.status === "Confirmado" ? "status-confirmado" : "status-pendente";
-                
-                let numeroFormatado = agendamento.whatsapp ? agendamento.whatsapp.replace(/\D/g, '') : '';
-                if (numeroFormatado.length === 11 || numeroFormatado.length === 10) {
-                    numeroFormatado = "55" + numeroFormatado;
-                }
-
-                const botaoWhatsapp = numeroFormatado 
-                    ? `<a href="https://wa.me/${numeroFormatado}" target="_blank" class="btn-whatsapp-cliente">💬 ${agendamento.whatsapp}</a>`
-                    : '<span style="color: #aaa; font-style: italic;">Não informado</span>';
-
-                tr.innerHTML = `
-                    <td>${agendamento.cliente}</td>
-                    <td>${botaoWhatsapp}</td>
-                    <td>${agendamento.servico}</td>
-                    <td>${agendamento.data}</td>
-                    <td>${agendamento.hora}</td>
-                    <td class="${classeStatus}">${agendamento.status}</td>
-                    <td>
-                        ${agendamento.status === "Pendente" ? `<button class="btn-acao btn-aprovar" onclick="confirmarAgendamento(${agendamento.id})">Confirmar</button>` : ''}
-                        <button class="btn-acao btn-cancelar" onclick="removerAgendamento(${agendamento.id})">Excluir</button>
-                    </td>
-                `;
-
-                tabelaCorpo.appendChild(tr);
-            });
         }
 
-        function confirmarAgendamento(id) {
-            let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
-            agendamentos = agendamentos.map(agendamento => {
-                if (agendamento.id === id) {
-                    agendamento.status = "Confirmado";
-                }
-                return agendamento;
-            });
-            localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
-            carregarAgendamentos();
-        }
-
-        function removerAgendamento(id) {
+        async function removerAgendamento(id) {
             if (confirm("Tem certeza que deseja excluir esse agendamento?")) {
-                let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
-                agendamentos = agendamentos.filter(agendamento => agendamento.id !== id);
-                localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
-                carregarAgendamentos();
+                try {
+                    const { error } = await _supabase
+                        .from('agendamentos')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    carregarAgendamentos();
+                } catch (err) {
+                    console.error(err);
+                    alert("Erro ao excluir o agendamento no servidor.");
+                }
             }
         }
 
@@ -228,7 +227,6 @@
         }
 
         window.onload = function() {
-            // Segurança com o seu novo e-mail
             if (localStorage.getItem("usuarioLogado") !== "isadoragomes.luk@gmail.com") {
                 alert("Acesso restrito para administradores.");
                 window.location.href = "login.html";
