@@ -101,11 +101,14 @@
             <label for="hora">Escolha o Horário:</label>
             <select id="hora" required>
                 <option value="">Selecione...</option>
-                <option value="09:00">09:00</option>
-                <option value="10:30">10:30</option>
+                <!-- Horários atualizados (13:00 às 19:00) -->
                 <option value="13:00">13:00</option>
-                <option value="14:30">14:30</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
                 <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
             </select>
 
             <button type="submit" class="btn-confirmar">Confirmar Agendamento</button>
@@ -130,7 +133,6 @@
         document.getElementById("agendamentoForm").addEventListener("submit", function(event) {
             event.preventDefault();
 
-            // Pega o nome real do usuário salvo no login
             const nomeCliente = localStorage.getItem("nomeUsuario") || localStorage.getItem("usuarioLogado");
             const servico = document.getElementById("servico").value;
             const data = document.getElementById("data").value;
@@ -140,7 +142,7 @@
 
             const novoAgendamento = {
                 id: Date.now(),
-                cliente: nomeCliente, // Agora guarda o nome da pessoa!
+                cliente: nomeCliente,
                 servico: servico,
                 data: dataFormatada,
                 hora: hora,
