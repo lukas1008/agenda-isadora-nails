@@ -7,6 +7,10 @@
     <!-- Fontes e Ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Script do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --bg-principal: #090a0f;
@@ -82,7 +86,7 @@
             letter-spacing: 2px;
         }
 
-        /* Menu de Navegação Horizontal em Grade */
+        /* Menu de Navegação Horizontal */
         .menu-navegacao {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -105,11 +109,6 @@
             transition: all 0.2s ease;
         }
 
-        .menu-btn i {
-            font-size: 16px;
-        }
-
-        /* Botão Ativo */
         .menu-btn.active {
             background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
             color: white;
@@ -120,11 +119,11 @@
         /* Conteúdo das Abas */
         .conteudo-secao {
             padding: 0 20px;
-            display: none; /* Escondido por padrão */
+            display: none;
         }
 
         .conteudo-secao.active {
-            display: block; /* Mostra apenas a ativa */
+            display: block;
         }
 
         .titulo-secao {
@@ -139,7 +138,7 @@
             margin-bottom: 24px;
         }
 
-        /* Cartões de Métricas (Dashboard) */
+        /* Cartões de Métricas */
         .metricas-grid {
             display: flex;
             flex-direction: column;
@@ -186,7 +185,7 @@
             font-weight: 700;
         }
 
-        /* Lista de Próximos Agendamentos */
+        /* Listas de Agendamentos */
         .lista-agendamentos {
             display: flex;
             flex-direction: column;
@@ -209,7 +208,7 @@
             color: var(--neon-azul);
         }
 
-        /* Cards de Clientes na Lista */
+        /* Cards de Clientes */
         .agenda-item-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -256,6 +255,11 @@
             color: var(--cor-sucesso);
         }
 
+        .status-cancelado {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--cor-perigo);
+        }
+
         .agenda-detalhes {
             display: flex;
             gap: 16px;
@@ -275,7 +279,7 @@
             color: var(--cor-secundaria);
         }
 
-        /* Botões de Ação nos Agendamentos */
+        /* Botões */
         .agenda-acoes {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -312,7 +316,6 @@
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        /* Sem dados avisos */
         .sem-dados {
             text-align: center;
             padding: 40px 20px;
@@ -348,7 +351,7 @@
             </a>
         </header>
 
-        <!-- Menu de Abas Horizontal -->
+        <!-- Menu -->
         <nav class="menu-navegacao">
             <button class="menu-btn active" onclick="mudarAba('dashboard')">
                 <i class="fa-solid fa-chart-pie"></i> Dashboard
@@ -370,18 +373,16 @@
             <p class="subtitulo-secao">Visão geral do seu salão</p>
 
             <div class="metricas-grid">
-                <!-- Metrica 1 -->
                 <div class="metrica-card">
                     <div class="metrica-icone">
                         <i class="fa-regular fa-calendar"></i>
                     </div>
                     <div class="metrica-info">
                         <h4>Agendamentos Ativos</h4>
-                        <p id="dash-total-agendamentos">0</p>
+                        <p id="dash-total-agendamentos">Carregando...</p>
                     </div>
                 </div>
 
-                <!-- Metrica 2 -->
                 <div class="metrica-card">
                     <div class="metrica-icone verde">
                         <i class="fa-solid fa-dollar-sign"></i>
@@ -393,22 +394,19 @@
                 </div>
             </div>
 
-            <!-- Próximos Atendimentos Rápidos -->
             <div class="secao-titulo-interno">
-                <i class="fa-solid fa-clock"></i> Próximos de Hoje
+                <i class="fa-solid fa-clock"></i> Próximos Atendimentos
             </div>
 
             <div class="lista-agendamentos" id="dash-proximos-hoje">
-                <!-- Exemplo Estático que será substituído por dados reais -->
                 <div class="sem-dados">
-                    <i class="fa-regular fa-calendar-times"></i>
-                    Nenhum agendamento para hoje.
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Buscando dados no banco...
                 </div>
             </div>
         </section>
 
-
-        <!-- ABA 2: AGENDAMENTOS (Aba que criamos agora!) -->
+        <!-- ABA 2: AGENDAMENTOS -->
         <section id="aba-agendamentos" class="conteudo-secao">
             <h2 class="titulo-secao">Agendamentos</h2>
             <p class="subtitulo-secao">Gerencie os horários solicitados</p>
@@ -418,119 +416,223 @@
             </div>
 
             <div class="lista-agendamentos" id="lista-geral-agendamentos">
-                
-                <!-- Card de Exemplo 1 -->
-                <div class="agenda-item-card">
-                    <div class="agenda-header">
-                        <div>
-                            <div class="cliente-nome">Mariana Souza</div>
-                            <span class="servico-tag">Manicure + Pedicure</span>
-                        </div>
-                        <span class="status-badge status-pendente">Pendente</span>
-                    </div>
-                    <div class="agenda-detalhes">
-                        <span><i class="fa-regular fa-calendar"></i> 18/07/2026</span>
-                        <span><i class="fa-regular fa-clock"></i> 14:00</span>
-                        <span><i class="fa-solid fa-dollar-sign"></i> R$ 60,00</span>
-                    </div>
-                    <div class="agenda-acoes">
-                        <button class="btn-acao btn-confirmar" onclick="confirmarAgendamento(this)">
-                            <i class="fa-solid fa-check"></i> Confirmar
-                        </button>
-                        <button class="btn-acao btn-cancelar" onclick="cancelarAgendamento(this)">
-                            <i class="fa-solid fa-xmark"></i> Recusar
-                        </button>
-                    </div>
+                <div class="sem-dados">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Buscando dados no banco...
                 </div>
-
-                <!-- Card de Exemplo 2 -->
-                <div class="agenda-item-card">
-                    <div class="agenda-header">
-                        <div>
-                            <div class="cliente-nome">Gabriela Lima</div>
-                            <span class="servico-tag">Unha Postiça</span>
-                        </div>
-                        <span class="status-badge status-confirmado">Confirmado</span>
-                    </div>
-                    <div class="agenda-detalhes">
-                        <span><i class="fa-regular fa-calendar"></i> 19/07/2026</span>
-                        <span><i class="fa-regular fa-clock"></i> 09:30</span>
-                        <span><i class="fa-solid fa-dollar-sign"></i> R$ 30,00</span>
-                    </div>
-                    <div class="agenda-acoes" style="display: none;">
-                        <!-- Escondido porque já está confirmado -->
-                    </div>
-                </div>
-
             </div>
         </section>
-
 
         <!-- ABA 3: CLIENTES -->
         <section id="aba-clientes" class="conteudo-secao">
             <h2 class="titulo-secao">Clientes</h2>
-            <p class="subtitulo-secao">Suas clientes cadastradas</p>
-            <div class="sem-dados">
-                <i class="fa-solid fa-users-slash"></i>
-                Nenhuma cliente cadastrada ainda.
+            <p class="subtitulo-secao">Clientes que já agendaram</p>
+            <div class="lista-agendamentos" id="lista-clientes">
+                <div class="sem-dados">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Carregando lista...
+                </div>
             </div>
         </section>
-
 
         <!-- ABA 4: SERVIÇOS -->
         <section id="aba-servicos" class="conteudo-secao">
             <h2 class="titulo-secao">Serviços</h2>
-            <p class="subtitulo-secao">Gerencie seus preços e serviços</p>
+            <p class="subtitulo-secao">Configurações de valores em breve</p>
             <div class="sem-dados">
                 <i class="fa-solid fa-scissors"></i>
-                Configuração de serviços em breve.
+                Esta seção estará disponível na próxima atualização.
             </div>
         </section>
 
     </div>
 
-    <!-- Script para controle de Abas e Simulação -->
+    <!-- Script de Integração ao Supabase -->
     <script>
-        // Função para alternar entre as abas do menu
+        // CONFIGURAÇÕES DO SEU SUPABASE - JÁ PREENCHIDAS PARA VOCÊ!
+        const SUPABASE_URL = 'https://htdgxhgnjiqvktunspbx.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Ao carregar a página, busca os dados
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarDadosDoBanco();
+        });
+
+        // Alternar entre abas
         function mudarAba(idAba) {
-            // 1. Remove a classe 'active' de todos os botões do menu
             const botoes = document.querySelectorAll('.menu-btn');
             botoes.forEach(btn => btn.classList.remove('active'));
 
-            // 2. Esconde todas as seções de conteúdo
             const secoes = document.querySelectorAll('.conteudo-secao');
             secoes.forEach(secao => secao.classList.remove('active'));
 
-            // 3. Ativa o botão clicado
-            // Encontra o botão baseado no texto ou ícone
             event.currentTarget.classList.add('active');
 
-            // 4. Mostra a seção correspondente
             const secaoAtiva = document.getElementById(`aba-${idAba}`);
             if (secaoAtiva) {
                 secaoAtiva.classList.add('active');
             }
         }
 
-        // Simulação simples de clique para aceitar/recusar (antes de ligar ao banco)
-        function confirmarAgendamento(botao) {
-            const card = botao.closest('.agenda-item-card');
-            const badge = card.querySelector('.status-badge');
-            const containerAcoes = card.querySelector('.agenda-acoes');
+        // Função principal que puxa tudo do Banco
+        async function carregarDadosDoBanco() {
+            try {
+                // Busca os agendamentos da tabela 'agendamentos'
+                let { data: agendamentos, error } = await supabase
+                    .from('agendamentos')
+                    .select('*')
+                    .order('data', { ascending: true })
+                    .order('horario', { ascending: true });
 
-            badge.textContent = "Confirmado";
-            badge.className = "status-badge status-confirmado";
-            containerAcoes.style.display = "none"; // Esconde botões após confirmar
-            alert("Agendamento confirmado com sucesso!");
+                if (error) throw error;
+
+                if (!agendamentos || agendamentos.length === 0) {
+                    mostrarSemDados();
+                    return;
+                }
+
+                // Filtrando dados para o Dashboard e Métricas
+                const ativos = agendamentos.filter(a => a.status !== 'Cancelado');
+                const faturamentoTotal = ativos.reduce((total, a) => {
+                    const valorLimpo = parseFloat(String(a.preco || '0').replace('R$', '').replace(',', '.').trim());
+                    return total + (isNaN(valorLimpo) ? 0 : valorLimpo);
+                }, 0);
+
+                // Atualiza números do Dashboard
+                document.getElementById('dash-total-agendamentos').textContent = ativos.length;
+                document.getElementById('dash-faturamento').textContent = faturamentoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                // Renderiza as listas
+                renderizarDashboard(ativos);
+                renderizarAgendamentos(agendamentos);
+                renderizarClientes(agendamentos);
+
+            } catch (err) {
+                console.error("Erro ao conectar no Supabase:", err.message);
+                alert("Erro ao buscar dados do Supabase. Verifique se a tabela 'agendamentos' existe.");
+            }
         }
 
-        function cancelarAgendamento(botao) {
-            if(confirm("Tem certeza que deseja recusar este agendamento?")) {
-                const card = botao.closest('.agenda-item-card');
-                card.style.opacity = "0.5";
-                card.querySelector('.status-badge').textContent = "Cancelado";
-                card.querySelector('.status-badge').className = "status-badge";
-                card.querySelector('.agenda-acoes').style.display = "none";
+        // Exibe tela vazia caso não haja dados
+        function mostrarSemDados() {
+            const vaziaHtml = `
+                <div class="sem-dados">
+                    <i class="fa-regular fa-calendar-times"></i>
+                    Nenhum agendamento encontrado no banco de dados.
+                </div>
+            `;
+            document.getElementById('dash-proximos-hoje').innerHTML = vaziaHtml;
+            document.getElementById('lista-geral-agendamentos').innerHTML = vaziaHtml;
+            document.getElementById('dash-total-agendamentos').textContent = "0";
+            document.getElementById('dash-faturamento').textContent = "R$ 0,00";
+        }
+
+        // Renderiza no Dashboard os próximos atendimentos
+        function renderizarDashboard(lista) {
+            const container = document.getElementById('dash-proximos-hoje');
+            if(lista.length === 0) {
+                container.innerHTML = `<div class="sem-dados">Nenhum agendamento ativo.</div>`;
+                return;
+            }
+
+            container.innerHTML = "";
+            lista.slice(0, 3).forEach(item => {
+                container.innerHTML += criarCardHtml(item, false);
+            });
+        }
+
+        // Renderiza na aba Geral todos os agendamentos
+        function renderizarAgendamentos(lista) {
+            const container = document.getElementById('lista-geral-agendamentos');
+            container.innerHTML = "";
+            lista.forEach(item => {
+                container.innerHTML += criarCardHtml(item, true);
+            });
+        }
+
+        // Renderiza na aba Clientes
+        function renderizarClientes(lista) {
+            const container = document.getElementById('lista-clientes');
+            container.innerHTML = "";
+            
+            const nomesUnicos = [...new Set(lista.map(item => item.cliente))];
+            
+            if(nomesUnicos.length === 0) {
+                container.innerHTML = `<div class="sem-dados">Nenhuma cliente encontrada.</div>`;
+                return;
+            }
+
+            nomesUnicos.forEach(nome => {
+                const totalServicos = lista.filter(item => item.cliente === nome).length;
+                container.innerHTML += `
+                    <div class="agenda-item-card">
+                        <div class="agenda-header">
+                            <div>
+                                <div class="cliente-nome">${nome}</div>
+                                <span class="servico-tag">Cliente Ativa</span>
+                            </div>
+                        </div>
+                        <div class="agenda-detalhes">
+                            <span><i class="fa-solid fa-heart"></i> Total de Agendamentos: ${totalServicos}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Helper para montar a estrutura HTML do card de agendamento
+        function criarCardHtml(item, mostrarBotoes) {
+            const dataFormatada = item.data ? item.data.split('-').reverse().join('/') : '';
+            const statusLower = String(item.status || 'Pendente').toLowerCase();
+            const statusClass = statusLower === 'confirmado' ? 'status-confirmado' : (statusLower === 'cancelado' ? 'status-cancelado' : 'status-pendente');
+
+            const exibirAcoes = mostrarBotoes && statusLower === 'pendente';
+
+            return `
+                <div class="agenda-item-card" id="card-${item.id}">
+                    <div class="agenda-header">
+                        <div>
+                            <div class="cliente-nome">${item.cliente || 'Sem Nome'}</div>
+                            <span class="servico-tag">${item.servico || 'Serviço'}</span>
+                        </div>
+                        <span class="status-badge ${statusClass}">${item.status || 'Pendente'}</span>
+                    </div>
+                    <div class="agenda-detalhes">
+                        <span><i class="fa-regular fa-calendar"></i> ${dataFormatada}</span>
+                        <span><i class="fa-regular fa-clock"></i> ${item.horario || '--:--'}</span>
+                        <span><i class="fa-solid fa-dollar-sign"></i> ${item.preco || 'R$ 0,00'}</span>
+                    </div>
+                    ${exibirAcoes ? `
+                    <div class="agenda-acoes">
+                        <button class="btn-acao btn-confirmar" onclick="atualizarStatus(${item.id}, 'Confirmado')">
+                            <i class="fa-solid fa-check"></i> Confirmar
+                        </button>
+                        <button class="btn-acao btn-cancelar" onclick="atualizarStatus(${item.id}, 'Cancelar')">
+                            <i class="fa-solid fa-xmark"></i> Cancelar
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Salva a alteração de status (Confirmar/Cancelar) diretamente no Supabase!
+        async function atualizarStatus(id, novoStatus) {
+            try {
+                const { error } = await supabase
+                    .from('agendamentos')
+                    .update({ status: novoStatus })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert(`Agendamento ${novoStatus.toLowerCase()} com sucesso!`);
+                carregarDadosDoBanco(); 
+            } catch (err) {
+                console.error("Erro ao atualizar status:", err.message);
+                alert("Erro ao salvar alteração. Tente novamente.");
             }
         }
     </script>
