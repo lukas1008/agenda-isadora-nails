@@ -5,54 +5,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Isadora Nails - Agendar</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 450px; margin: 0 auto; background: #1e1e1e; padding: 25px; border-radius: 10px; }
-        h2 { color: #007bff; text-align: center; }
-        label { display: block; margin-top: 15px; color: white; }
-        select, input { width: 100%; padding: 12px; margin-top: 5px; background: #121212; color: white; border: 1px solid #2d2d2d; border-radius: 5px; }
-        .btn { width: 100%; background-color: #007bff; color: white; border: none; padding: 14px; margin-top: 20px; border-radius: 5px; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            border: 1px solid #2d2d2d;
+        }
+        h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: white;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #2d2d2d;
+            background-color: #121212;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        select:focus, input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .btn-confirmar {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+        .btn-confirmar:hover {
+            background-color: #0056b3;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+        }
+        .back-link:hover {
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h2>Agendar Horário</h2>
-        <form id="formAgendamento">
-            <label>Serviço:</label>
+        <h2>Escolha seu Horário</h2>
+        
+        <form id="agendamentoForm">
+            <label for="servico">Selecione o Serviço:</label>
             <select id="servico" required>
-                <option value="Manicure">Manicure - R$ 27,00</option>
-                <option value="Pedicure">Pedicure - R$ 33,00</option>
-                <option value="Manicure + Pedicure">Manicure + Pedicure - R$ 60,00</option>
+                <option value="">Selecione...</option>
+                <option value="💅 Manicure - R$ 27,00">💅 Manicure - R$ 27,00</option>
+                <option value="🦶 Pedicure - R$ 33,00">🦶 Pedicure - R$ 33,00</option>
+                <option value="🔄 Manicure + Pedicure - R$ 60,00">🔄 Manicure + Pedicure - R$ 60,00</option>
+                <option value="✨ Unha Postiça - R$ 30,00">✨ Unha Postiça - R$ 30,00</option>
             </select>
-            <label>Data:</label>
+
+            <label for="data">Escolha a Data:</label>
             <input type="date" id="data" required>
-            <label>Horário:</label>
+
+            <label for="hora">Escolha o Horário:</label>
             <select id="hora" required>
+                <option value="">Selecione...</option>
                 <option value="13:00">13:00</option>
                 <option value="14:30">14:30</option>
                 <option value="16:00">16:00</option>
+                <option value="17:30">17:30</option>
+                <option value="19:00">19:00</option>
             </select>
-            <button type="submit" class="btn">Confirmar Agendamento</button>
+
+            <button type="submit" class="btn-confirmar">Confirmar & Enviar no WhatsApp</button>
         </form>
+
+        <button onclick="fazerLogout()" class="back-link">Sair / Voltar ao Início</button>
     </div>
 
     <script>
-        document.getElementById('formAgendamento').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const agendamento = {
-                servico: document.getElementById('servico').value,
-                data: document.getElementById('data').value,
-                hora: document.getElementById('hora').value,
-                cliente: localStorage.getItem('nomeUsuario')
+        function fazerLogout() {
+            localStorage.removeItem("usuarioLogado");
+            localStorage.removeItem("nomeUsuario");
+            localStorage.removeItem("whatsappUsuario");
+            window.location.href = "index.html";
+        }
+
+        window.onload = function() {
+            if (!localStorage.getItem("usuarioLogado")) {
+                window.location.href = "login.html";
+                return;
+            }
+        };
+
+        document.getElementById("data").addEventListener("input", function() {
+            const dataSelecionada = new Date(this.value + "T00:00:00");
+            const diaSemana = dataSelecionada.getDay();
+
+            if (diaSemana === 0) {
+                alert("Olá! Não atendemos aos domingos. Por favor, escolha uma data de segunda a sábado. 😉");
+                this.value = "";
+            }
+        });
+
+        document.getElementById("agendamentoForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const nomeCliente = localStorage.getItem("nomeUsuario") || localStorage.getItem("usuarioLogado");
+            const whatsappCliente = localStorage.getItem("whatsappUsuario") || "";
+            const servico = document.getElementById("servico").value;
+            const data = document.getElementById("data").value;
+            const hora = document.getElementById("hora").value;
+
+            const dataFormatada = data.split("-").reverse().join("/");
+
+            let listaAgendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+            
+            const horarioOcupado = listaAgendamentos.some(agendamento => 
+                agendamento.data === dataFormatada && agendamento.hora === hora
+            );
+
+            if (horarioOcupado) {
+                alert(`⚠️ Atenção: O horário de ${hora} no dia ${dataFormatada} já foi preenchido por outra cliente. Por favor, escolha outro horário ou outro dia.`);
+                return;
+            }
+
+            const novoAgendamento = {
+                id: Date.now(),
+                cliente: nomeCliente,
+                whatsapp: whatsappCliente,
+                servico: servico,
+                data: dataFormatada,
+                hora: hora,
+                status: "Pendente"
             };
-            
-            // Salva localmente
-            let lista = JSON.parse(localStorage.getItem('agendamentos') || '[]');
-            lista.push(agendamento);
-            localStorage.setItem('agendamentos', JSON.stringify(lista));
-            
-            alert('Agendado com sucesso!');
-            window.location.href = 'index.html';
+
+            listaAgendamentos.push(novoAgendamento);
+            localStorage.setItem("agendamentos", JSON.stringify(listaAgendamentos));
+
+            alert(`Agendamento registrado no sistema! Agora vamos te direcionar ao WhatsApp da Isadora para enviar o comprovante.`);
+
+            const telefoneDona = "5588981215376";
+            const textoMensagem = encodeURIComponent(
+                `Olá Isadora! Meu nome é ${nomeCliente}.\n` +
+                `Gostaria de confirmar o agendamento feito pelo site:\n\n` +
+                `💅 *Serviço:* ${servico}\n` +
+                `📅 *Data:* ${dataFormatada}\n` +
+                `🕒 *Horário:* ${hora}\n\n` +
+                `Meu WhatsApp de contato é: ${whatsappCliente}\n\n` +
+                `Aguardo sua confirmação! ✨`
+            );
+
+            const linkWhatsapp = `https://wa.me/${telefoneDona}?text=${textoMensagem}`;
+            document.getElementById("agendamentoForm").reset();
+            window.open(linkWhatsapp, "_blank");
         });
     </script>
+
 </body>
 </html>
