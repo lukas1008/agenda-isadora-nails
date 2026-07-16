@@ -81,8 +81,9 @@
         <p>Identifique-se para agendar seu horário</p>
         
         <form id="loginForm">
-            <!-- Novo campo para o Nome do Cliente -->
             <input type="text" id="nome" placeholder="Seu Nome Completo" required>
+            <!-- Novo campo de WhatsApp com máscara simples -->
+            <input type="tel" id="whatsapp" placeholder="Seu WhatsApp (ex: 88999999999)" required pattern="[0-9]{10,11}">
             <input type="email" id="email" placeholder="Seu E-mail" required>
             <input type="password" id="senha" placeholder="Sua Senha" required>
             <button type="submit" class="btn">Entrar</button>
@@ -108,6 +109,7 @@
             event.preventDefault();
 
             const nomeInput = document.getElementById("nome").value.trim();
+            const whatsappInput = document.getElementById("whatsapp").value.trim();
             const emailInput = document.getElementById("email").value.trim();
             const senhaInput = document.getElementById("senha").value;
 
@@ -117,11 +119,12 @@
             if (emailInput === emailAdmin && senhaInput === senhaAdmin) {
                 localStorage.setItem("usuarioLogado", emailInput);
                 localStorage.setItem("nomeUsuario", "Isadora Admin");
+                localStorage.setItem("whatsappUsuario", "");
                 window.location.href = "admin.html";
             } else {
-                // Salva tanto o e-mail quanto o nome real digitado pela cliente
                 localStorage.setItem("usuarioLogado", emailInput);
                 localStorage.setItem("nomeUsuario", nomeInput);
+                localStorage.setItem("whatsappUsuario", whatsappInput);
                 window.location.href = "agendar.html";
             }
         });
