@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Isadora Nails</title>
+    <!-- Fontes e Ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Script do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -340,6 +342,7 @@
 
     <div class="container">
         
+        <!-- Header -->
         <header>
             <div class="logo-container">
                 <div class="logo-icon">
@@ -355,21 +358,23 @@
             </a>
         </header>
 
+        <!-- Menu -->
         <nav class="menu-navegacao">
-            <button class="menu-btn active" onclick="mudarAba('dashboard')">
+            <button id="btn-dashboard" class="menu-btn active" onclick="mudarAba('dashboard')">
                 <i class="fa-solid fa-chart-pie"></i> Dashboard
             </button>
-            <button class="menu-btn" onclick="mudarAba('agendamentos')">
+            <button id="btn-agendamentos" class="menu-btn" onclick="mudarAba('agendamentos')">
                 <i class="fa-regular fa-calendar-days"></i> Agendamentos
             </button>
-            <button class="menu-btn" onclick="mudarAba('clientes')">
+            <button id="btn-clientes" class="menu-btn" onclick="mudarAba('clientes')">
                 <i class="fa-solid fa-users"></i> Clientes
             </button>
-            <button class="menu-btn" onclick="mudarAba('servicos')">
+            <button id="btn-servicos" class="menu-btn" onclick="mudarAba('servicos')">
                 <i class="fa-solid fa-hand-sparkles"></i> Serviços
             </button>
         </nav>
 
+        <!-- ABA 1: DASHBOARD -->
         <section id="aba-dashboard" class="conteudo-secao active">
             <h2 class="titulo-secao">Dashboard</h2>
             <p class="subtitulo-secao">Visão geral do seu salão</p>
@@ -408,6 +413,7 @@
             </div>
         </section>
 
+        <!-- ABA 2: AGENDAMENTOS -->
         <section id="aba-agendamentos" class="conteudo-secao">
             <h2 class="titulo-secao">Agendamentos</h2>
             <p class="subtitulo-secao">Gerencie os horários solicitados</p>
@@ -418,23 +424,23 @@
 
             <div class="lista-agendamentos" id="lista-geral-agendamentos">
                 <div class="sem-dados">
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                    Buscando dados no banco...
+                    Buscando agendamentos...
                 </div>
             </div>
         </section>
 
+        <!-- ABA 3: CLIENTES -->
         <section id="aba-clientes" class="conteudo-secao">
             <h2 class="titulo-secao">Clientes</h2>
             <p class="subtitulo-secao">Clientes que já agendaram</p>
             <div class="lista-agendamentos" id="lista-clientes">
                 <div class="sem-dados">
-                    <i class="fa-solid fa-spinner fa-spin"></i>
                     Carregando lista...
                 </div>
             </div>
         </section>
 
+        <!-- ABA 4: SERVIÇOS -->
         <section id="aba-servicos" class="conteudo-secao">
             <h2 class="titulo-secao">Serviços</h2>
             <p class="subtitulo-secao">Configurações de valores em breve</p>
@@ -446,21 +452,22 @@
 
     </div>
 
+    <!-- Script de Integração ao Supabase -->
     <script>
         // CONFIGURAÇÕES DO SEU SUPABASE
         const SUPABASE_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
         const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-            auth: { persistSession: false }
-        });
+        let supabase = null;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                auth: { persistSession: false }
+            });
+        } catch(e) {
+            alert("Erro ao inicializar biblioteca Supabase: " + e.message);
+        }
 
-        // Ao carregar a página, busca os dados
-        document.addEventListener("DOMContentLoaded", () => {
-            carregarDadosDoBanco();
-        });
-
-        // Alternar entre abas
+        // Alternar entre abas (isolada de erros de banco)
         function mudarAba(idAba) {
             const botoes = document.querySelectorAll('.menu-btn');
             botoes.forEach(btn => btn.classList.remove('active'));
@@ -468,7 +475,10 @@
             const secoes = document.querySelectorAll('.conteudo-secao');
             secoes.forEach(secao => secao.classList.remove('active'));
 
-            event.currentTarget.classList.add('active');
+            const botaoAtivo = document.getElementById(`btn-${idAba}`);
+            if (botaoAtivo) {
+                botaoAtivo.classList.add('active');
+            }
 
             const secaoAtiva = document.getElementById(`aba-${idAba}`);
             if (secaoAtiva) {
@@ -476,7 +486,14 @@
             }
         }
 
-        // Função principal que puxa tudo do Banco
+        // Ao carregar a página, busca os dados
+        document.addEventListener("DOMContentLoaded", () => {
+            if (supabase) {
+                carregarDadosDoBanco();
+            }
+        });
+
+        // Função principal que puxa tudo do Banco com tratamento de erros robusto
         async function carregarDadosDoBanco() {
             try {
                 // Busca os agendamentos da tabela 'agendamentos'
@@ -486,14 +503,16 @@
                     .order('data', { ascending: true })
                     .order('horario', { ascending: true });
 
-                if (error) throw error;
+                if (error) {
+                    throw error;
+                }
 
                 if (!agendamentos || agendamentos.length === 0) {
                     mostrarSemDados();
                     return;
                 }
 
-                // Filtrando dados para o Dashboard e Métricas (Ativos = Confirmado ou Pendente)
+                // Filtrando dados para o Dashboard e Métricas
                 const ativos = agendamentos.filter(a => a.status !== 'Cancelado');
                 const faturamentoTotal = ativos.reduce((total, a) => {
                     const valorLimpo = parseFloat(String(a.preco || '0').replace('R$', '').replace(',', '.').replace(/[^\d.-]/g, '').trim());
@@ -510,8 +529,15 @@
                 renderizarClientes(agendamentos);
 
             } catch (err) {
-                console.error("Erro ao conectar no Supabase:", err.message);
-                alert("Erro ao buscar dados do Supabase. Verifique a tabela.");
+                console.error("Erro crítico de conexão:", err);
+                
+                // Exibe o erro exato retornado pelo Supabase em um alerta na tela do celular!
+                alert("🔴 ERRO DE CONEXÃO COM O SUPABASE:\n\n" + (err.message || err.details || JSON.stringify(err)));
+                
+                // Atualiza textos para sinalizar falha amigavelmente
+                document.getElementById('dash-total-agendamentos').textContent = "Erro";
+                document.getElementById('dash-faturamento').textContent = "R$ --";
+                document.getElementById('dash-proximos-hoje').innerHTML = `<div class="sem-dados"><i class="fa-solid fa-triangle-exclamation"></i> Falha ao carregar dados do banco de dados.</div>`;
             }
         }
 
@@ -557,7 +583,6 @@
             const container = document.getElementById('lista-clientes');
             container.innerHTML = "";
             
-            // Pega apenas nomes únicos de clientes usando 'cliente_nome'
             const nomesUnicos = [...new Set(lista.map(item => item.cliente_nome))].filter(Boolean);
             
             if(nomesUnicos.length === 0) {
@@ -568,7 +593,7 @@
             nomesUnicos.forEach(nome => {
                 const registrosCliente = lista.filter(item => item.cliente_nome === nome);
                 const totalServicos = registrosCliente.length;
-                const dadosContato = registrosCliente[0]; // Pega whatsapp do primeiro registro
+                const dadosContato = registrosCliente[0];
                 const zapFormatado = dadosContato.whatsapp ? dadosContato.whatsapp.replace(/[^\d]/g, '') : '';
 
                 container.innerHTML += `
@@ -592,7 +617,7 @@
             });
         }
 
-        // Helper para montar a estrutura HTML do card de agendamento usando 'cliente_nome'
+        // Helper para montar a estrutura HTML do card de agendamento
         function criarCardHtml(item, mostrarBotoes) {
             const dataFormatada = item.data ? item.data.split('-').reverse().join('/') : '';
             const statusLower = String(item.status || 'Pendente').toLowerCase();
