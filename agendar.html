@@ -7,21 +7,22 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff0f5;
-            color: #333;
+            background-color: #121212;
+            color: #e0e0e0;
             margin: 0;
             padding: 20px;
         }
         .container {
             max-width: 450px;
             margin: 0 auto;
-            background: white;
+            background: #1e1e1e;
             padding: 25px;
             border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            border: 1px solid #2d2d2d;
         }
         h2 {
-            color: #ff69b4;
+            color: #007bff;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -30,18 +31,25 @@
             display: block;
             margin-top: 15px;
             margin-bottom: 5px;
+            color: white;
         }
         select, input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 12px;
+            border: 1px solid #2d2d2d;
+            background-color: #121212;
+            color: white;
             border-radius: 5px;
             box-sizing: border-box;
             font-size: 16px;
         }
+        select:focus, input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
         .btn-confirmar {
             width: 100%;
-            background-color: #ff69b4;
+            background-color: #007bff;
             color: white;
             border: none;
             padding: 14px;
@@ -50,17 +58,21 @@
             font-size: 16px;
             cursor: pointer;
             margin-top: 25px;
+            transition: background 0.3s;
         }
         .btn-confirmar:hover {
-            background-color: #ff1493;
+            background-color: #0056b3;
         }
         .back-link {
             display: block;
             text-align: center;
             margin-top: 15px;
-            color: #ff69b4;
+            color: #aaa;
             text-decoration: none;
             font-size: 14px;
+        }
+        .back-link:hover {
+            color: #007bff;
         }
     </style>
 </head>
@@ -70,20 +82,18 @@
         <h2>Escolha seu Horário</h2>
         
         <form>
-            <!-- Seleção de Serviço -->
             <label for="servico">Selecione o Serviço:</label>
             <select id="servico" required>
                 <option value="">Selecione...</option>
-                <option value="manicure">💅 Manicure Simples - R$ 30,00</option>
-                <option value="pedicure">🦶 Pedicure Simples - R$ 35,00</option>
-                <option value="alongamento">✨ Alongamento em Gel - R$ 100,00</option>
+                <option value="manicure">💅 Manicure - R$ 27,00</option>
+                <option value="pedicure">🦶 Pedicure - R$ 33,00</option>
+                <option value="combo">🔄 Manicure + Pedicure - R$ 60,00</option>
+                <option value="postica">✨ Unha Postiça - R$ 30,00</option>
             </select>
 
-            <!-- Seleção de Data -->
             <label for="data">Escolha a Data:</label>
             <input type="date" id="data" required>
 
-            <!-- Seleção de Horário -->
             <label for="hora">Escolha o Horário:</label>
             <select id="hora" required>
                 <option value="">Selecione...</option>
