@@ -137,7 +137,7 @@
 
     <div class="admin-container">
         <div class="menu-admin">
-            <button onclick="fazerLogout()">Sair do Panel</button>
+            <button onclick="fazerLogout()">Sair do Painel</button>
         </div>
 
         <h2>Agendamentos Recebidos</h2>
@@ -175,13 +175,11 @@
                 const tr = document.createElement("tr");
                 const classeStatus = agendamento.status === "Confirmado" ? "status-confirmado" : "status-pendente";
                 
-                // Formata o número do whatsapp para o link (garante que tenha o código do país se necessário)
                 let numeroFormatado = agendamento.whatsapp ? agendamento.whatsapp.replace(/\D/g, '') : '';
                 if (numeroFormatado.length === 11 || numeroFormatado.length === 10) {
                     numeroFormatado = "55" + numeroFormatado;
                 }
 
-                // Cria o botão do WhatsApp se o número existir
                 const botaoWhatsapp = numeroFormatado 
                     ? `<a href="https://wa.me/${numeroFormatado}" target="_blank" class="btn-whatsapp-cliente">💬 ${agendamento.whatsapp}</a>`
                     : '<span style="color: #aaa; font-style: italic;">Não informado</span>';
@@ -230,7 +228,8 @@
         }
 
         window.onload = function() {
-            if (localStorage.getItem("usuarioLogado") !== "isadora@admin.com") {
+            // Segurança com o seu novo e-mail
+            if (localStorage.getItem("usuarioLogado") !== "isadoragomes.luk@gmail.com") {
                 alert("Acesso restrito para administradores.");
                 window.location.href = "login.html";
             } else {
