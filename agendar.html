@@ -3,128 +3,755 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isadora Nails - Agendar</title>
+    <title>Isadora Nails - Agendar Horário</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 450px; margin: 0 auto; background: #1e1e1e; padding: 25px; border-radius: 10px; border: 1px solid #2d2d2d; }
-        h2 { color: #007bff; text-align: center; margin-bottom: 20px; }
-        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; color: white; }
-        select, input { width: 100%; padding: 12px; border: 1px solid #2d2d2d; background-color: #121212; color: white; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
-        .btn-confirmar { width: 100%; background-color: #007bff; color: white; border: none; padding: 14px; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; }
-        .btn-confirmar:hover { background-color: #0056b3; }
-        .back-link { display: block; text-align: center; margin-top: 15px; color: #aaa; text-decoration: none; font-size: 14px; cursor: pointer; border: none; background: none; width: 100%; }
+        :root {
+            --bg-principal: #090a0f;
+            --bg-card: #121420;
+            --cor-primaria: #2563eb;
+            --texto-claro: #ffffff;
+            --texto-cinza: #94a3b8;
+            --neon-azul: #3b82f6;
+            --border-color: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+            background-color: var(--bg-principal);
+            min-height: 100vh;
+            padding: 24px 20px 120px 20px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Topo com seta de voltar */
+        header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--texto-claro);
+            font-size: 20px;
+            cursor: pointer;
+            margin-right: 20px;
+            text-decoration: none;
+        }
+
+        header h1 {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Indicador de Passos (Stepper) */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 32px;
+            padding: 0 10px;
+        }
+
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 30px;
+            right: 30px;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--texto-cinza);
+            transition: all 0.3s;
+        }
+
+        .step-item.active .step-circle {
+            background-color: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+            color: white;
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+        }
+
+        .step-item.completed .step-circle {
+            background-color: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 11px;
+            color: var(--texto-cinza);
+            font-weight: 500;
+        }
+
+        .step-item.active .step-label {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Pergunta do Passo */
+        .passo-titulo {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .passo-sub {
+            font-size: 13px;
+            color: var(--texto-cinza);
+            margin-bottom: 24px;
+        }
+
+        /* Container de cada etapa */
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        /* Lista de Seleção de Serviços */
+        .servicos-opcoes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opcao-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .opcao-card.selected {
+            border-color: var(--neon-azul);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.15);
+        }
+
+        .opcao-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .opcao-icone {
+            width: 44px;
+            height: 44px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: var(--neon-azul);
+        }
+
+        .opcao-detalhes h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .opcao-detalhes p {
+            font-size: 12px;
+            color: var(--texto-cinza);
+            margin-bottom: 4px;
+        }
+
+        .opcao-detalhes .tempo {
+            font-size: 11px;
+            color: var(--texto-cinza);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .opcao-preco-check {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .opcao-preco {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            color: transparent;
+            transition: all 0.2s;
+        }
+
+        .opcao-card.selected .checkbox-custom {
+            background-color: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+            color: white;
+        }
+
+        /* Inputs de Data e Horários */
+        .calendario-input {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 24px;
+            outline: none;
+        }
+
+        .horarios-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .horario-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .horario-btn.selected {
+            background-color: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Formulário do Cliente */
+        .form-cliente {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-grupo label {
+            font-size: 12px;
+            color: var(--texto-cinza);
+            font-weight: 600;
+        }
+
+        .input-grupo input {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Resumo / Confirmação */
+        .resumo-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .resumo-item:last-child {
+            border-bottom: none;
+        }
+
+        .resumo-item span:first-child {
+            color: var(--texto-cinza);
+        }
+
+        .resumo-item span:last-child {
+            font-weight: 600;
+        }
+
+        /* Botão Continuar */
+        .btn-continuar {
+            width: 100%;
+            background-color: var(--cor-primaria);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-top: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-continuar i {
+            font-size: 12px;
+        }
+
+        /* Selo de Agendamento Seguro */
+        .selo-seguro {
+            margin-top: 32px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .selo-icone {
+            font-size: 20px;
+            color: var(--neon-azul);
+        }
+
+        .selo-texto h4 {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .selo-texto p {
+            font-size: 11px;
+            color: var(--texto-cinza);
+        }
+
+        /* Redes de suporte rodapé */
+        .footer-suporte {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .btn-suporte {
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .suporte-wa { background-color: #22c55e; }
+        .suporte-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Escolha seu Horário</h2>
         
-        <form id="agendamentoForm">
-            <label for="servico">Selecione o Serviço:</label>
-            <select id="servico" required>
-                <option value="">Selecione...</option>
-                <option value="💅 Manicure - R$ 27,00">💅 Manicure - R$ 27,00</option>
-                <option value="🦶 Pedicure - R$ 33,00">🦶 Pedicure - R$ 33,00</option>
-                <option value="🔄 Manicure + Pedicure - R$ 60,00">🔄 Manicure + Pedicure - R$ 60,00</option>
-                <option value="✨ Unha Postiça - R$ 30,00">✨ Unha Postiça - R$ 30,00</option>
-            </select>
+        <!-- Topo -->
+        <header>
+            <a href="index.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1>Agendar Horário</h1>
+        </header>
 
-            <label for="data">Escolha a Data:</label>
-            <input type="date" id="data" required>
+        <!-- Stepper -->
+        <div class="stepper">
+            <div class="step-item active" id="step-indicator-1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Serviço</div>
+            </div>
+            <div class="step-item" id="step-indicator-2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Data</div>
+            </div>
+            <div class="step-item" id="step-indicator-3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Horário</div>
+            </div>
+            <div class="step-item" id="step-indicator-4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Confirmar</div>
+            </div>
+        </div>
 
-            <label for="hora">Escolha o Horário:</label>
-            <select id="hora" required>
-                <option value="">Selecione...</option>
-                <option value="13:00">13:00</option>
-                <option value="14:30">14:30</option>
-                <option value="16:00">16:00</option>
-                <option value="17:30">17:30</option>
-                <option value="19:00">19:00</option>
-            </select>
+        <!-- ==================== PASSO 1: SERVIÇO ==================== -->
+        <div class="step-content active" id="step-1">
+            <h2 class="passo-titulo">Qual serviço você deseja?</h2>
+            <p class="passo-sub">Selecione o serviço desejado</p>
 
-            <button type="submit" class="btn-confirmar">Confirmar & Enviar no WhatsApp</button>
-        </form>
+            <div class="servicos-opcoes">
+                <!-- Opção 1 -->
+                <div class="opcao-card" onclick="selecionarServico(this, 'Manicure', 'R$ 27,00')">
+                    <div class="opcao-info">
+                        <div class="opcao-icone"><i class="fa-solid fa-hand-sparkles"></i></div>
+                        <div class="opcao-detalhes">
+                            <h3>Manicure</h3>
+                            <p>Cuidados e esmaltação</p>
+                            <div class="tempo"><i class="fa-regular fa-clock"></i> 40 min</div>
+                        </div>
+                    </div>
+                    <div class="opcao-preco-check">
+                        <div class="opcao-preco">R$ 27,00</div>
+                        <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                    </div>
+                </div>
 
-        <button onclick="fazerLogout()" class="back-link">Sair / Voltar ao Início</button>
+                <!-- Opção 2 -->
+                <div class="opcao-card" onclick="selecionarServico(this, 'Pedicure', 'R$ 33,00')">
+                    <div class="opcao-info">
+                        <div class="opcao-icone"><i class="fa-solid fa-shoe-prints"></i></div>
+                        <div class="opcao-detalhes">
+                            <h3>Pedicure</h3>
+                            <p>Cuidados e esmaltação</p>
+                            <div class="tempo"><i class="fa-regular fa-clock"></i> 50 min</div>
+                        </div>
+                    </div>
+                    <div class="opcao-preco-check">
+                        <div class="opcao-preco">R$ 33,00</div>
+                        <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                    </div>
+                </div>
+
+                <!-- Opção 3 -->
+                <div class="opcao-card" onclick="selecionarServico(this, 'Manicure + Pedicure', 'R$ 60,00')">
+                    <div class="opcao-info">
+                        <div class="opcao-icone"><i class="fa-solid fa-arrows-rotate"></i></div>
+                        <div class="opcao-detalhes">
+                            <h3>Manicure + Pedicure</h3>
+                            <p>Pacote completo</p>
+                            <div class="tempo"><i class="fa-regular fa-clock"></i> 1h 30 min</div>
+                        </div>
+                    </div>
+                    <div class="opcao-preco-check">
+                        <div class="opcao-preco">R$ 60,00</div>
+                        <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                    </div>
+                </div>
+
+                <!-- Opção 4 -->
+                <div class="opcao-card" onclick="selecionarServico(this, 'Unha Postiça', 'R$ 30,00')">
+                    <div class="opcao-info">
+                        <div class="opcao-icone"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <div class="opcao-detalhes">
+                            <h3>Unha Postiça</h3>
+                            <p>Alongamento e aplicação</p>
+                            <div class="tempo"><i class="fa-regular fa-clock"></i> 1h 20 min</div>
+                        </div>
+                    </div>
+                    <div class="opcao-preco-check">
+                        <div class="opcao-preco">R$ 30,00</div>
+                        <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-continuar" onclick="avancarPasso(2)">Continuar <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <!-- ==================== PASSO 2: DATA ==================== -->
+        <div class="step-content" id="step-2">
+            <h2 class="passo-titulo">Escolha a Data</h2>
+            <p class="passo-sub">Selecione o dia do seu atendimento</p>
+
+            <input type="date" class="calendario-input" id="data-agendamento" onchange="liberarBotaoData()">
+
+            <button class="btn-continuar" id="btn-data-continuar" onclick="avancarPasso(3)" disabled style="opacity: 0.5;">Escolha uma Data <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <!-- ==================== PASSO 3: HORÁRIO ==================== -->
+        <div class="step-content" id="step-3">
+            <h2 class="passo-titulo">Escolha o Horário</h2>
+            <p class="passo-sub">Horários disponíveis para agendamento</p>
+
+            <div class="horarios-grid">
+                <button class="horario-btn" onclick="selecionarHorario(this, '08:00')">08:00</button>
+                <button class="horario-btn" onclick="selecionarHorario(this, '09:00')">09:00</button>
+                <button class="horario-btn" onclick="selecionarHorario(this, '10:00')">10:00</button>
+                <button class="horario-btn" onclick="selecionarHorario(this, '13:00')">13:00</button>
+                <button class="horario-btn" onclick="selecionarHorario(this, '14:00')">14:00</button>
+                <button class="horario-btn" onclick="selecionarHorario(this, '15:00')">15:00</button>
+                <button class="horario-btn" onclick="selecionarHorario(this, '16:00')">16:00</button>
+                <button class="horario-btn" onclick="selecionarHorario(this, '17:00')">17:00</button>
+            </div>
+
+            <button class="btn-continuar" id="btn-horario-continuar" onclick="avancarPasso(4)" disabled style="opacity: 0.5;">Escolha um Horário <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <!-- ==================== PASSO 4: CONFIRMAR ==================== -->
+        <div class="step-content" id="step-4">
+            <h2 class="passo-titulo">Seus Dados</h2>
+            <p class="passo-sub">Preencha para concluir o seu agendamento</p>
+
+            <div class="form-cliente">
+                <div class="input-grupo">
+                    <label>NOME COMPLETO</label>
+                    <input type="text" id="cliente-nome" placeholder="Seu nome" required>
+                </div>
+                <div class="input-grupo">
+                    <label>E-MAIL</label>
+                    <input type="email" id="cliente-email" placeholder="seuemail@exemplo.com" required>
+                </div>
+                <div class="input-grupo">
+                    <label>WHATSAPP</label>
+                    <input type="tel" id="cliente-whatsapp" placeholder="(00) 00000-0000">
+                </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <h3 style="font-size: 14px; margin-bottom: 12px;">Resumo do Agendamento</h3>
+                <div class="resumo-card">
+                    <div class="resumo-item">
+                        <span>Serviço</span>
+                        <span id="resumo-servico">-</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Data</span>
+                        <span id="resumo-data">-</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Horário</span>
+                        <span id="resumo-horario">-</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Preço</span>
+                        <span id="resumo-preco">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-continuar" onclick="finalizarAgendamento()">Confirmar Agendamento <i class="fa-solid fa-check"></i></button>
+        </div>
+
+        <!-- Selo Seguro -->
+        <div class="selo-seguro">
+            <div class="selo-icone"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="selo-texto">
+                <h4>Agendamento Seguro</h4>
+                <p>Seus dados estão protegidos e seu horário garantido!</p>
+            </div>
+        </div>
+
+        <!-- Redes Rodapé -->
+        <div class="footer-suporte">
+            <a href="https://wa.me/558881333190" target="_blank" class="btn-suporte suporte-wa">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="https://instagram.com" target="_blank" class="btn-suporte suporte-ig">
+                <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+        </div>
+
     </div>
 
+    <!-- Script de Integração com o Supabase -->
     <script>
+        // Configurações exatas da sua nuvem do Supabase
         const SUPABASE_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
-        
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-            auth: { persistSession: false }
-        });
+        const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3"; // sua chave pública fornecida anteriormente
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        function fazerLogout() {
-            localStorage.clear();
-            window.location.href = "index.html";
-        }
-
-        window.onload = function() {
-            if (!localStorage.getItem("usuarioLogado")) {
-                window.location.href = "login.html";
-                return;
-            }
-            const hoje = new Date();
-            const yyyy = hoje.getFullYear();
-            const mm = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dd = String(hoje.getDate()).padStart(2, '0');
-            document.getElementById("data").setAttribute("min", `${yyyy}-${mm}-${dd}`);
+        let agendamento = {
+            servico: '',
+            preco: '',
+            data: '',
+            horario: ''
         };
 
-        document.getElementById("agendamentoForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
+        // Passo 1: Selecionar Serviço
+        function selecionarServico(elemento, nome, preco) {
+            document.querySelectorAll('.opcao-card').forEach(card => card.classList.remove('selected'));
+            elemento.classList.add('selected');
+            agendamento.servico = nome;
+            agendamento.preco = preco;
+        }
 
-            const nomeCliente = localStorage.getItem("nomeUsuario") || "Cliente";
-            const emailCliente = localStorage.getItem("usuarioLogado") || "nao@informado.com";
-            const whatsappCliente = localStorage.getItem("whatsappUsuario") || "";
-            const servicoCompleto = document.getElementById("servico").value;
-            const data = document.getElementById("data").value;
-            const hora = document.getElementById("hora").value;
-            const dataFormatada = data.split("-").reverse().join("/");
+        // Passo 2: Liberar data
+        function liberarBotaoData() {
+            const inputData = document.getElementById('data-agendamento').value;
+            const btn = document.getElementById('btn-data-continuar');
+            if(inputData) {
+                agendamento.data = inputData;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.innerHTML = `Continuar <i class="fa-solid fa-chevron-right"></i>`;
+            }
+        }
 
-            const partesServico = servicoCompleto.split(" - ");
-            const servicoNome = partesServico[0] || servicoCompleto;
-            const servicoPreco = partesServico[1] || "";
+        // Passo 3: Selecionar Horário
+        function selecionarHorario(elemento, valor) {
+            document.querySelectorAll('.horario-btn').forEach(btn => btn.classList.remove('selected'));
+            elemento.classList.add('selected');
+            agendamento.horario = valor;
+            
+            const btnContinuar = document.getElementById('btn-horario-continuar');
+            btnContinuar.disabled = false;
+            btnContinuar.style.opacity = '1';
+            btnContinuar.innerHTML = `Continuar <i class="fa-solid fa-chevron-right"></i>`;
+        }
+
+        // Navegação entre passos
+        function avancarPasso(proximo) {
+            if (proximo === 2 && !agendamento.servico) {
+                alert('Por favor, selecione um serviço antes de continuar!');
+                return;
+            }
+            if (proximo === 3 && !agendamento.data) {
+                alert('Por favor, escolha uma data antes de continuar!');
+                return;
+            }
+            if (proximo === 4 && !agendamento.horario) {
+                alert('Por favor, escolha um horário antes de continuar!');
+                return;
+            }
+
+            // Atualiza indicadores visuais do stepper
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                if (index + 1 < proximo) {
+                    item.className = 'step-item completed';
+                } else if (index + 1 === proximo) {
+                    item.className = 'step-item active';
+                } else {
+                    item.className = 'step-item';
+                }
+            });
+
+            // Mostra a tela correspondente
+            document.querySelectorAll('.step-content').forEach(conteudo => conteudo.classList.remove('active'));
+            document.getElementById(`step-${proximo}`).classList.add('active');
+
+            // Se for o passo 4, preenche o resumo final
+            if (proximo === 4) {
+                document.getElementById('resumo-servico').innerText = agendamento.servico;
+                // Formata a data para padrão BR (DD/MM/AAAA)
+                const dataBr = agendamento.data.split('-').reverse().join('/');
+                document.getElementById('resumo-data').innerText = dataBr;
+                document.getElementById('resumo-horario').innerText = agendamento.horario + 'h';
+                document.getElementById('resumo-preco').innerText = agendamento.preco;
+            }
+        }
+
+        // Passo 4: Finalizar e salvar no Supabase
+        async function finalizarAgendamento() {
+            const nome = document.getElementById('cliente-nome').value.trim();
+            const email = document.getElementById('cliente-email').value.trim();
+            const whatsapp = document.getElementById('cliente-whatsapp').value.trim();
+
+            if (!nome || !email) {
+                alert('Por favor, preencha o seu nome e e-mail!');
+                return;
+            }
 
             try {
-                const { error: erroInsercao } = await _supabase
+                const { data, error } = await _supabase
                     .from('agendamentos')
-                    .insert([{
-                        cliente_nome: nomeCliente,
-                        cliente_email: emailCliente,
-                        servico: servicoNome,
-                        preco: servicoPreco,
-                        data: dataFormatada,
-                        horario: hora,
-                        whatsapp: whatsappCliente
-                    }]);
+                    .insert([
+                        { 
+                            cliente_nome: nome, 
+                            cliente_email: email, 
+                            whatsapp: whatsapp,
+                            servico: agendamento.servico,
+                            preco: agendamento.preco,
+                            data: agendamento.data,
+                            horario: agendamento.horario
+                        }
+                    ]);
 
-                if (erroInsercao) throw erroInsercao;
+                if (error) throw error;
 
-                alert("Agendamento salvo com sucesso!");
-
-                const telefoneDona = "5588981215376";
-                const textoMensagem = encodeURIComponent(
-                    `Olá Isadora! Meu nome é ${nomeCliente}.\n` +
-                    `Confirmei meu agendamento pelo site:\n\n` +
-                    `💅 *Serviço:* ${servicoCompleto}\n` +
-                    `📅 *Data:* ${dataFormatada}\n` +
-                    `🕒 *Horário:* ${hora}\n` +
-                    `📱 *WhatsApp:* ${whatsappCliente}`
-                );
-
-                window.open(`https://wa.me/${telefoneDona}?text=${textoMensagem}`, "_blank");
-                window.location.href = "index.html";
+                alert('Agendamento realizado com sucesso! 🎉');
+                // Redireciona para a home
+                window.location.href = 'index.html';
 
             } catch (err) {
                 console.error(err);
-                alert("Ocorreu um erro ao tentar salvar o seu agendamento no servidor. Por favor, tente novamente.");
+                alert('Ocorreu um erro ao salvar o agendamento. Tente novamente!');
             }
-        });
+        }
     </script>
 </body>
 </html>
