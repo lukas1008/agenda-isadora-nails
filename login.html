@@ -80,8 +80,9 @@
         <h2>Acesse sua Conta</h2>
         <p>Identifique-se para agendar seu horário</p>
         
-        <!-- Adicionamos um ID para podermos controlar o formulário no JavaScript -->
         <form id="loginForm">
+            <!-- Novo campo para o Nome do Cliente -->
+            <input type="text" id="nome" placeholder="Seu Nome Completo" required>
             <input type="email" id="email" placeholder="Seu E-mail" required>
             <input type="password" id="senha" placeholder="Sua Senha" required>
             <button type="submit" class="btn">Entrar</button>
@@ -91,8 +92,6 @@
     </div>
 
     <script>
-        // Verificação automática ao carregar a página:
-        // Se o usuário já estiver logado anteriormente, pula a tela de login
         window.onload = function() {
             const usuarioLogado = localStorage.getItem("usuarioLogado");
             
@@ -105,24 +104,24 @@
             }
         };
 
-        // Função que processa o login
         document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Impede a página de recarregar à toa
+            event.preventDefault();
 
+            const nomeInput = document.getElementById("nome").value.trim();
             const emailInput = document.getElementById("email").value.trim();
             const senhaInput = document.getElementById("senha").value;
 
-            // Define o e-mail administrativo
             const emailAdmin = "isadora@admin.com";
             const senhaAdmin = "admin123";
 
             if (emailInput === emailAdmin && senhaInput === senhaAdmin) {
-                // Se for você (Isadora), salva seu login e te leva para a administração
                 localStorage.setItem("usuarioLogado", emailInput);
+                localStorage.setItem("nomeUsuario", "Isadora Admin");
                 window.location.href = "admin.html";
             } else {
-                // Se for uma cliente, salva o e-mail dela e a leva para agendar
+                // Salva tanto o e-mail quanto o nome real digitado pela cliente
                 localStorage.setItem("usuarioLogado", emailInput);
+                localStorage.setItem("nomeUsuario", nomeInput);
                 window.location.href = "agendar.html";
             }
         });
