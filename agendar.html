@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Isadora Nails - Agendar</title>
+    <!-- Script para carregar a conexão direta do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -115,6 +117,11 @@
     </div>
 
     <script>
+        // Inicialização do Supabase com as suas credenciais
+        const SUPABASE_URL = "https://htdgxhgnjiqvktunspbx.supabase.com";
+        const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         function fazerLogout() {
             localStorage.removeItem("usuarioLogado");
             localStorage.removeItem("nomeUsuario");
@@ -127,6 +134,14 @@
                 window.location.href = "login.html";
                 return;
             }
+
+            const hoje = new Date();
+            const yyyy = hoje.getFullYear();
+            const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dd = String(hoje.getDate()).padStart(2, '0');
+            const dataMinima = `${yyyy}-${mm}-${dd}`;
+            
+            document.getElementById("data").setAttribute("min", dataMinima);
         };
 
         document.getElementById("data").addEventListener("input", function() {
@@ -139,57 +154,74 @@
             }
         });
 
-        document.getElementById("agendamentoForm").addEventListener("submit", function(event) {
+        document.getElementById("agendamentoForm").addEventListener("submit", async function(event) {
             event.preventDefault();
 
             const nomeCliente = localStorage.getItem("nomeUsuario") || localStorage.getItem("usuarioLogado");
+            const emailCliente = localStorage.getItem("usuarioLogado") || "nao@informado.com";
             const whatsappCliente = localStorage.getItem("whatsappUsuario") || "";
-            const servico = document.getElementById("servico").value;
+            const servicoCompleto = document.getElementById("servico").value;
             const data = document.getElementById("data").value;
             const hora = document.getElementById("hora").value;
 
             const dataFormatada = data.split("-").reverse().join("/");
 
-            let listaAgendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
-            
-            const horarioOcupado = listaAgendamentos.some(agendamento => 
-                agendamento.data === dataFormatada && agendamento.hora === hora
-            );
+            // Separa nome do serviço e preço para salvar certinho no banco
+            const partesServico = servicoCompleto.split(" - ");
+            const servicoNome = partesServico[0] || servicoCompleto;
+            const servicoPreco = partesServico[1] || "";
 
-            if (horarioOcupado) {
-                alert(`⚠️ Atenção: O horário de ${hora} no dia ${dataFormatada} já foi preenchido por outra cliente. Por favor, escolha outro horário ou outro dia.`);
-                return;
+            // --- SEGURANÇA NA NUVEM: VERIFICAR DUPLICIDADE REAL ---
+            try {
+                const { data: agendamentosExistentes, error: erroBusca } = await _supabase
+                    .from('agendamentos')
+                    .select('*')
+                    .eq('data', dataFormatada)
+                    .eq('horario', hora);
+
+                if (erroBusca) throw erroBusca;
+
+                if (agendamentosExistentes && agendamentosExistentes.length > 0) {
+                    alert(`⚠️ Atenção: O horário de ${hora} no dia ${dataFormatada} já foi preenchido por outra cliente. Por favor, escolha outro horário ou outro dia.`);
+                    return;
+                }
+
+                // --- SALVAR DIRETO NO BANCO DE DADOS GRATUITO ---
+                const { error: erroInsercao } = await _supabase
+                    .from('agendamentos')
+                    .insert([{
+                        cliente_nome: nomeCliente,
+                        cliente_email: emailCliente,
+                        servico: servicoNome,
+                        preco: servicoPreco,
+                        data: dataFormatada,
+                        horario: hora,
+                        whatsapp: whatsappCliente
+                    }]);
+
+                if (erroInsercao) throw erroInsercao;
+
+                alert(`Agendamento registrado no sistema com sucesso! Agora vamos te direcionar ao WhatsApp da Isadora para enviar o comprovante.`);
+
+                const telefoneDona = "5588981215376";
+                const textoMensagem = encodeURIComponent(
+                    `Olá Isadora! Meu nome é ${nomeCliente}.\n` +
+                    `Gostaria de confirmar o agendamento feito pelo site:\n\n` +
+                    `💅 *Serviço:* ${servicoCompleto}\n` +
+                    `📅 *Data:* ${dataFormatada}\n` +
+                    `🕒 *Horário:* ${hora}\n\n` +
+                    `Meu WhatsApp de contato é: ${whatsappCliente}\n\n` +
+                    `Aguardo sua confirmação! ✨`
+                );
+
+                const linkWhatsapp = `https://wa.me/${telefoneDona}?text=${textoMensagem}`;
+                document.getElementById("agendamentoForm").reset();
+                window.open(linkWhatsapp, "_blank");
+
+            } catch (err) {
+                console.error(err);
+                alert("Ocorreu um erro ao tentar salvar o seu agendamento no servidor. Por favor, tente novamente.");
             }
-
-            const novoAgendamento = {
-                id: Date.now(),
-                cliente: nomeCliente,
-                whatsapp: whatsappCliente,
-                servico: servico,
-                data: dataFormatada,
-                hora: hora,
-                status: "Pendente"
-            };
-
-            listaAgendamentos.push(novoAgendamento);
-            localStorage.setItem("agendamentos", JSON.stringify(listaAgendamentos));
-
-            alert(`Agendamento registrado no sistema! Agora vamos te direcionar ao WhatsApp da Isadora para enviar o comprovante.`);
-
-            const telefoneDona = "5588981215376";
-            const textoMensagem = encodeURIComponent(
-                `Olá Isadora! Meu nome é ${nomeCliente}.\n` +
-                `Gostaria de confirmar o agendamento feito pelo site:\n\n` +
-                `💅 *Serviço:* ${servico}\n` +
-                `📅 *Data:* ${dataFormatada}\n` +
-                `🕒 *Horário:* ${hora}\n\n` +
-                `Meu WhatsApp de contato é: ${whatsappCliente}\n\n` +
-                `Aguardo sua confirmação! ✨`
-            );
-
-            const linkWhatsapp = `https://wa.me/${telefoneDona}?text=${textoMensagem}`;
-            document.getElementById("agendamentoForm").reset();
-            window.open(linkWhatsapp, "_blank");
         });
     </script>
 
