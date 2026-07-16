@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isadora Nails - Agendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff0f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #ff69b4;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .btn-confirmar {
+            width: 100%;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+        .btn-confirmar:hover {
+            background-color: #ff1493;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #ff69b4;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Escolha seu Horário</h2>
+        
+        <form>
+            <!-- Seleção de Serviço -->
+            <label for="servico">Selecione o Serviço:</label>
+            <select id="servico" required>
+                <option value="">Selecione...</option>
+                <option value="manicure">💅 Manicure Simples - R$ 30,00</option>
+                <option value="pedicure">🦶 Pedicure Simples - R$ 35,00</option>
+                <option value="alongamento">✨ Alongamento em Gel - R$ 100,00</option>
+            </select>
+
+            <!-- Seleção de Data -->
+            <label for="data">Escolha a Data:</label>
+            <input type="date" id="data" required>
+
+            <!-- Seleção de Horário -->
+            <label for="hora">Escolha o Horário:</label>
+            <select id="hora" required>
+                <option value="">Selecione...</option>
+                <option value="09:00">09:00</option>
+                <option value="10:30">10:30</option>
+                <option value="13:00">13:00</option>
+                <option value="14:30">14:30</option>
+                <option value="16:00">16:00</option>
+            </select>
+
+            <button type="submit" class="btn-confirmar">Confirmar Agendamento</button>
+        </form>
+
+        <a href="index.html" class="back-link">Sair / Voltar ao Início</a>
+    </div>
+
+</body>
+</html>
