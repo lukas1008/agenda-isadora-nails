@@ -60,6 +60,10 @@
             color: #ffc107;
             font-weight: bold;
         }
+        .status-confirmado {
+            color: #28a745;
+            font-weight: bold;
+        }
         .btn-acao {
             padding: 6px 12px;
             border: none;
@@ -89,7 +93,7 @@
             display: flex;
             gap: 10px;
         }
-        .menu-admin a {
+        .menu-admin button {
             text-decoration: none;
             color: #aaa;
             font-size: 14px;
@@ -98,11 +102,18 @@
             background-color: #121212;
             border-radius: 5px;
             transition: all 0.3s;
+            cursor: pointer;
         }
-        .menu-admin a:hover {
+        .menu-admin button:hover {
             color: white;
-            border-color: #007bff;
-            background-color: #007bff;
+            border-color: #dc3545;
+            background-color: #dc3545;
+        }
+        .sem-agendamentos {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+            font-style: italic;
         }
     </style>
 </head>
@@ -114,47 +125,109 @@
 
     <div class="admin-container">
         <div class="menu-admin">
-            <a href="index.html">Sair</a>
-            <a href="#">Configurações</a>
-            <a href="#">Clientes</a>
+            <button onclick="fazerLogout()">Sair do Painel</button>
         </div>
 
-        <h2>Agendamentos do Dia</h2>
+        <h2>Agendamentos Recebidos</h2>
         
         <table>
             <thead>
                 <tr>
                     <th>Cliente</th>
                     <th>Serviço</th>
+                    <th>Data</th>
                     <th>Horário</th>
                     <th>Status</th>
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>Maria Oliveira</td>
-                    <td>Manicure</td>
-                    <td>09:00</td>
-                    <td class="status-pendente">Pendente</td>
-                    <td>
-                        <button class="btn-acao btn-aprovar">Ok</button>
-                        <button class="btn-acao btn-cancelar">X</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Ana Souza</td>
-                    <td>Unha Postiça</td>
-                    <td>10:30</td>
-                    <td class="status-pendente">Pendente</td>
-                    <td>
-                        <button class="btn-acao btn-aprovar">Ok</button>
-                        <button class="btn-acao btn-cancelar">X</button>
-                    </td>
-                </tr>
-            </tbody>
+            <tbody id="tabelaCorpo">
+                </tbody>
         </table>
     </div>
+
+    <script>
+        // Função para carregar e exibir os agendamentos salvos
+        function carregarAgendamentos() {
+            const tabelaCorpo = document.getElementById("tabelaCorpo");
+            tabelaCorpo.innerHTML = ""; // Limpa a tabela antes de atualizar
+
+            // Busca os agendamentos salvos ou cria lista vazia
+            const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+            if (agendamentos.length === 0) {
+                tabelaCorpo.innerHTML = `<tr><td colspan="6" class="sem-agendamentos">Nenhum agendamento realizado ainda.</td></tr>`;
+                return;
+            }
+
+            // Cria uma linha para cada agendamento cadastrado
+            agendamentos.forEach(agendamento => {
+                const tr = document.createElement("tr");
+
+                // Define a cor do status baseado no valor
+                const classeStatus = agendamento.status === "Confirmado" ? "status-confirmado" : "status-pendente";
+
+                tr.innerHTML = `
+                    <td>${agendamento.cliente}</td>
+                    <td>${agendamento.servico}</td>
+                    <td>${agendamento.data}</td>
+                    <td>${agendamento.hora}</td>
+                    <td class="${classeStatus}">${agendamento.status}</td>
+                    <td>
+                        ${agendamento.status === "Pendente" ? `<button class="btn-acao btn-aprovar" onclick="confirmarAgendamento(${agendamento.id})">Confirmar</button>` : ''}
+                        <button class="btn-acao btn-cancelar" onclick="removerAgendamento(${agendamento.id})">Excluir</button>
+                    </td>
+                `;
+
+                tabelaCorpo.appendChild(tr);
+            });
+        }
+
+        // Função para confirmar o agendamento
+        function confirmarAgendamento(id) {
+            let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+            
+            // Encontra o agendamento específico pelo ID e muda o status
+            agendamentos = agendamentos.map(agendamento => {
+                if (agendamento.id === id) {
+                    agendamento.status = "Confirmado";
+                }
+                return agendamento;
+            });
+
+            localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+            carregarAgendamentos(); // Atualiza a tabela na tela
+        }
+
+        // Função para excluir um agendamento da lista
+        function removerAgendamento(id) {
+            if (confirm("Tem certeza que deseja excluir esse agendamento?")) {
+                let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+                
+                // Filtra a lista mantendo apenas quem NÃO tem o ID que queremos excluir
+                agendamentos = agendamentos.filter(agendamento => agendamento.id !== id);
+
+                localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+                carregarAgendamentos(); // Atualiza a tabela na tela
+            }
+        }
+
+        // Função para sair e deslogar
+        function fazerLogout() {
+            localStorage.removeItem("usuarioLogado");
+            window.location.href = "index.html";
+        }
+
+        // Segurança: Só permite acessar se for a conta da Isadora
+        window.onload = function() {
+            if (localStorage.getItem("usuarioLogado") !== "isadora@admin.com") {
+                alert("Acesso restrito para administradores.");
+                window.location.href = "login.html";
+            } else {
+                carregarAgendamentos(); // Se for admin, carrega as informações
+            }
+        };
+    </script>
 
 </body>
 </html>
