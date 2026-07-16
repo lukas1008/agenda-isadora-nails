@@ -33,6 +33,7 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            position: relative;
         }
 
         .container {
@@ -87,6 +88,57 @@
             color: var(--texto-claro);
             font-size: 20px;
             cursor: pointer;
+            padding: 5px;
+            z-index: 101;
+        }
+
+        /* Menu de Opções Suspenso (Dropdown) */
+        .dropdown-menu {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 200px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.show {
+            display: flex;
+        }
+
+        .dropdown-item {
+            padding: 14px 16px;
+            color: var(--texto-claro);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+            background: none;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--neon-azul);
         }
 
         /* Banner Hero */
@@ -510,9 +562,20 @@
                     <span>NAILS</span>
                 </div>
             </div>
-            <button class="menu-btn">
+            <!-- Botão de Menu Três Linhas -->
+            <button class="menu-btn" onclick="toggleMenu(event)">
                 <i class="fa-solid fa-bars"></i>
             </button>
+
+            <!-- Menu de Opções Suspenso -->
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="agendar.html" class="dropdown-item">
+                    <i class="fa-regular fa-calendar-days"></i> Agendar Horário
+                </a>
+                <button onclick="solicitarAcessoAdm()" class="dropdown-item">
+                    <i class="fa-solid fa-user-gear"></i> Área do ADM
+                </button>
+            </div>
         </header>
 
         <!-- Banner Hero -->
@@ -700,6 +763,43 @@
         </footer>
 
     </div>
+
+    <!-- Scripts de Interação -->
+    <script>
+        // Função para abrir/fechar o menu suspenso
+        function toggleMenu(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('show');
+        }
+
+        // Fecha o menu caso o usuário clique fora dele
+        window.onclick = function(event) {
+            const menu = document.getElementById('dropdownMenu');
+            if (menu.classList.contains('show') && !event.target.closest('.menu-btn')) {
+                menu.classList.remove('show');
+            }
+        }
+
+        // Função de login administrativo seguro
+        function solicitarAcessoAdm() {
+            const emailCorreto = "isadoragomes.luk@gmail.com";
+            const senhaCorreta = "lukisa1008"; 
+            
+            const emailDigitado = prompt("Digite o e-mail de administrador:");
+            if (emailDigitado === null) return; // Cancela se o usuário clicar em "Cancelar"
+            
+            const senhaDigitada = prompt("Digite a senha de administrador:");
+            if (senhaDigitada === null) return;
+
+            // Validação de acesso
+            if (emailDigitado.trim().toLowerCase() === emailCorreto && senhaDigitada === senhaCorreta) {
+                window.location.href = "admin.html";
+            } else {
+                alert("E-mail ou senha incorretos! Acesso negado.");
+            }
+        }
+    </script>
 
 </body>
 </html>
