@@ -189,9 +189,10 @@
         .review-score { font-size: 32px; font-weight: 800; color: #ffffff; }
         .review-stars { color: #fbbf24; font-size: 14px; }
         .review-count { color: #64748b; font-size: 12px; }
+        .review-count-stars { margin-bottom: 5px; }
+        .btn-ver-avaliacoes { background: none; border: 1px solid #1e2235; color: #3b82f6; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; width: fit-content; }
         .review-grid-imgs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 130px; height: 130px; }
         .review-grid-imgs img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-        .btn-ver-avaliacoes { background: none; border: 1px solid #1e2235; color: #3b82f6; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; width: fit-content; }
         .space-box { background-color: #111422; border: 1px solid #1e2235; border-radius: 16px; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 25px; }
         .space-info { display: flex; flex-direction: column; gap: 6px; }
         .space-title-row { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
@@ -308,7 +309,7 @@
             <p class="section-subtitle">Intervalos de 1:30h (Disponíveis das 13:00 às 19:00)</p>
             <div class="horarios-grid" id="container-horarios"></div>
 
-            <button class="btn-primary" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
+            <button class="btn-primary" id="btn-agendar-main" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
 
             <!-- Avaliações e Espaço -->
             <h2 class="section-title">⭐ Avaliações</h2>
@@ -316,7 +317,7 @@
                 <div class="review-left">
                     <span class="review-score">5,0</span>
                     <div class="review-stars">★★★★★</div>
-                    <span class="review-count">+420 clientes atendidas</span>
+                    <span class="review-count review-count-stars">+420 clientes atendidas</span>
                     <button class="btn-ver-avaliacoes">Ver avaliações</button>
                 </div>
                 <div class="review-grid-imgs">
@@ -424,7 +425,6 @@
         let precoServicoSelecionado = "";
         let horarioSelecionado = "";
         
-        // Cache global dos agendamentos baixados do Supabase
         let cacheAgendamentosAdmin = [];
 
         window.onload = async function() {
@@ -436,7 +436,6 @@
                 document.getElementById('menu-admin').style.display = 'none';
             });
 
-            // MEMÓRIA ATIVA: Verifica se o usuário já estava logado antes do Recarregamento da Página (F5)
             if (localStorage.getItem("adm_logado") === "true") {
                 document.getElementById('tela-cliente').style.display = 'none';
                 document.getElementById('painel-adm-tela').style.display = 'block';
@@ -484,7 +483,6 @@
             const senha = document.getElementById('login-senha').value;
 
             if (email === "isadoragomes.luk@gmail.com" && senha === "lukisa1008") {
-                // Grava na memória permanente do navegador que está logado
                 localStorage.setItem("adm_logado", "true");
 
                 fecharModalLogin();
@@ -502,9 +500,7 @@
         }
 
         function sairDoPainel() {
-            // Remove o estado de login da memória para que precise logar novamente
             localStorage.removeItem("adm_logado");
-
             document.getElementById('painel-adm-tela').style.display = 'none';
             document.getElementById('tela-cliente').style.display = 'block';
         }
@@ -560,7 +556,7 @@
 
             } else if (aba === 'servicos') {
                 document.getElementById('btn-tab-servicos').classList.add('active');
-                titulo.innerText = "Serviços";
+                titulo.innerText = "Services";
                 subtitulo.innerText = "Tabela de serviços oferecidos e valores vigentes";
                 blocoContadores.style.display = "none";
                 subLabelLista.style.display = "none";
@@ -712,6 +708,10 @@
                 return;
             }
 
+            const botao = document.getElementById('btn-agendar-main');
+            botao.innerText = "SALVANDO HORÁRIO...";
+            botao.disabled = true;
+
             const dataFormatada = dataVal.split('-').reverse().join('/');
 
             const dadosAgendamento = {
@@ -722,46 +722,28 @@
                 preco: precoServicoSelecionado
             };
 
-            // Adiciona localmente na lista da memória imediatamente
-            cacheAgendamentosAdmin.push(dadosAgendamento);
-
-            // CORREÇÃO MÁXIMA PARA SALVAMENTO GARANTIDO (Sem delay e sem perdas ao mudar de aba)
-            // Criando um Blob e usando sendBeacon, o navegador processa o salvamento de forma isolada
             const endpoint = `${DB_URL}/rest/v1/agendamentos`;
             const payload = JSON.stringify(dadosAgendamento);
-            
-            // Verifica se o navegador suporta sendBeacon (Padrão atual em celulares)
-            if (navigator.sendBeacon) {
-                const headers = new Headers({
-                    'apikey': DB_KEY,
-                    'Authorization': `Bearer ${DB_KEY}`,
+
+            // Salvamento via fetch tradicional e seguro
+            fetch(endpoint, {
+                method: 'POST',
+                headers: { 
+                    'apikey': DB_KEY, 
+                    'Authorization': `Bearer ${DB_KEY}`, 
                     'Content-Type': 'application/json',
                     'Prefer': 'return=minimal'
-                });
-                
-                // Como sendBeacon nativamente não aceita headers customizados diretamente no método,
-                // usamos a URL estendida com os parâmetros chave para o Supabase aceitar o método POST direto.
-                const urlComChave = `${endpoint}?apikey=${encodeURIComponent(DB_KEY)}`;
-                const blob = new Blob([payload], { type: 'application/json' });
-                navigator.sendBeacon(urlComChave, blob);
-            } else {
-                // Alternativa de segurança caso seja um navegador muito antigo
-                fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 
-                        'apikey': DB_KEY, 
-                        'Authorization': `Bearer ${DB_KEY}`, 
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: payload,
-                    keepalive: true
-                }).catch(e => console.error(e));
-            }
+                },
+                body: payload
+            })
+            .then(() => console.log("Salvo no banco com sucesso!"))
+            .catch(e => console.error("Erro ao salvar:", e));
 
-            // REDIRECIONAMENTO INSTANTÂNEO PARA O WHATSAPP
-            const mensagemZap = `Olá Isadora! Gostaria de confirmar meu agendamento:%0A%0A👤 *Nome:* ${nome}%0A💅 *Serviço:* ${nomeServicoSelecionado}%0A📅 *Data:* ${dataFormatada}%0A🕒 *Horário:* ${horarioSelecionado}%0A💵 *Valor:* ${precoServicoSelecionado}`;
-            window.location.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensagemZap}`;
+            // Cronômetro de segurança (800 milissegundos) para o banco receber tudo antes de mudar de tela
+            setTimeout(function() {
+                const mensagemZap = `Olá Isadora! Gostaria de confirmar meu agendamento:%0A%0A👤 *Nome:* ${nome}%0A💅 *Serviço:* ${nomeServicoSelecionado}%0A📅 *Data:* ${dataFormatada}%0A🕒 *Horário:* ${horarioSelecionado}%0A💵 *Valor:* ${precoServicoSelecionado}`;
+                window.location.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensagemZap}`;
+            }, 800);
         }
     </script>
 </body>
