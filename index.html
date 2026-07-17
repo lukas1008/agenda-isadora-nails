@@ -316,7 +316,7 @@
                 <div class="review-left">
                     <span class="review-score">5,0</span>
                     <div class="review-stars">★★★★★</div>
-                    <span class="review-count">+420 clientes completamente satisfeitas</span>
+                    <span class="review-count">+420 clientes completamente substituídas</span>
                     <button class="btn-ver-avaliacoes">Ver avaliações</button>
                 </div>
                 <div class="review-grid-imgs">
@@ -455,6 +455,18 @@
             document.getElementById('login-senha').value = "";
         }
 
+        async function sincronizarDadosBanco() {
+            try {
+                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc,horario.asc`, {
+                    method: 'GET',
+                    headers: { 'apikey': DB_KEY, 'Authorization': `Bearer ${DB_KEY}` }
+                });
+                cacheAgendamentosAdmin = await res.json();
+            } catch (e) {
+                console.error("Erro ao sincronizar dados:", e);
+            }
+        }
+
         async function validarAcessoAdmin() {
             const email = document.getElementById('login-email').value.trim();
             const senha = document.getElementById('login-senha').value;
@@ -463,6 +475,11 @@
                 fecharModalLogin();
                 document.getElementById('tela-cliente').style.display = 'none';
                 document.getElementById('painel-adm-tela').style.display = 'block';
+                
+                // Baixa os dados uma vez logo no início do login
+                const containerCards = document.getElementById('lista-cards-adm');
+                containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Carregando dados do painel...</p>";
+                await sincronizarDadosBanco();
                 
                 mudarAbaAdm('dashboard');
             } else {
@@ -475,9 +492,9 @@
             document.getElementById('tela-cliente').style.display = 'block';
         }
 
-        // Função Inteligente para Controlar a Troca de Abas do Administrador
-        async function mudarAbaAdm(aba) {
-            // Atualiza classe ativa visual dos botões
+        // Função Inteligente e Instantânea para Controlar a Troca de Abas do Administrador
+        function mudarAbaAdm(aba) {
+            // Atualiza classe ativa visual dos botões de forma imediata
             document.querySelectorAll('.adm-menu-btn').forEach(b => b.classList.remove('active'));
             
             const titulo = document.getElementById('adm-titulo-secao');
@@ -486,22 +503,7 @@
             const subLabelLista = document.getElementById('adm-sub-label-lista');
             const containerCards = document.getElementById('lista-cards-adm');
 
-            containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Atualizando...</p>";
-
-            // Baixa os agendamentos atualizados do banco se for dashboard, agendamentos ou clientes
-            if(aba !== 'servicos') {
-                try {
-                    const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc,horario.asc`, {
-                        method: 'GET',
-                        headers: { 'apikey': DB_KEY, 'Authorization': `Bearer ${DB_KEY}` }
-                    });
-                    cacheAgendamentosAdmin = await res.json();
-                } catch (e) {
-                    console.error("Erro ao sincronizar dados:", e);
-                }
-            }
-
-            // Renderiza com base na Aba clicada
+            // Renderiza com base na Aba clicada de forma instantânea usando o cache local
             if (aba === 'dashboard') {
                 document.getElementById('btn-tab-dashboard').classList.add('active');
                 titulo.innerText = "Dashboard";
@@ -617,7 +619,6 @@
             const container = document.getElementById('container-horarios');
             container.innerHTML = "";
 
-            turnonsExpediente = turnosExpediente; // Ajuste de escopo
             turnosExpediente.forEach(hora => {
                 const card = document.createElement('div');
                 card.className = 'horario-card';
