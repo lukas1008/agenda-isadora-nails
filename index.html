@@ -150,7 +150,7 @@
         .btn-primary { width: 100%; background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #ffffff; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 25px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
         .alert-message { background-color: #1c1515; border: 1px solid #7f1d1d; color: #f87171; padding: 12px; border-radius: 10px; font-size: 13px; margin-bottom: 15px; display: none; }
 
-        /* ESTILOS EXCLUSIVOS DO PAINEL ADM (IMAGEM ANTERIOR) */
+        /* ESTILOS EXCLUSIVOS DO PAINEL ADM */
         #painel-adm-tela { display: none; }
         .adm-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .adm-title-brand { font-size: 14px; font-weight: 700; color: #3b82f6; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
@@ -158,13 +158,14 @@
         
         /* Grid de Abas Administrativas */
         .adm-menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .adm-menu-btn { background-color: #111422; border: 1px solid #1e2235; padding: 16px; border-radius: 12px; color: #94a3b8; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .adm-menu-btn { background-color: #111422; border: 1px solid #1e2235; padding: 16px; border-radius: 12px; color: #94a3b8; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; justify-content: center; transition: all 0.2s ease; }
         .adm-menu-btn.active { background: linear-gradient(135deg, #4f46e5, #3b82f6); border-color: transparent; color: #ffffff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
         
         .adm-section-header { font-size: 28px; font-weight: 800; margin: 0 0 4px 0; }
         .adm-section-subtitle { color: #64748b; font-size: 14px; margin: 0 0 20px 0; }
         
         /* Blocos de Contadores */
+        .adm-counters-wrapper { display: block; }
         .adm-counter-card { background-color: #111422; border: 1px solid #1e2235; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
         .adm-counter-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .bg-icon-blue { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; }
@@ -347,48 +348,47 @@
             </div>
         </div>
 
-        <!-- TELA DO PAINEL ADM IDENTICA À SEGUNDA IMAGEM -->
+        <!-- TELA DO PAINEL ADM FUNCIONAL -->
         <div id="painel-adm-tela">
             <div class="adm-top-bar">
                 <div class="adm-title-brand">◆ PAINEL ADM</div>
                 <button class="adm-btn-sair" onclick="sairDoPainel()">🔄 Sair</button>
             </div>
 
-            <!-- Grade de Menu do Painel -->
+            <!-- Grade de Menu do Painel com funções de Clique -->
             <div class="adm-menu-grid">
-                <div class="adm-menu-btn active">📊 Dashboard</div>
-                <div class="adm-menu-btn">📅 Agendamentos</div>
-                <div class="adm-menu-btn">👥 Clientes</div>
-                <div class="adm-menu-btn">🖌️ Serviços</div>
+                <div class="adm-menu-btn active" id="btn-tab-dashboard" onclick="mudarAbaAdm('dashboard')">📊 Dashboard</div>
+                <div class="adm-menu-btn" id="btn-tab-agendamentos" onclick="mudarAbaAdm('agendamentos')">📅 Agendamentos</div>
+                <div class="adm-menu-btn" id="btn-tab-clientes" onclick="mudarAbaAdm('clientes')">👥 Clientes</div>
+                <div class="adm-menu-btn" id="btn-tab-servicos" onclick="mudarAbaAdm('servicos')">🖌️ Serviços</div>
             </div>
 
-            <h1 class="adm-section-header">Dashboard</h1>
-            <p class="adm-section-subtitle">Visão geral do seu salão</p>
+            <h1 class="adm-section-header" id="adm-titulo-secao">Dashboard</h1>
+            <p class="adm-section-subtitle" id="adm-subtitulo-secao">Visão geral do seu salão</p>
 
-            <!-- Contador 1: Agendamentos Ativos -->
-            <div class="adm-counter-card">
-                <div class="adm-counter-icon bg-icon-blue">📅</div>
-                <div class="adm-counter-info">
-                    <span class="adm-counter-label">Agendamentos Ativos</span>
-                    <span class="adm-counter-value" id="total-agendamentos">0</span>
+            <!-- Blocos de Contadores -->
+            <div class="adm-counters-wrapper" id="bloco-contadores-adm">
+                <div class="adm-counter-card">
+                    <div class="adm-counter-icon bg-icon-blue">📅</div>
+                    <div class="adm-counter-info">
+                        <span class="adm-counter-label">Agendamentos Ativos</span>
+                        <span class="adm-counter-value" id="total-agendamentos">0</span>
+                    </div>
+                </div>
+
+                <div class="adm-counter-card">
+                    <div class="adm-counter-icon bg-icon-green">💲</div>
+                    <div class="adm-counter-info">
+                        <span class="adm-counter-label">Faturamento Estimado</span>
+                        <span class="adm-counter-value" id="faturamento-total">R$ 0,00</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Contador 2: Faturamento Estimado -->
-            <div class="adm-counter-card">
-                <div class="adm-counter-icon bg-icon-green">💲</div>
-                <div class="adm-counter-info">
-                    <span class="adm-counter-label">Faturamento Estimado</span>
-                    <span class="adm-counter-value" id="faturamento-total">R$ 0,00</span>
-                </div>
-            </div>
+            <div class="adm-sub-label" id="adm-sub-label-lista">🕒 PRÓXIMOS ATENDIMENTOS</div>
 
-            <div class="adm-sub-label">🕒 PRÓXIMOS ATENDIMENTOS</div>
-
-            <!-- Lista de Cards Individuais Clássicos -->
-            <div class="adm-list-cards" id="lista-cards-adm">
-                <!-- Inseridos via JavaScript dinamicamente -->
-            </div>
+            <!-- Lista Dinâmica de Cards Administrativos -->
+            <div class="adm-list-cards" id="lista-cards-adm"></div>
         </div>
 
         <!-- MODAL FLUTUANTE DE LOGIN -->
@@ -423,6 +423,9 @@
         let nomeServicoSelecionado = "";
         let precoServicoSelecionado = "";
         let horarioSelecionado = "";
+        
+        // Cache global dos agendamentos baixados do Supabase
+        let cacheAgendamentosAdmin = [];
 
         window.onload = function() {
             const hoje = new Date().toISOString().split('T')[0];
@@ -461,7 +464,7 @@
                 document.getElementById('tela-cliente').style.display = 'none';
                 document.getElementById('painel-adm-tela').style.display = 'block';
                 
-                carregarDashboardCompleto();
+                mudarAbaAdm('dashboard');
             } else {
                 alert("❌ E-mail ou Senha inválidos!");
             }
@@ -472,42 +475,119 @@
             document.getElementById('tela-cliente').style.display = 'block';
         }
 
-        // Carrega dados e monta os Cards do Dashboard perfeitamente
-        async function carregarDashboardCompleto() {
+        // Função Inteligente para Controlar a Troca de Abas do Administrador
+        async function mudarAbaAdm(aba) {
+            // Atualiza classe ativa visual dos botões
+            document.querySelectorAll('.adm-menu-btn').forEach(b => b.classList.remove('active'));
+            
+            const titulo = document.getElementById('adm-titulo-secao');
+            const subtitulo = document.getElementById('adm-subtitulo-secao');
+            const blocoContadores = document.getElementById('bloco-contadores-adm');
+            const subLabelLista = document.getElementById('adm-sub-label-lista');
             const containerCards = document.getElementById('lista-cards-adm');
-            containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Carregando informações...</p>";
 
-            try {
-                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc,horario.asc`, {
-                    method: 'GET',
-                    headers: { 'apikey': DB_KEY, 'Authorization': `Bearer ${DB_KEY}` }
-                });
-                const dados = await res.json();
-                containerCards.innerHTML = "";
+            containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Atualizando...</p>";
 
-                // Configura Contadores do Topo
-                document.getElementById('total-agendamentos').innerText = dados.length;
-                
-                let somaFaturamento = 0;
-
-                if (dados.length === 0) {
-                    containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Nenhum agendamento ativo.</p>";
-                    document.getElementById('faturamento-total').innerText = "R$ 0,00";
-                    return;
+            // Baixa os agendamentos atualizados do banco se for dashboard, agendamentos ou clientes
+            if(aba !== 'servicos') {
+                try {
+                    const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc,horario.asc`, {
+                        method: 'GET',
+                        headers: { 'apikey': DB_KEY, 'Authorization': `Bearer ${DB_KEY}` }
+                    });
+                    cacheAgendamentosAdmin = await res.json();
+                } catch (e) {
+                    console.error("Erro ao sincronizar dados:", e);
                 }
+            }
 
-                // Renderiza Cards Individuais Clássicos
-                dados.forEach(item => {
-                    const dataBr = item.data.split('-').reverse().join('/');
-                    
-                    // Tratamento simples para somar o faturamento total
+            // Renderiza com base na Aba clicada
+            if (aba === 'dashboard') {
+                document.getElementById('btn-tab-dashboard').classList.add('active');
+                titulo.innerText = "Dashboard";
+                subtitulo.innerText = "Visão geral do seu salão";
+                blocoContadores.style.display = "block";
+                subLabelLista.innerText = "🕒 PRÓXIMOS ATENDIMENTOS";
+                subLabelLista.style.display = "flex";
+
+                // Calcular contadores
+                let somaFaturamento = 0;
+                cacheAgendamentosAdmin.forEach(item => {
                     if(item.preco) {
                         const valorLimpo = parseFloat(item.preco.replace('R$', '').replace('.', '').replace(',', '.').trim());
                         if(!isNaN(valorLimpo)) somaFaturamento += valorLimpo;
                     }
+                });
+                document.getElementById('total-agendamentos').innerText = cacheAgendamentosAdmin.length;
+                document.getElementById('faturamento-total').innerText = `R$ ${somaFaturamento.toFixed(2).replace('.', ',')}`;
 
+                renderizarCardsAdmin(cacheAgendamentosAdmin, 'completo');
+
+            } else if (aba === 'agendamentos') {
+                document.getElementById('btn-tab-agendamentos').classList.add('active');
+                titulo.innerText = "Agendamentos";
+                subtitulo.innerText = "Lista cronológica de horários reservados";
+                blocoContadores.style.display = "none";
+                subLabelLista.innerText = "📅 CRONOGRAMA DE RESERVAS";
+                subLabelLista.style.display = "flex";
+
+                renderizarCardsAdmin(cacheAgendamentosAdmin, 'completo');
+
+            } else if (aba === 'clientes') {
+                document.getElementById('btn-tab-clientes').classList.add('active');
+                titulo.innerText = "Clientes";
+                subtitulo.innerText = "Histórico de clientes agendados no sistema";
+                blocoContadores.style.display = "none";
+                subLabelLista.innerText = "👥 CLIENTES CADASTRADOS";
+                subLabelLista.style.display = "flex";
+
+                renderizarCardsAdmin(cacheAgendamentosAdmin, 'cliente');
+
+            } else if (aba === 'servicos') {
+                document.getElementById('btn-tab-servicos').classList.add('active');
+                titulo.innerText = "Serviços";
+                subtitulo.innerText = "Tabela de serviços oferecidos e valores vigentes";
+                blocoContadores.style.display = "none";
+                subLabelLista.style.display = "none";
+
+                // Dados estáticos da tabela de serviços atuais
+                const listaServicosFixos = [
+                    { nome: "Manicure", preco: "R$ 27,00", desc: "Cuidados e esmaltação tradicional" },
+                    { nome: "Pedicure", preco: "R$ 33,00", desc: "Cuidados e esmaltação tradicional" },
+                    { nome: "Manicure + Pedicure", preco: "R$ 60,00", desc: "Pacote completo casadinha" },
+                    { nome: "Unha Postiça", preco: "R$ 30,00", desc: "Alongamento e aplicação rápida" }
+                ];
+                
+                containerCards.innerHTML = "";
+                listaServicosFixos.forEach(s => {
                     const card = document.createElement('div');
                     card.className = 'adm-client-card';
+                    card.innerHTML = `
+                        <div class="adm-client-name" style="color:#3b82f6;">${s.nome}</div>
+                        <div class="adm-client-detail-row">📝 <span>Descrição:</span> <strong>${s.desc}</strong></div>
+                        <div class="adm-client-detail-row">💵 <span>Preço de Venda:</span> <strong style="color:#16a34a; font-size:15px;">${s.preco}</strong></div>
+                    `;
+                    containerCards.appendChild(card);
+                });
+            }
+        }
+
+        // Renderizador Auxiliar Dinâmico
+        function renderizarCardsAdmin(lista, layout) {
+            const containerCards = document.getElementById('lista-cards-adm');
+            containerCards.innerHTML = "";
+
+            if (lista.length === 0) {
+                containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Nenhum registro encontrado.</p>";
+                return;
+            }
+
+            lista.forEach(item => {
+                const dataBr = item.data.split('-').reverse().join('/');
+                const card = document.createElement('div');
+                card.className = 'adm-client-card';
+
+                if(layout === 'completo') {
                     card.innerHTML = `
                         <div class="adm-client-name">${item.cliente_nome}</div>
                         <div class="adm-client-detail-row">💅 <span>Serviço:</span> <strong>${item.servico}</strong></div>
@@ -515,14 +595,14 @@
                         <div class="adm-client-detail-row">🕒 <span>Horário:</span> <strong>${item.horario}</strong></div>
                         <div class="adm-client-detail-row">💵 <span>Valor:</span> <strong>${item.preco || 'R$ 0,00'}</strong></div>
                     `;
-                    containerCards.appendChild(card);
-                });
-
-                document.getElementById('faturamento-total').innerText = `R$ ${somaFaturamento.toFixed(2).replace('.', ',')}`;
-
-            } catch (err) {
-                containerCards.innerHTML = "<p style='text-align:center; color:#f87171;'>Erro ao carregar dados do Supabase.</p>";
-            }
+                } else if(layout === 'cliente') {
+                    card.innerHTML = `
+                        <div class="adm-client-name" style="margin-bottom:6px;">${item.cliente_nome}</div>
+                        <div class="adm-client-detail-row">✨ <span>Último Serviço:</span> <strong>${item.servico}</strong></div>
+                    `;
+                }
+                containerCards.appendChild(card);
+            });
         }
 
         function selecionarServico(elemento, nome, preco) {
@@ -537,6 +617,7 @@
             const container = document.getElementById('container-horarios');
             container.innerHTML = "";
 
+            turnonsExpediente = turnosExpediente; // Ajuste de escopo
             turnosExpediente.forEach(hora => {
                 const card = document.createElement('div');
                 card.className = 'horario-card';
