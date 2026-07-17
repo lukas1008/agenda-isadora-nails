@@ -105,7 +105,7 @@
         .space-title-row { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
         .space-text { color: #64748b; font-size: 12px; line-height: 1.4; }
         .btn-maps { border: 1px solid #1e2235; color: #3b82f6; padding: 8px 12px; border-radius: 8px; font-size: 11px; text-decoration: none; font-weight: 600; width: fit-content; text-align: center; display: block; margin-top: 6px; }
-        .space-img { width: 110px; height: 110px; object-fit: cover; border-radius: 12px; }
+        .space-img { width: 110px; height: 110px; object-fit: cover; border-radius: 12px; background-color: #1e2235; }
 
         /* Botão Principal */
         .btn-primary { width: 100%; background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #ffffff; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 25px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
@@ -255,7 +255,7 @@
         <!-- Botão de Confirmação Principal -->
         <button class="btn-primary" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
 
-        <!-- SEÇÃO 3: AVALIAÇÕES (NOTA MÁXIMA 5.0) -->
+        <!-- SEÇÃO 3: AVALIAÇÕES -->
         <h2 class="section-title">⭐ Avaliações</h2>
         <div class="review-box">
             <div class="review-left">
@@ -272,14 +272,15 @@
             </div>
         </div>
 
-        <!-- SEÇÃO 4: NOSSO ESPAÇO -->
+        <!-- SEÇÃO 4: NOSSO ESPAÇO (FOTO ATUALIZADA) -->
         <div class="space-box">
             <div class="space-info">
                 <div class="space-title-row">📍 Nosso Espaço</div>
                 <div class="space-text">Ambiente confortável e preparado para te receber com muito carinho.</div>
                 <a href="https://maps.google.com" target="_blank" class="btn-maps">Abrir no Google Maps</a>
             </div>
-            <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200&auto=format&fit=crop&q=60" class="space-img" alt="Salão Interno">
+            <!-- Imagem atualizada diretamente do seu ImgBB -->
+            <img src="https://i.ibb.co/680pZ7Y0/sd4-JGh-S4.jpg" class="space-img" alt="Nosso Espaço">
         </div>
 
         <!-- Selo de Segurança -->
@@ -295,7 +296,6 @@
         <div class="social-title-bottom">Fale Conosco</div>
         <div class="social-row">
             <a href="https://wa.me/5588981215376" class="social-btn bg-whatsapp" target="_blank">WhatsApp</a>
-            <!-- SEU LINK DO INSTAGRAM ADICIONADO AQUI: -->
             <a href="https://www.instagram.com/isadora_nails.designer" class="social-btn bg-instagram" target="_blank">Instagram</a>
         </div>
 
@@ -306,7 +306,6 @@
         const DB_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
         const WHATSAPP_NUMERO = "5588981215376"; 
 
-        // Janelas exatas com 1:30h de intervalo
         const turnosExpediente = ["13:00", "14:30", "16:00", "17:30", "19:00"];
         
         let nomeServicoSelecionado = "";
