@@ -36,322 +36,93 @@
             align-items: center;
             gap: 10px;
         }
-        .logo-icon {
-            font-size: 24px;
-        }
-        .logo-text {
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: 1px;
-        }
-        .logo-text span {
-            color: #3b82f6;
-            display: block;
-            font-size: 12px;
-        }
-        
-        .menu-hamburger {
-            font-size: 20px;
-            cursor: pointer;
-        }
+        .logo-icon { font-size: 24px; }
+        .logo-text { font-weight: 700; font-size: 18px; letter-spacing: 1px; }
+        .logo-text span { color: #3b82f6; display: block; font-size: 12px; }
+        .menu-hamburger { font-size: 20px; cursor: pointer; }
 
         /* Banner Principal */
-        .hero-section {
-            position: relative;
-            margin-bottom: 25px;
-        }
-        .hero-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin: 0 0 5px 0;
-            letter-spacing: 0.5px;
-        }
-        .hero-badge {
-            color: #ffffff;
-            font-size: 15px;
-        }
-        .hero-badge span {
-            color: #3b82f6;
-            font-weight: 600;
-        }
-        .hero-subtitle {
-            color: #64748b;
-            font-size: 13px;
-            margin: 5px 0 0 0;
-        }
+        .hero-section { position: relative; margin-bottom: 25px; }
+        .hero-title { font-size: 32px; font-weight: 800; margin: 0 0 5px 0; letter-spacing: 0.5px; }
+        .hero-badge { color: #ffffff; font-size: 15px; }
+        .hero-badge span { color: #3b82f6; font-weight: 600; }
+        .hero-subtitle { color: #64748b; font-size: 13px; margin: 5px 0 0 0; }
 
         /* Linha de Passos */
-        .steps-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 25px 10px;
-            position: relative;
-        }
-        .steps-line {
-            position: absolute;
-            top: 15px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: #1e2235;
-            z-index: 1;
-        }
-        .step-item {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-        .step-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #111422;
-            border: 2px solid #1e2235;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 600;
-            color: #64748b;
-        }
-        .step-item.active .step-circle {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-            color: #ffffff;
-            box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
-        }
-        .step-label {
-            font-size: 11px;
-            color: #64748b;
-        }
-        .step-item.active .step-label {
-            color: #ffffff;
-            font-weight: 500;
-        }
+        .steps-container { display: flex; justify-content: space-between; align-items: center; margin: 25px 10px; position: relative; }
+        .steps-line { position: absolute; top: 15px; left: 0; right: 0; height: 2px; background-color: #1e2235; z-index: 1; }
+        .step-item { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background-color: #111422; border: 2px solid #1e2235; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #64748b; }
+        .step-item.active .step-circle { background-color: #3b82f6; border-color: #3b82f6; color: #ffffff; box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); }
+        .step-label { font-size: 11px; color: #64748b; }
+        .step-item.active .step-label { color: #ffffff; font-weight: 500; }
 
         /* Títulos de Seções */
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .section-subtitle {
-            color: #64748b;
-            font-size: 13px;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; margin-top: 25px; }
+        .section-subtitle { color: #64748b; font-size: 13px; margin-top: 0; margin-bottom: 20px; }
 
-        /* Input de Nome e Data */
-        .input-group {
-            margin-bottom: 20px;
-        }
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            color: #94a3b8;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .input-control {
-            width: 100%;
-            padding: 14px;
-            background-color: #111422;
-            border: 1px solid #1e2235;
-            border-radius: 12px;
-            color: #ffffff;
-            font-size: 15px;
-            box-sizing: border-box;
-            outline: none;
-        }
-        .input-control:focus {
-            border-color: #3b82f6;
-        }
+        /* Inputs */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 8px; font-weight: 500; }
+        .input-control { width: 100%; padding: 14px; background-color: #111422; border: 1px solid #1e2235; border-radius: 12px; color: #ffffff; font-size: 15px; box-sizing: border-box; outline: none; }
+        .input-control:focus { border-color: #3b82f6; }
 
-        /* Cards de Serviços (Idêntico ao Layout) */
-        .services-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-        .service-card {
-            background-color: #111422;
-            border: 1px solid #1e2235;
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            position: relative;
-        }
-        .service-card.selected {
-            border-color: #3b82f6;
-            background-color: #121829;
-        }
-        .service-info-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .service-img-icon {
-            font-size: 24px;
-        }
-        .service-details {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .service-name {
-            font-size: 15px;
-            font-weight: 700;
-        }
-        .service-desc {
-            color: #64748b;
-            font-size: 12px;
-        }
-        .service-time {
-            color: #64748b;
-            font-size: 11px;
-            margin-top: 2px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .service-price-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .service-price {
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-        .custom-radio {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #262b44;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .service-card.selected .custom-radio {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-        }
-        .service-card.selected .custom-radio::after {
-            content: "✓";
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-        }
+        /* Cards de Serviços */
+        .services-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .service-card { background-color: #111422; border: 1px solid #1e2235; border-radius: 14px; padding: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .service-card.selected { border-color: #3b82f6; background-color: #121829; }
+        .service-info-left { display: flex; align-items: center; gap: 14px; }
+        .service-img-icon { font-size: 24px; }
+        .service-details { display: flex; flex-direction: column; gap: 2px; }
+        .service-name { font-size: 15px; font-weight: 700; }
+        .service-desc { color: #64748b; font-size: 12px; }
+        .service-time { color: #64748b; font-size: 11px; margin-top: 2px; }
+        .service-price-right { display: flex; align-items: center; gap: 12px; }
+        .service-price { font-size: 14px; font-weight: 700; }
+        .custom-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #262b44; display: flex; align-items: center; justify-content: center; }
+        .service-card.selected .custom-radio { background-color: #3b82f6; border-color: #3b82f6; }
+        .service-card.selected .custom-radio::after { content: "✓"; color: white; font-size: 11px; font-weight: bold; }
 
-        /* Grade de Horários Elegante */
-        .horarios-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .horario-card {
-            background-color: #111422;
-            border: 1px solid #1e2235;
-            padding: 14px 10px;
-            text-align: center;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            color: #e2e8f0;
-        }
-        .horario-card.selected {
-            background: linear-gradient(135deg, #4f46e5, #3b82f6);
-            border-color: transparent;
-            color: #ffffff;
-        }
-        .horario-card.ocupado {
-            background-color: #151722;
-            border-color: #1e2235;
-            color: #334155;
-            text-decoration: line-through;
-            cursor: not-allowed;
-            opacity: 0.3;
-        }
+        /* Grade de Horários */
+        .horarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+        .horario-card { background-color: #111422; border: 1px solid #1e2235; padding: 14px 10px; text-align: center; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; color: #e2e8f0; }
+        .horario-card.selected { background: linear-gradient(135deg, #4f46e5, #3b82f6); border-color: transparent; color: #ffffff; }
+        .horario-card.ocupado { background-color: #151722; border-color: #1e2235; color: #334155; text-decoration: line-through; cursor: not-allowed; opacity: 0.3; }
 
-        /* Botão de Ação */
-        .btn-primary {
-            width: 100%;
-            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
-            color: #ffffff;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
-            margin-bottom: 30px;
-        }
+        /* Seção de Avaliações */
+        .review-box { display: flex; background-color: #111422; border: 1px solid #1e2235; border-radius: 16px; padding: 18px; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .review-left { display: flex; flex-direction: column; gap: 4px; }
+        .review-score { font-size: 32px; font-weight: 800; color: #ffffff; }
+        .review-stars { color: #fbbf24; font-size: 14px; }
+        .review-count { color: #64748b; font-size: 12px; }
+        .review-grid-imgs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 130px; height: 130px; }
+        .review-grid-imgs img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .btn-ver-avaliacoes { background: none; border: 1px solid #1e2235; color: #3b82f6; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; width: fit-content; }
+
+        /* Nosso Espaço */
+        .space-box { background-color: #111422; border: 1px solid #1e2235; border-radius: 16px; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 25px; }
+        .space-info { display: flex; flex-direction: column; gap: 6px; }
+        .space-title-row { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
+        .space-text { color: #64748b; font-size: 12px; line-height: 1.4; }
+        .btn-maps { border: 1px solid #1e2235; color: #3b82f6; padding: 8px 12px; border-radius: 8px; font-size: 11px; text-decoration: none; font-weight: 600; width: fit-content; text-align: center; display: block; margin-top: 6px; }
+        .space-img { width: 110px; height: 110px; object-fit: cover; border-radius: 12px; }
+
+        /* Botão Principal */
+        .btn-primary { width: 100%; background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #ffffff; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 25px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
 
         /* Alertas */
-        .alert-message {
-            background-color: #1c1515;
-            border: 1px solid #7f1d1d;
-            color: #f87171;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 13px;
-            margin-bottom: 15px;
-            display: none;
-        }
+        .alert-message { background-color: #1c1515; border: 1px solid #7f1d1d; color: #f87171; padding: 12px; border-radius: 10px; font-size: 13px; margin-bottom: 15px; display: none; }
+
+        /* Selo de Segurança */
+        .secure-footer { background-color: #0f1322; border: 1px solid #1e2235; border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 25px; font-size: 12px; color: #64748b; }
+        .secure-footer strong { color: #94a3b8; }
 
         /* Rodapé Redes Sociais */
-        .social-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .social-btn {
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
-            color: white;
-        }
+        .social-title-bottom { text-align: center; font-size: 11px; color: #475569; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+        .social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .social-btn { padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: white; }
         .bg-whatsapp { background-color: #16a34a; }
         .bg-instagram { background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); }
-
-        /* Proteção Visual Inferior */
-        .secure-footer {
-            background-color: #0f1322;
-            border: 1px solid #1e2235;
-            border-radius: 12px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
-            font-size: 12px;
-            color: #64748b;
-        }
-        .secure-footer strong { color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -395,7 +166,7 @@
             </div>
         </div>
 
-        <!-- Área de Inputs Cadastrais -->
+        <!-- Área de Inputs -->
         <div class="input-group">
             <label for="nome">Qual seu nome completo?</label>
             <input type="text" id="nome" class="input-control" placeholder="Digite seu nome completo..." oninput="atualizarPassos()">
@@ -407,12 +178,11 @@
         </div>
         <div id="erro-domingo" class="alert-message">❌ Não atendemos aos domingos. Por favor, escolha outro dia útil!</div>
 
-        <!-- SEÇÃO 1: LISTA DE SERVIÇOS DO PRINT -->
+        <!-- SEÇÃO 1: LISTA DE SERVIÇOS -->
         <h2 class="section-title">Qual serviço você deseja?</h2>
         <p class="section-subtitle">Selecione o serviço desejado</p>
 
         <div class="services-list">
-            <!-- Card Manicure -->
             <div class="service-card" onclick="selecionarServico(this, 'Manicure', '27.00')">
                 <div class="service-info-left">
                     <span class="service-img-icon">💅</span>
@@ -428,7 +198,6 @@
                 </div>
             </div>
 
-            <!-- Card Pedicure -->
             <div class="service-card" onclick="selecionarServico(this, 'Pedicure', '33.00')">
                 <div class="service-info-left">
                     <span class="service-img-icon">👣</span>
@@ -444,7 +213,6 @@
                 </div>
             </div>
 
-            <!-- Card Casadinha -->
             <div class="service-card" onclick="selecionarServico(this, 'Manicure + Pedicure', '60.00')">
                 <div class="service-info-left">
                     <span class="service-img-icon">🔄</span>
@@ -460,7 +228,6 @@
                 </div>
             </div>
 
-            <!-- Card Unha Postiça -->
             <div class="service-card" onclick="selecionarServico(this, 'Unha Postiça', '30.00')">
                 <div class="service-info-left">
                     <span class="service-img-icon">✨</span>
@@ -477,18 +244,45 @@
             </div>
         </div>
 
-        <!-- SEÇÃO 2: HORÁRIOS DISPONÍVEIS -->
+        <!-- SEÇÃO 2: HORÁRIOS DISPONÍVEIS (INTERVALO DE 1H30) -->
         <h2 class="section-title">Escolha o horário</h2>
-        <p class="section-subtitle">Disponíveis de 13:00 às 19:00 para esta data</p>
+        <p class="section-subtitle">Intervalos de 1:30h (Disponíveis das 13:00 às 19:00)</p>
         
         <div class="horarios-grid" id="container-horarios">
-            <!-- Gerados dinamicamente limitados de 13h as 19h -->
+            <!-- Gerados dinamicamente via JS de 1:30 em 1:30 -->
         </div>
 
-        <!-- Botão de Ação Principal -->
+        <!-- Botão de Confirmação Principal -->
         <button class="btn-primary" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
 
-        <!-- Selo de Segurança do Print -->
+        <!-- SEÇÃO 3: AVALIAÇÕES -->
+        <h2 class="section-title">⭐ Avaliações</h2>
+        <div class="review-box">
+            <div class="review-left">
+                <span class="review-score">4,9</span>
+                <div class="review-stars">★★★★★</div>
+                <span class="review-count">+380 clientes atendidas</span>
+                <button class="btn-ver-avaliacoes">Ver avaliações</button>
+            </div>
+            <div class="review-grid-imgs">
+                <img src="https://images.unsplash.com/photo-1604654894610-df4906947712?w=150&auto=format&fit=crop&q=60" alt="Unha 1">
+                <img src="https://images.unsplash.com/photo-1632345031435-8797b2d58045?w=150&auto=format&fit=crop&q=60" alt="Unha 2">
+                <img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=150&auto=format&fit=crop&q=60" alt="Unha 3">
+                <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150&auto=format&fit=crop&q=60" alt="Unha 4">
+            </div>
+        </div>
+
+        <!-- SEÇÃO 4: NOSSO ESPAÇO -->
+        <div class="space-box">
+            <div class="space-info">
+                <div class="space-title-row">📍 Nosso Espaço</div>
+                <div class="space-text">Ambiente confortável e preparado para te receber com muito carinho.</div>
+                <a href="https://maps.google.com" target="_blank" class="btn-maps">Abrir no Google Maps</a>
+            </div>
+            <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200&auto=format&fit=crop&q=60" class="space-img" alt="Salão Interno">
+        </div>
+
+        <!-- Selo de Segurança -->
         <div class="secure-footer">
             <span style="font-size: 20px;">🛡️</span>
             <div>
@@ -497,10 +291,12 @@
             </div>
         </div>
 
-        <!-- Links Rápidos Rodapé -->
+        <!-- CORREÇÃO DAS REDES SOCIAIS -->
+        <div class="social-title-bottom">Fale Conosco</div>
         <div class="social-row">
             <a href="https://wa.me/5588981215376" class="social-btn bg-whatsapp" target="_blank">WhatsApp</a>
-            <a href="#" class="social-btn bg-instagram" target="_blank">Instagram</a>
+            <!-- LINK DO INSTAGRAM AJUSTADO AQUI: -->
+            <a href="https://instagram.com" class="social-btn bg-instagram" target="_blank">Instagram</a>
         </div>
 
     </div>
@@ -510,8 +306,8 @@
         const DB_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
         const WHATSAPP_NUMERO = "5588981215376"; 
 
-        // Turnos restritos obrigatórios das 13h às 19h
-        const turnosExpediente = ["13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"];
+        // LISTA DE HORÁRIOS COM INTERVALOS EXATOS DE 1:30 (Expediente das 13h às 19h)
+        const turnosExpediente = ["13:00", "14:30", "16:00", "17:30", "19:00"];
         
         let nomeServicoSelecionado = "";
         let precoServicoSelecionado = "";
@@ -560,7 +356,6 @@
             
             if (!campoData) return;
 
-            // Restrição número 1: Bloquear domingos completamente
             const diaDaSemana = new Date(campoData + 'T00:00:00').getDay();
             if (diaDaSemana === 0) {
                 erroDomingo.style.display = 'block';
@@ -575,7 +370,6 @@
             atualizarPassos();
 
             try {
-                // Restrição número 2: Buscar horários ocupados no banco em tempo real
                 const res = await fetch(`${DB_URL}/rest/v1/agendamentos?data=eq.${campoData}&select=horario`, {
                     method: 'GET',
                     headers: { 'apikey': DB_KEY, 'Authorization': `Bearer ${DB_KEY}` }
@@ -590,24 +384,19 @@
             }
         }
 
-        // Atualiza a barra 1 -> 2 -> 3 -> 4 de forma interativa
         function atualizarPassos() {
             const nome = document.getElementById('nome').value.trim();
             const dataVal = document.getElementById('data').value;
 
-            // Passo 1: Serviço selecionado
             if (nomeServicoSelecionado) document.getElementById('step-1').classList.add('active');
             else document.getElementById('step-1').classList.remove('active');
 
-            // Passo 2: Data preenchida
             if (dataVal) document.getElementById('step-2').classList.add('active');
             else document.getElementById('step-2').classList.remove('active');
 
-            // Passo 3: Horário escolhido
             if (horarioSelecionado) document.getElementById('step-3').classList.add('active');
             else document.getElementById('step-3').classList.remove('active');
 
-            // Passo 4: Pronto para enviar
             if (nome && nomeServicoSelecionado && dataVal && horarioSelecionado) {
                 document.getElementById('step-4').classList.add('active');
             } else {
@@ -615,7 +404,6 @@
             }
         }
 
-        // Salva instantâneo em background e dispara pro Whatsapp do print
         async function salvarEIrProZap() {
             const nome = document.getElementById('nome').value.trim();
             const dataVal = document.getElementById('data').value;
@@ -635,7 +423,6 @@
                 preco: precoServicoSelecionado
             };
 
-            // Envio veloz sem travar a tela
             fetch(`${DB_URL}/rest/v1/agendamentos`, {
                 method: 'POST',
                 headers: { 
@@ -647,7 +434,6 @@
                 body: JSON.stringify(dadosAgendamento)
             }).catch(e => console.error("Erro background:", e));
 
-            // Mensagem de sucesso direta e imediata
             alert("Agendamento Confirmado! Redirecionando para o WhatsApp... ✨");
 
             const mensagemZap = `Olá Isadora! Gostaria de confirmar meu agendamento:%0A%0A👤 *Nome:* ${nome}%0A💅 *Serviço:* ${nomeServicoSelecionado}%0A📅 *Data:* ${dataFormatada}%0A🕒 *Horário:* ${horarioSelecionado}%0A💵 *Valor:* ${precoServicoSelecionado}`;
