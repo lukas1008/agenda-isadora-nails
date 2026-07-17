@@ -75,16 +75,17 @@
 
         async function carregarDados() {
             try {
-                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc`, {
+                const urlCompleta = DB_URL + "/rest/v1/agendamentos?select=*&order=data.asc";
+                const res = await fetch(urlCompleta, {
                     method: 'GET',
                     headers: {
                         'apikey': DB_KEY,
-                        'Authorization': `Bearer ${DB_KEY}`,
+                        'Authorization': 'Bearer ' + DB_KEY,
                         'Content-Type': 'application/json'
                     }
                 });
 
-                if (!res.ok) throw new Error(`Erro do servidor: ${res.status}`);
+                if (!res.ok) throw new Error("Erro do servidor: " + res.status);
                 const dados = await res.json();
 
                 if (!dados || dados.length === 0) {
@@ -150,14 +151,14 @@
             });
         }
 
-        // FUNÇÃO DE ATUALIZAÇÃO CORRIGIDA E ADAPTADA PARA O SUPABASE
         async function atualizar(id, status) {
             try {
-                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?id=eq.${id}`, {
+                const urlUpdate = DB_URL + "/rest/v1/agendamentos?id=eq." + id;
+                const res = await fetch(urlUpdate, {
                     method: 'PATCH',
                     headers: {
                         'apikey': DB_KEY,
-                        'Authorization': `Bearer ${DB_KEY}`,
+                        'Authorization': 'Bearer ' + DB_KEY,
                         'Content-Type': 'application/json',
                         'Prefer': 'return=representation'
                     },
@@ -166,11 +167,11 @@
 
                 if (!res.ok) {
                     const txtErro = await res.text();
-                    throw new Error(`Erro (${res.status}): ${txtErro}`);
+                    throw new Error("Erro " + res.status + ": " + txtErro);
                 }
 
-                alert(`Agendamento atualizado para ${status}!`);
-                carregarDados(); // Recarrega os dados na tela na hora
+                alert("Agendamento atualizado para " + status + "!");
+                carregarDados(); 
             } catch (err) {
                 alert("Não foi possível salvar: " + err.message);
             }
