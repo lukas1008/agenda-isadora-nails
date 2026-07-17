@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel ADM</title>
     <style>
-        /* Cores de fundo e fontes idênticas ao print */
         body { 
             background-color: #0b0d17; 
             color: #ffffff; 
@@ -43,7 +42,7 @@
             gap: 5px;
         }
 
-        /* Menu de Navegação Superior em Grade (2x2) */
+        /* Menu de Navegação Superior (Grade 2x2) */
         .nav-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -64,22 +63,22 @@
             align-items: center;
             gap: 10px;
             text-align: left;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Cor Roxa/Azul do Botão Selecionado */
         .nav-button.active {
             background: linear-gradient(135deg, #4f46e5, #3b82f6);
             color: #ffffff;
             border: none;
         }
 
-        /* Seções de Exibição */
+        /* CORREÇÃO AQUI: Forçando a ocultação correta das abas desativadas */
         .secao-conteudo {
-            display: none;
+            display: none !important;
         }
 
         .secao-conteudo.active {
-            display: block;
+            display: block !important;
         }
 
         /* Textos Principais */
@@ -95,7 +94,7 @@
             margin: 0 0 25px 0;
         }
 
-        /* Caixas de Estatísticas Grandes (Dashboard) */
+        /* Caixas de Estatísticas */
         .stat-container {
             background-color: #111422;
             border: 1px solid #1e2235;
@@ -137,7 +136,7 @@
             margin-top: 2px;
         }
 
-        /* Seção Próximos Atendimentos */
+        /* Título Próximos Atendimentos */
         .section-divider {
             display: flex;
             align-items: center;
@@ -150,7 +149,7 @@
             text-transform: uppercase;
         }
 
-        /* Cards de Agendamentos / Listagens */
+        /* Cards de Listagem */
         .card-atendimento {
             background-color: #111422;
             border: 1px solid #1e2235;
@@ -176,7 +175,6 @@
             color: #e2e8f0;
         }
 
-        /* Texto de Carregamento Solitário */
         .loading-box {
             text-align: center;
             color: #64748b;
@@ -187,7 +185,7 @@
 </head>
 <body>
 
-    <!-- Topo IDÊNTICO ao print -->
+    <!-- Topo -->
     <div class="header-top">
         <div class="brand-title">
             <span>🔹 Painel ADM</span>
@@ -195,7 +193,7 @@
         <a href="#" class="btn-sair">🔄 Sair</a>
     </div>
 
-    <!-- Menu em Grade 2x2 com os nomes exatos -->
+    <!-- Menu em Grade 2x2 -->
     <div class="nav-grid">
         <button id="btn-dashboard" class="nav-button active" onclick="alternarTela('dashboard')">📊 Dashboard</button>
         <button id="btn-agendamentos" class="nav-button" onclick="alternarTela('agendamentos')">📅 Agendamentos</button>
@@ -204,11 +202,10 @@
     </div>
 
     <!-- TELA 1: DASHBOARD -->
-    <div id="tela-dashboard" class="secaoconteudo active">
+    <div id="tela-dashboard" class="secao-conteudo active">
         <h2 class="main-title">Dashboard</h2>
         <p class="sub-title">Visão geral do seu salão</p>
 
-        <!-- Caixa 1: Agendamentos Ativos -->
         <div class="stat-container">
             <div class="stat-icon bg-blue-icon">📅</div>
             <div class="stat-details">
@@ -217,7 +214,6 @@
             </div>
         </div>
 
-        <!-- Caixa 2: Faturamento Estimado -->
         <div class="stat-container">
             <div class="stat-icon bg-green-icon">$</div>
             <div class="stat-details">
@@ -226,33 +222,31 @@
             </div>
         </div>
 
-        <!-- Título Próximos Atendimentos -->
         <div class="section-divider">
             <span>🕒 Próximos Atendimentos</span>
         </div>
 
-        <!-- Lista dinâmica abaixo do Dashboard -->
         <div id="lista-dashboard-atendimentos">
             <div class="loading-box">Buscando dados no banco...</div>
         </div>
     </div>
 
     <!-- TELA 2: AGENDAMENTOS COMPLETO -->
-    <div id="tela-agendamentos" class="secaoconteudo">
+    <div id="tela-agendamentos" class="secao-conteudo">
         <h2 class="main-title">Agendamentos</h2>
         <p class="sub-title">Lista Geral de Horários</p>
         <div id="lista-completa-agendamentos"></div>
     </div>
 
     <!-- TELA 3: CLIENTES -->
-    <div id="tela-clientes" class="secaoconteudo">
+    <div id="tela-clientes" class="secao-conteudo">
         <h2 class="main-title">Clientes</h2>
         <p class="sub-title">Histórico de Clientes Cadastradas</p>
         <div id="lista-completa-clientes"></div>
     </div>
 
     <!-- TELA 4: SERVIÇOS -->
-    <div id="tela-servicos" class="secaoconteudo">
+    <div id="tela-servicos" class="secao-conteudo">
         <h2 class="main-title">Serviços</h2>
         <p class="sub-title">Serviços Oferecidos</p>
         <div id="lista-completa-servicos"></div>
@@ -262,10 +256,10 @@
         const DB_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
         const DB_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
 
-        // Gerencia a troca de abas perfeitamente
+        // Alterna entre as telas escondendo as que não estão ativas
         function alternarTela(tela) {
             document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.secaoconteudo').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.secao-conteudo').forEach(s => s.classList.remove('active'));
 
             document.getElementById('btn-' + tela).classList.add('active');
             document.getElementById('tela-' + tela).classList.add('active');
@@ -288,7 +282,6 @@
                 const dados = await resposta.json();
 
                 if (dados && dados.length > 0) {
-                    // 1. Atualizar contadores do Dashboard com os termos exatos do print
                     document.getElementById('txt-ativos').innerText = dados.length;
                     
                     let somaValor = 0;
@@ -301,10 +294,9 @@
                     document.getElementById('txt-faturamento').innerText = 
                         somaValor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-                    // 2. Renderizar os cards na aba Dashboard (Próximos Atendimentos)
+                    // 1. Preenche o Dashboard (Próximos Atendimentos)
                     const listaDash = document.getElementById('lista-dashboard-atendimentos');
                     listaDash.innerHTML = "";
-                    
                     dados.forEach(item => {
                         const dataBR = item.data ? item.data.split('-').reverse().join('/') : '';
                         listaDash.innerHTML += `
@@ -318,10 +310,10 @@
                         `;
                     });
 
-                    // Copia para a aba específica de Agendamentos
+                    // 2. Preenche a Aba Agendamentos
                     document.getElementById('lista-completa-agendamentos').innerHTML = listaDash.innerHTML;
 
-                    // 3. Renderizar Clientes Unificadas
+                    // 3. Preenche a Aba Clientes
                     const listaClientes = document.getElementById('lista-completa-clientes');
                     listaClientes.innerHTML = "";
                     const unicos = [...new Set(dados.map(i => i.cliente_nome))].filter(Boolean);
@@ -335,7 +327,7 @@
                         `;
                     });
 
-                    // 4. Renderizar Serviços Disponíveis
+                    // 4. Preenche a Aba Serviços
                     const listaServicos = document.getElementById('lista-completa-servicos');
                     listaServicos.innerHTML = "";
                     const servicosUnicos = [...new Set(dados.map(i => i.servico))].filter(Boolean);
@@ -348,7 +340,6 @@
                         `;
                     });
                 } else {
-                    // Estado vazio padrão
                     document.getElementById('txt-ativos').innerText = "0";
                     document.getElementById('lista-dashboard-atendimentos').innerHTML = '<div class="loading-box">Nenhum atendimento agendado.</div>';
                 }
