@@ -722,19 +722,24 @@
                 preco: precoServicoSelecionado
             };
 
-            // CORREÇÃO: O agendamento agora é empurrado na hora para o cache temporário do painel ADM
+            // O agendamento é adicionado na hora para o cache temporário do painel ADM
             cacheAgendamentosAdmin.push(dadosAgendamento);
 
-            fetch(`${DB_URL}/rest/v1/agendamentos`, {
-                method: 'POST',
-                headers: { 
-                    'apikey': DB_KEY, 
-                    'Authorization': `Bearer ${DB_KEY}`, 
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
-                },
-                body: JSON.stringify(dadosAgendamento)
-            }).catch(e => console.error("Erro background:", e));
+            // Salva de forma garantida no Supabase
+            try {
+                await fetch(`${DB_URL}/rest/v1/agendamentos`, {
+                    method: 'POST',
+                    headers: { 
+                        'apikey': DB_KEY, 
+                        'Authorization': `Bearer ${DB_KEY}`, 
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(dadosAgendamento)
+                });
+            } catch(e) {
+                console.error("Erro ao salvar agendamento:", e);
+            }
 
             alert("Agendamento Confirmado! Redirecionando para o WhatsApp... ✨");
 
