@@ -70,6 +70,54 @@
             border-radius: 8px;
         }
 
+        /* Modal / Caixinha de Login Flutuante */
+        .modal-login {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background-color: #111422;
+            border: 1px solid #1e2235;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 365px;
+            padding: 24px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 18px; color: #64748b; cursor: pointer;
+        }
+
+        /* Painel ADM Interno */
+        #painel-adm-tela {
+            display: none;
+        }
+        .btn-voltar-cliente {
+            background-color: #1e2235;
+            color: white; border: none; padding: 10px 14px;
+            border-radius: 8px; font-weight: 600; cursor: pointer;
+            font-size: 13px; margin-bottom: 20px;
+        }
+        .tabela-container {
+            width: 100%; overflow-x: auto;
+            background-color: #111422; border: 1px solid #1e2235;
+            border-radius: 12px; margin-top: 15px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+        th, td { padding: 12px; border-bottom: 1px solid #1e2235; }
+        th { background-color: #161b30; color: #94a3b8; font-weight: 600; }
+        td { color: #e2e8f0; }
+
         /* Banner Principal */
         .hero-section { position: relative; margin-bottom: 25px; }
         .hero-title { font-size: 32px; font-weight: 800; margin: 0 0 5px 0; letter-spacing: 0.5px; }
@@ -158,178 +206,222 @@
 
     <div class="phone-container">
         
-        <!-- Topo da Marca com Menu Dropdown Corrigido -->
-        <div class="header">
-            <div class="logo-area">
-                <span class="logo-icon">💅</span>
-                <div class="logo-text">ISADORA <span>NAILS</span></div>
-            </div>
-            <div class="menu-container">
-                <div class="menu-hamburger" onclick="alternarMenuAdmin()">☰</div>
-                <div class="admin-dropdown" id="menu-admin">
-                    <a href="#" onclick="fazerLoginAdmin(event)">🔐 Painel ADM</a>
+        <!-- TELA DO CLIENTE (Agendamento) -->
+        <div id="tela-cliente">
+            <!-- Topo da Marca com Menu Dropdown -->
+            <div class="header">
+                <div class="logo-area">
+                    <span class="logo-icon">💅</span>
+                    <div class="logo-text">ISADORA <span>NAILS</span></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Banner de Boas Vindas -->
-        <div class="hero-section">
-            <h1 class="hero-title">ISADORA NAILS</h1>
-            <div class="hero-badge">Agendamento <span>Prático & Rápido</span></div>
-            <p class="hero-subtitle">Sua beleza, nossa prioridade! 💙</p>
-        </div>
-
-        <!-- Barra de Progresso / Passos -->
-        <div class="steps-container">
-            <div class="steps-line"></div>
-            <div class="step-item active" id="step-1">
-                <div class="step-circle">1</div>
-                <span class="step-label">Serviço</span>
-            </div>
-            <div class="step-item" id="step-2">
-                <div class="step-circle">2</div>
-                <span class="step-label">Data</span>
-            </div>
-            <div class="step-item" id="step-3">
-                <div class="step-circle">3</div>
-                <span class="step-label">Horário</span>
-            </div>
-            <div class="step-item" id="step-4">
-                <div class="step-circle">4</div>
-                <span class="step-label">Confirmar</span>
-            </div>
-        </div>
-
-        <!-- Área de Inputs -->
-        <div class="input-group">
-            <label for="nome">Qual seu nome completo?</label>
-            <input type="text" id="nome" class="input-control" placeholder="Digite seu nome completo..." oninput="atualizarPassos()">
-        </div>
-
-        <div class="input-group">
-            <label for="data">Selecione o Dia do Atendimento</label>
-            <input type="date" id="data" class="input-control" onchange="verificarHorariosDisponiveis()">
-        </div>
-        <div id="erro-domingo" class="alert-message">❌ Não atendemos aos domingos. Por favor, escolha outro dia útil!</div>
-
-        <!-- SEÇÃO 1: LISTA DE SERVIÇOS -->
-        <h2 class="section-title">Qual serviço você deseja?</h2>
-        <p class="section-subtitle">Selecione o serviço desejado</p>
-
-        <div class="services-list">
-            <div class="service-card" onclick="selecionarServico(this, 'Manicure', '27.00')">
-                <div class="service-info-left">
-                    <span class="service-img-icon">💅</span>
-                    <div class="service-details">
-                        <span class="service-name">Manicure</span>
-                        <span class="service-desc">Cuidados e esmaltação</span>
-                        <span class="service-time">🕒 40 min</span>
+                <div class="menu-container">
+                    <div class="menu-hamburger" onclick="alternarMenuAdmin(event)">☰</div>
+                    <div class="admin-dropdown" id="menu-admin">
+                        <a href="#" onclick="abrirModalLogin(event)">🔐 Painel ADM</a>
                     </div>
                 </div>
-                <div class="service-price-right">
-                    <span class="service-price">R$ 27,00</span>
-                    <div class="custom-radio"></div>
+            </div>
+
+            <!-- Banner de Boas Vindas -->
+            <div class="hero-section">
+                <h1 class="hero-title">ISADORA NAILS</h1>
+                <div class="hero-badge">Agendamento <span>Prático & Rápido</span></div>
+                <p class="hero-subtitle">Sua beleza, nossa prioridade! 💙</p>
+            </div>
+
+            <!-- Barra de Progresso / Passos -->
+            <div class="steps-container">
+                <div class="steps-line"></div>
+                <div class="step-item active" id="step-1">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Serviço</span>
+                </div>
+                <div class="step-item" id="step-2">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Data</span>
+                </div>
+                <div class="step-item" id="step-3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Horário</span>
+                </div>
+                <div class="step-item" id="step-4">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Confirmar</span>
                 </div>
             </div>
 
-            <div class="service-card" onclick="selecionarServico(this, 'Pedicure', '33.00')">
-                <div class="service-info-left">
-                    <span class="service-img-icon">👣</span>
-                    <div class="service-details">
-                        <span class="service-name">Pedicure</span>
-                        <span class="service-desc">Cuidados e esmaltação</span>
-                        <span class="service-time">🕒 50 min</span>
+            <!-- Área de Inputs -->
+            <div class="input-group">
+                <label for="nome">Qual seu nome completo?</label>
+                <input type="text" id="nome" class="input-control" placeholder="Digite seu nome completo..." oninput="atualizarPassos()">
+            </div>
+
+            <div class="input-group">
+                <label for="data">Selecione o Dia do Atendimento</label>
+                <input type="date" id="data" class="input-control" onchange="verificarHorariosDisponiveis()">
+            </div>
+            <div id="erro-domingo" class="alert-message">❌ Não atendemos aos domingos. Por favor, escolha outro dia útil!</div>
+
+            <!-- SEÇÃO 1: LISTA DE SERVIÇOS -->
+            <h2 class="section-title">Qual serviço você deseja?</h2>
+            <p class="section-subtitle">Selecione o serviço desejado</p>
+
+            <div class="services-list">
+                <div class="service-card" onclick="selecionarServico(this, 'Manicure', '27.00')">
+                    <div class="service-info-left">
+                        <span class="service-img-icon">💅</span>
+                        <div class="service-details">
+                            <span class="service-name">Manicure</span>
+                            <span class="service-desc">Cuidados e esmaltação</span>
+                            <span class="service-time">🕒 40 min</span>
+                        </div>
+                    </div>
+                    <div class="service-price-right">
+                        <span class="service-price">R$ 27,00</span>
+                        <div class="custom-radio"></div>
                     </div>
                 </div>
-                <div class="service-price-right">
-                    <span class="service-price">R$ 33,00</span>
-                    <div class="custom-radio"></div>
-                </div>
-            </div>
 
-            <div class="service-card" onclick="selecionarServico(this, 'Manicure + Pedicure', '60.00')">
-                <div class="service-info-left">
-                    <span class="service-img-icon">🔄</span>
-                    <div class="service-details">
-                        <span class="service-name">Manicure + Pedicure</span>
-                        <span class="service-desc">Pacote completo casadinha</span>
-                        <span class="service-time">🕒 1h 30 min</span>
+                <div class="service-card" onclick="selecionarServico(this, 'Pedicure', '33.00')">
+                    <div class="service-info-left">
+                        <span class="service-img-icon">👣</span>
+                        <div class="service-details">
+                            <span class="service-name">Pedicure</span>
+                            <span class="service-desc">Cuidados e esmaltação</span>
+                            <span class="service-time">🕒 50 min</span>
+                        </div>
+                    </div>
+                    <div class="service-price-right">
+                        <span class="service-price">R$ 33,00</span>
+                        <div class="custom-radio"></div>
                     </div>
                 </div>
-                <div class="service-price-right">
-                    <span class="service-price">R$ 60,00</span>
-                    <div class="custom-radio"></div>
-                </div>
-            </div>
 
-            <div class="service-card" onclick="selecionarServico(this, 'Unha Postiça', '30.00')">
-                <div class="service-info-left">
-                    <span class="service-img-icon">✨</span>
-                    <div class="service-details">
-                        <span class="service-name">Unha Postiça</span>
-                        <span class="service-desc">Alongamento e aplicação rápida</span>
-                        <span class="service-time">🕒 1h 20 min</span>
+                <div class="service-card" onclick="selecionarServico(this, 'Manicure + Pedicure', '60.00')">
+                    <div class="service-info-left">
+                        <span class="service-img-icon">🔄</span>
+                        <div class="service-details">
+                            <span class="service-name">Manicure + Pedicure</span>
+                            <span class="service-desc">Pacote completo casadinha</span>
+                            <span class="service-time">🕒 1h 30 min</span>
+                        </div>
+                    </div>
+                    <div class="service-price-right">
+                        <span class="service-price">R$ 60,00</span>
+                        <div class="custom-radio"></div>
                     </div>
                 </div>
-                <div class="service-price-right">
-                    <span class="service-price">R$ 30,00</span>
-                    <div class="custom-radio"></div>
+
+                <div class="service-card" onclick="selecionarServico(this, 'Unha Postiça', '30.00')">
+                    <div class="service-info-left">
+                        <span class="service-img-icon">✨</span>
+                        <div class="service-details">
+                            <span class="service-name">Unha Postiça</span>
+                            <span class="service-desc">Alongamento e aplicação rápida</span>
+                            <span class="service-time">🕒 1h 20 min</span>
+                        </div>
+                    </div>
+                    <div class="service-price-right">
+                        <span class="service-price">R$ 30,00</span>
+                        <div class="custom-radio"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- SEÇÃO 2: HORÁRIOS DISPONÍVEIS -->
-        <h2 class="section-title">Escolha o horário</h2>
-        <p class="section-subtitle">Intervalos de 1:30h (Disponíveis das 13:00 às 19:00)</p>
-        
-        <div class="horarios-grid" id="container-horarios">
-            <!-- Gerados via JS -->
-        </div>
+            <!-- SEÇÃO 2: HORÁRIOS DISPONÍVEIS -->
+            <h2 class="section-title">Escolha o horário</h2>
+            <p class="section-subtitle">Intervalos de 1:30h (Disponíveis das 13:00 às 19:00)</p>
+            
+            <div class="horarios-grid" id="container-horarios"></div>
 
-        <!-- Botão de Confirmação Principal -->
-        <button class="btn-primary" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
+            <!-- Botão de Confirmação Principal -->
+            <button class="btn-primary" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
 
-        <!-- SEÇÃO 3: AVALIAÇÕES -->
-        <h2 class="section-title">⭐ Avaliações</h2>
-        <div class="review-box">
-            <div class="review-left">
-                <span class="review-score">5,0</span>
-                <div class="review-stars">★★★★★</div>
-                <span class="review-count">+420 clientes completamente satisfeitas</span>
-                <button class="btn-ver-avaliacoes">Ver avaliações</button>
+            <!-- SEÇÃO 3: AVALIAÇÕES -->
+            <h2 class="section-title">⭐ Avaliações</h2>
+            <div class="review-box">
+                <div class="review-left">
+                    <span class="review-score">5,0</span>
+                    <div class="review-stars">★★★★★</div>
+                    <span class="review-count">+420 clientes completamente satisfeitas</span>
+                    <button class="btn-ver-avaliacoes">Ver avaliações</button>
+                </div>
+                <div class="review-grid-imgs">
+                    <img src="https://images.unsplash.com/photo-1604654894610-df4906947712?w=150&auto=format&fit=crop&q=60" alt="Unha 1">
+                    <img src="https://images.unsplash.com/photo-1632345031435-8797b2d58045?w=150&auto=format&fit=crop&q=60" alt="Unha 2">
+                    <img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=150&auto=format&fit=crop&q=60" alt="Unha 3">
+                    <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150&auto=format&fit=crop&q=60" alt="Unha 4">
+                </div>
             </div>
-            <div class="review-grid-imgs">
-                <img src="https://images.unsplash.com/photo-1604654894610-df4906947712?w=150&auto=format&fit=crop&q=60" alt="Unha 1">
-                <img src="https://images.unsplash.com/photo-1632345031435-8797b2d58045?w=150&auto=format&fit=crop&q=60" alt="Unha 2">
-                <img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=150&auto=format&fit=crop&q=60" alt="Unha 3">
-                <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150&auto=format&fit=crop&q=60" alt="Unha 4">
+
+            <!-- SEÇÃO 4: NOSSO ESPAÇO -->
+            <div class="space-box">
+                <div class="space-info">
+                    <div class="space-title-row">📍 Nosso Espaço</div>
+                    <div class="space-text">Ambiente confortável e preparado para te receber com muito carinho.</div>
+                    <a href="https://maps.google.com" target="_blank" class="btn-maps">Abrir no Google Maps</a>
+                </div>
+                <img src="https://i.postimg.cc/FK2jhhsW/2fca5ab4-ec17-4a1b-9ed8-cd297a40a7d5.jpg" class="space-img" alt="Nosso Espaço">
+            </div>
+
+            <!-- Selo de Segurança -->
+            <div class="secure-footer">
+                <span style="font-size: 20px;">🛡️</span>
+                <div>
+                    <strong>Agendamento Seguro</strong><br>
+                    Seus dados estão protegidos e seu horário garantido!
+                </div>
+            </div>
+
+            <!-- Rodapé Redes Sociais -->
+            <div class="social-title-bottom">Fale Conosco</div>
+            <div class="social-row">
+                <a href="https://wa.me/5588981215376" class="social-btn bg-whatsapp" target="_blank">WhatsApp</a>
+                <a href="https://www.instagram.com/isadora_nails.designer" class="social-btn bg-instagram" target="_blank">Instagram</a>
             </div>
         </div>
 
-        <!-- SEÇÃO 4: NOSSO ESPAÇO -->
-        <div class="space-box">
-            <div class="space-info">
-                <div class="space-title-row">📍 Nosso Espaço</div>
-                <div class="space-text">Ambiente confortável e preparado para te receber com muito carinho.</div>
-                <a href="https://maps.google.com" target="_blank" class="btn-maps">Abrir no Google Maps</a>
+        <!-- TELA INTERNA DO PAINEL ADM (Só aparece após login correto) -->
+        <div id="painel-adm-tela">
+            <button class="btn-voltar-cliente" onclick="sairDoPainel()">⬅ Sair do Painel</button>
+            <h2 class="section-title">📅 Seus Agendamentos</h2>
+            <p class="section-subtitle">Lista de clientes agendados no sistema:</p>
+            
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Data</th>
+                            <th>Horário</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-agendamentos-adm">
+                        <!-- Linhas preenchidas dinamicamente -->
+                    </tbody>
+                </table>
             </div>
-            <img src="https://i.postimg.cc/FK2jhhsW/2fca5ab4-ec17-4a1b-9ed8-cd297a40a7d5.jpg" class="space-img" alt="Nosso Espaço">
         </div>
 
-        <!-- Selo de Segurança -->
-        <div class="secure-footer">
-            <span style="font-size: 20px;">🛡️</span>
-            <div>
-                <strong>Agendamento Seguro</strong><br>
-                Seus dados estão protegidos e seu horário garantido!
-            </div>
-        </div>
+        <!-- MODAL CAIXINHA DE LOGIN FLUTUANTE -->
+        <div class="modal-login" id="modal-login-adm">
+            <div class="modal-content">
+                <span class="modal-close" onclick="fecharModalLogin()">✕</span>
+                <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 18px; font-weight: 700;">Acesso Restrito ADM</h3>
+                
+                <div class="input-group">
+                    <label>E-mail do Administrador:</label>
+                    <input type="email" id="login-email" class="input-control" placeholder="exemplo@gmail.com">
+                </div>
+                
+                <div class="input-group" style="margin-bottom: 24px;">
+                    <label>Senha:</label>
+                    <input type="password" id="login-senha" class="input-control" placeholder="••••••••">
+                </div>
 
-        <!-- Rodapé Redes Sociais -->
-        <div class="social-title-bottom">Fale Conosco</div>
-        <div class="social-row">
-            <a href="https://wa.me/5588981215376" class="social-btn bg-whatsapp" target="_blank">WhatsApp</a>
-            <a href="https://www.instagram.com/isadora_nails.designer" class="social-btn bg-instagram" target="_blank">Instagram</a>
+                <button class="btn-primary" style="margin-bottom: 0; padding: 14px;" onclick="validarAcessoAdmin()">ENTRAR NO PAINEL</button>
+            </div>
         </div>
 
     </div>
@@ -350,35 +442,83 @@
             document.getElementById('data').min = hoje;
             renderizarGradeHorarios([]);
             
-            document.addEventListener('click', function(event) {
-                const menuContainer = document.querySelector('.menu-container');
-                if (!menuContainer.contains(event.target)) {
-                    document.getElementById('menu-admin').style.display = 'none';
-                }
+            // Fecha o menu suspenso ao clicar em qualquer outro canto
+            document.addEventListener('click', function() {
+                document.getElementById('menu-admin').style.display = 'none';
             });
         };
 
-        function alternarMenuAdmin() {
+        function alternarMenuAdmin(event) {
+            event.stopPropagation();
             const menu = document.getElementById('menu-admin');
             menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         }
 
-        // Validação usando suas credenciais oficiais do Supabase
-        function fazerLoginAdmin(event) {
+        function abrirModalLogin(event) {
             event.preventDefault();
             document.getElementById('menu-admin').style.display = 'none';
-            
-            const emailDigitado = prompt("Digite o e-mail do Administrador:");
-            if (!emailDigitado) return;
-            
-            const senhaDigitada = prompt("Digite a sua senha:");
-            if (!senhaDigitada) return;
-            
-            if (emailDigitado.trim() === "isadoragomes.luk@gmail.com" && senhaDigitada === "lukisa1008") {
-                alert("🔓 Autenticado com sucesso! Redirecionando para o painel de controle...");
-                window.open("https://supabase.com/dashboard", "_blank");
+            document.getElementById('modal-login-adm').style.display = 'flex';
+        }
+
+        function fecharModalLogin() {
+            document.getElementById('modal-login-adm').style.display = 'none';
+            document.getElementById('login-email').value = "";
+            document.getElementById('login-senha').value = "";
+        }
+
+        // Validação Inteligente das suas Credenciais Reais
+        async function validarAcessoAdmin() {
+            const email = document.getElementById('login-email').value.trim();
+            const senha = document.getElementById('login-senha').value;
+
+            if (email === "isadoragomes.luk@gmail.com" && senha === "lukisa1008") {
+                fecharModalLogin();
+                document.getElementById('tela-cliente').style.display = 'none';
+                document.getElementById('painel-adm-tela').style.display = 'block';
+                
+                // Carrega os agendamentos diretamente do seu Banco Supabase
+                carregarAgendamentosNoPainel();
             } else {
-                alert("❌ E-mail ou Senha incorretos! Tente novamente.");
+                alert("❌ E-mail ou Senha inválidos!");
+            }
+        }
+
+        function sairDoPainel() {
+            document.getElementById('painel-adm-tela').style.display = 'none';
+            document.getElementById('tela-cliente').style.display = 'block';
+        }
+
+        // Função que busca dados reais do seu Supabase e monta a tabela na hora
+        async function carregarAgendamentosNoPainel() {
+            const tabelaCorpo = document.getElementById('lista-agendamentos-adm');
+            tabelaCorpo.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Carregando...</td></tr>";
+
+            try {
+                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc,horario.asc`, {
+                    method: 'GET',
+                    headers: { 'apikey': DB_KEY, 'Authorization': `Bearer ${DB_KEY}` }
+                });
+                const dados = await res.json();
+                tabelaCorpo.innerHTML = "";
+
+                if(dados.length === 0) {
+                    tabelaCorpo.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Nenhum agendamento encontrado.</td></tr>";
+                    return;
+                }
+
+                dados.forEach(item => {
+                    const dataBr = item.data.split('-').reverse().join('/');
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${item.cliente_nome}</strong></td>
+                        <td>${item.servico}</td>
+                        <td>${dataBr}</td>
+                        <td><span style="color:#3b82f6; font-weight:600;">${item.horario}</span></td>
+                    `;
+                    tabelaCorpo.appendChild(tr);
+                });
+            } catch (err) {
+                tabelaCorpo.innerHTML = "<tr><td colspan='4' style='text-align:center; color:#f87171;'>Erro ao carregar do banco.</td></tr>";
             }
         }
 
