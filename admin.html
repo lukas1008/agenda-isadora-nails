@@ -9,7 +9,7 @@
         h1 { font-size: 20px; margin-bottom: 5px; }
         p.sub { color: #8892b0; font-size: 12px; margin: 0 0 20px 0; }
         .menu { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn { flex: 1; padding: 15px; background: #1e293b; border: 2px solid #334155; color: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center; -webkit-tap-highlight-color: transparent; }
+        .btn { flex: 1; padding: 15px; background: #1e293b; border: 2px solid #334155; color: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center; }
         .btn.active { background: #2563eb; border-color: #3b82f6; }
         .secao { display: none; background: #111827; border: 1px solid #1f2937; padding: 15px; border-radius: 8px; }
         .secao.active { display: block; }
@@ -19,9 +19,24 @@
         .nome { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
         .info { font-size: 13px; color: #9ca3af; line-height: 1.4; }
         .status-erro { background: #7f1d1d; border: 1px solid #f87171; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; }
-        .btn-acao { border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; margin-top: 12px; cursor: pointer; color: white; font-size: 14px; -webkit-tap-highlight-color: transparent; display: inline-block; }
+        
+        /* Botões maiores e com área de clique expandida para dedos no celular */
+        .btn-container { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-acao { 
+            flex: 1;
+            border: none; 
+            padding: 16px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: white; 
+            font-size: 15px; 
+            text-align: center;
+            display: block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
         .btn-confirmar { background: #10b981; }
-        .btn-cancelar { background: #ef4444; margin-left: 10px; }
+        .btn-cancelar { background: #ef4444; }
     </style>
 </head>
 <body>
@@ -119,7 +134,7 @@
                 if (status === 'cancelado') clStatus = "cancelado";
                 const dataBR = item.data ? item.data.split('-').reverse().join('/') : '';
 
-                // Usamos onclick E touchstart para forçar o clique em celulares antigos e novos
+                // Criamos os botões com IDs específicos para capturar o clique via JavaScript puro
                 container.innerHTML += `
                     <div class="card ${clStatus}">
                         <div class="nome">${item.cliente_nome || 'Sem Nome'}</div>
@@ -129,19 +144,33 @@
                             <strong>Status:</strong> ${item.status || 'Pendente'}
                         </div>
                         ${status === 'pendente' ? `
-                            <button class="btn-acao btn-confirmar" 
-                                    onclick="atualizar(${item.id}, 'Confirmado')" 
-                                    ontouchstart="atualizar(${item.id}, 'Confirmado')">
-                                Confirmar
-                            </button>
-                            <button class="btn-acao btn-cancelar" 
-                                    onclick="atualizar(${item.id}, 'Cancelar')" 
-                                    ontouchstart="atualizar(${item.id}, 'Cancelar')">
-                                Cancelar
-                            </button>
+                            <div class="btn-container">
+                                <button class="btn-acao btn-confirmar" data-id="${item.id}" data-status="Confirmado">
+                                    Confirmar
+                                </button>
+                                <button class="btn-acao btn-cancelar" data-id="${item.id}" data-status="Cancelar">
+                                    Cancelar
+                                </button>
+                            </div>
                         ` : ''}
                     </div>
                 `;
+            });
+
+            // Adiciona o escutador de eventos para cliques/toques físicos nos botões
+            configurarCliquesCelular();
+        }
+
+        function configurarCliquesCelular() {
+            const botoes = document.querySelectorAll('.btn-acao');
+            botoes.forEach(botao => {
+                // Esse evento escuta tanto o clique do mouse quanto o toque rápido de dedos no iPhone
+                botao.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const id = this.getAttribute('data-id');
+                    const status = this.getAttribute('data-status');
+                    atualizarStatus(id, status);
+                });
             });
         }
 
@@ -160,16 +189,12 @@
             });
         }
 
-        async function atualizar(id, status) {
-            // Pequeno truque para evitar disparar o clique duas vezes por conta do touchstart
-            if (window.estaProcessando) return;
-            window.estaProcessando = true;
-
+        async function atualizarStatus(id, status) {
             try {
-                // Mostra um aviso visual imediato de que está salvando
+                // Alerta visual no topo avisando que começou a salvar
                 document.getElementById('alertas').innerHTML = `
                     <div class="status-erro" style="background: #1e3a8a; border-color: #3b82f6; color: #dbeafe;">
-                        Salvando alteração para "${status}"... por favor aguarde.
+                        Processando... alterando agendamento para "${status}".
                     </div>
                 `;
 
@@ -190,23 +215,16 @@
                     throw new Error("Erro " + res.status + ": " + txtErro);
                 }
 
-                // Alerta de sucesso nativo
-                alert("Agendamento atualizado com sucesso!");
-                document.getElementById('alertas').innerHTML = ""; // Limpa o aviso
-                
-                // Recarrega os dados na tela
-                await carregarDados(); 
+                alert("Agendamento atualizado para " + status + "!");
+                document.getElementById('alertas').innerHTML = ""; 
+                carregarDados(); 
             } catch (err) {
-                // Se der erro do banco (permissão RLS), o alerta vai abrir e nos avisar!
-                alert("Erro ao salvar no banco: " + err.message);
+                alert("Erro ao salvar: " + err.message);
                 document.getElementById('alertas').innerHTML = `
                     <div class="status-erro">
                         <strong>Falha ao Salvar:</strong> ${err.message}
                     </div>
                 `;
-            } finally {
-                // Libera para novos cliques após 1 segundo
-                setTimeout(() => { window.estaProcessando = false; }, 1000);
             }
         }
     </script>
