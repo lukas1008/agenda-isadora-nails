@@ -722,6 +722,9 @@
                 preco: precoServicoSelecionado
             };
 
+            // CORREÇÃO: O agendamento agora é empurrado na hora para o cache temporário do painel ADM
+            cacheAgendamentosAdmin.push(dadosAgendamento);
+
             fetch(`${DB_URL}/rest/v1/agendamentos`, {
                 method: 'POST',
                 headers: { 
