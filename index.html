@@ -244,24 +244,24 @@
             </div>
         </div>
 
-        <!-- SEÇÃO 2: HORÁRIOS DISPONÍVEIS (INTERVALO DE 1H30) -->
+        <!-- SEÇÃO 2: HORÁRIOS DISPONÍVEIS -->
         <h2 class="section-title">Escolha o horário</h2>
         <p class="section-subtitle">Intervalos de 1:30h (Disponíveis das 13:00 às 19:00)</p>
         
         <div class="horarios-grid" id="container-horarios">
-            <!-- Gerados dinamicamente via JS de 1:30 em 1:30 -->
+            <!-- Gerados via JS -->
         </div>
 
         <!-- Botão de Confirmação Principal -->
         <button class="btn-primary" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
 
-        <!-- SEÇÃO 3: AVALIAÇÕES -->
+        <!-- SEÇÃO 3: AVALIAÇÕES (NOTA MÁXIMA 5.0) -->
         <h2 class="section-title">⭐ Avaliações</h2>
         <div class="review-box">
             <div class="review-left">
-                <span class="review-score">4,9</span>
+                <span class="review-score">5,0</span>
                 <div class="review-stars">★★★★★</div>
-                <span class="review-count">+380 clientes atendidas</span>
+                <span class="review-count">+420 clientes completamente satisfeitas</span>
                 <button class="btn-ver-avaliacoes">Ver avaliações</button>
             </div>
             <div class="review-grid-imgs">
@@ -291,12 +291,12 @@
             </div>
         </div>
 
-        <!-- CORREÇÃO DAS REDES SOCIAIS -->
+        <!-- Rodapé Redes Sociais -->
         <div class="social-title-bottom">Fale Conosco</div>
         <div class="social-row">
             <a href="https://wa.me/5588981215376" class="social-btn bg-whatsapp" target="_blank">WhatsApp</a>
-            <!-- LINK DO INSTAGRAM AJUSTADO AQUI: -->
-            <a href="https://instagram.com" class="social-btn bg-instagram" target="_blank">Instagram</a>
+            <!-- SEU LINK DO INSTAGRAM ADICIONADO AQUI: -->
+            <a href="https://www.instagram.com/isadora_nails.designer" class="social-btn bg-instagram" target="_blank">Instagram</a>
         </div>
 
     </div>
@@ -306,7 +306,7 @@
         const DB_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
         const WHATSAPP_NUMERO = "5588981215376"; 
 
-        // LISTA DE HORÁRIOS COM INTERVALOS EXATOS DE 1:30 (Expediente das 13h às 19h)
+        // Janelas exatas com 1:30h de intervalo
         const turnosExpediente = ["13:00", "14:30", "16:00", "17:30", "19:00"];
         
         let nomeServicoSelecionado = "";
