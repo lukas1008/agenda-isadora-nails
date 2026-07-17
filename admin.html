@@ -3,391 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Simplificado - Isadora Nails</title>
-    <!-- Fontes e Ícones -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Script do Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <title>Painel Isadora Nails</title>
     <style>
-        :root {
-            --bg-principal: #090a0f;
-            --bg-card: #121420;
-            --cor-primaria: #2563eb;
-            --cor-secundaria: #7c3aed;
-            --texto-claro: #ffffff;
-            --texto-cinza: #94a3b8;
-            --border-color: #1e293b;
-            --cor-sucesso: #10b981;
-            --cor-perigo: #ef4444;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-principal);
-            color: var(--texto-claro);
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 430px;
-            background-color: var(--bg-principal);
-            min-height: 100vh;
-            padding: 20px;
-            padding-bottom: 60px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 20px;
-        }
-
-        .logo h1 {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .logo span {
-            font-size: 11px;
-            color: var(--cor-primaria);
-            font-weight: 600;
-        }
-
-        /* Menu ultra simples e que NÃO trava */
-        .menu {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .menu-btn {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--texto-cinza);
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .menu-btn.active {
-            background-color: var(--cor-primaria);
-            color: white;
-            border-color: var(--cor-primaria);
-        }
-
-        /* Seções */
-        .secao {
-            display: none;
-        }
-
-        .secao.active {
-            display: block;
-        }
-
-        h2 {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-
-        /* Cards de Agendamento */
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .cliente-nome {
-            font-weight: 700;
-            font-size: 15px;
-        }
-
-        .status {
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .status-pendente { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .status-confirmado { background: rgba(16, 185, 129, 0.2); color: var(--cor-sucesso); }
-        .status-cancelado { background: rgba(239, 68, 68, 0.2); color: var(--cor-perigo); }
-
-        .detalhes {
-            font-size: 13px;
-            color: var(--texto-cinza);
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .detalhes a {
-            color: var(--cor-sucesso);
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .acoes {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .btn-acao {
-            padding: 8px;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-confirmar { background-color: var(--cor-sucesso); color: white; }
-        .btn-cancelar { background-color: rgba(239, 68, 68, 0.15); color: var(--cor-perigo); border: 1px solid var(--cor-perigo); }
-
-        /* Alertas e avisos */
-        .aviso {
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-        }
-
-        .erro-box {
-            background-color: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--cor-perigo);
-            color: #fca5a5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            text-align: left;
-        }
+        body { background-color: #0b0f19; color: #ffffff; font-family: sans-serif; padding: 15px; margin: 0; }
+        h1 { font-size: 20px; margin-bottom: 5px; }
+        p.sub { color: #8892b0; font-size: 12px; margin: 0 0 20px 0; }
+        .menu { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn { flex: 1; padding: 15px; background: #1e293b; border: 2px solid #334155; color: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center; }
+        .btn.active { background: #2563eb; border-color: #3b82f6; }
+        .secao { display: none; background: #111827; border: 1px solid #1f2937; padding: 15px; border-radius: 8px; }
+        .secao.active { display: block; }
+        .card { background: #1f2937; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid #f59e0b; }
+        .card.confirmado { border-left-color: #10b981; }
+        .card.cancelado { border-left-color: #ef4444; }
+        .nome { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .info { font-size: 13px; color: #9ca3af; line-height: 1.4; }
+        .status-erro { background: #7f1d1d; border: 1px solid #f87171; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; }
+        .btn-acao { border: none; padding: 8px 12px; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer; color: white; }
+        .btn-confirmar { background: #10b981; }
+        .btn-cancelar { background: #ef4444; margin-left: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <div class="logo">
-                <h1>ISADORA NAILS</h1>
-                <span>PAINEL ADMINISTRATIVO</span>
-            </div>
-            <a href="index.html" style="color: var(--texto-cinza); text-decoration: none; font-size: 14px;">Sair</a>
-        </header>
+    <h1>ISADORA NAILS</h1>
+    <p class="sub">Painel Administrativo Simplificado</p>
 
-        <!-- Menu simples -->
-        <div class="menu">
-            <button id="btn-agendamentos" class="menu-btn active" onclick="mudarAba('agendamentos')">Agendamentos</button>
-            <button id="btn-clientes" class="menu-btn" onclick="mudarAba('clientes')">Clientes</button>
+    <div class="menu">
+        <button id="btn-agenda" class="btn active" onclick="trocarAba('agenda')">Agendamentos</button>
+        <button id="btn-cli" class="btn" onclick="trocarAba('cli')">Clientes</button>
+    </div>
+
+    <div id="alertas"></div>
+
+    <div id="sec-agenda" class="secao active">
+        <h3 style="margin:0 0 10px 0;">Todos os Pedidos</h3>
+        <div id="lista-agenda">
+            <p style="color: #9ca3af;">Conectando ao Supabase...</p>
         </div>
+    </div>
 
-        <!-- Área de mensagens e diagnósticos -->
-        <div id="status-conexao"></div>
-
-        <!-- ABA 1: AGENDAMENTOS -->
-        <section id="aba-agendamentos" class="secao active">
-            <h2>Todos os Pedidos</h2>
-            <div id="lista-agendamentos">
-                <div class="aviso">Carregando lista de agendamentos...</div>
-            </div>
-        </section>
-
-        <!-- ABA 2: CLIENTES -->
-        <section id="aba-clientes" class="secao">
-            <h2>Suas Clientes</h2>
-            <div id="lista-clientes">
-                <div class="aviso">Carregando lista de clientes...</div>
-            </div>
-        </section>
+    <div id="sec-cli" class="secao">
+        <h3 style="margin:0 0 10px 0;">Lista de Clientes</h3>
+        <div id="lista-cli">
+            <p style="color: #9ca3af;">Carregando clientes...</p>
+        </div>
     </div>
 
     <script>
-        // Configurações do Supabase
-        const SUPABASE_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
+        const DB_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
+        const DB_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
 
-        let supabase = null;
+        function trocarAba(nome) {
+            document.getElementById('btn-agenda').classList.remove('active');
+            document.getElementById('btn-cli').classList.remove('active');
+            document.getElementById('sec-agenda').classList.remove('active');
+            document.getElementById('sec-cli').classList.remove('active');
 
-        // 1. Alternador de abas super rápido e simples
-        function mudarAba(nomeAba) {
-            // Remove active dos botões
-            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            // Remove active das seções
-            document.querySelectorAll('.secao').forEach(s => s.classList.remove('active'));
-
-            // Ativa o botão correto
-            document.getElementById(`btn-${nomeAba}`).classList.add('active');
-            // Ativa a seção correta
-            document.getElementById(`aba-${nomeAba}`).classList.add('active');
-        }
-
-        // 2. Tenta conectar ao carregar a página
-        document.addEventListener("DOMContentLoaded", () => {
-            inicializarConexao();
-        });
-
-        function inicializarConexao() {
-            try {
-                if (typeof window.supabase === 'undefined') {
-                    exibirErro("A biblioteca do Supabase não foi carregada. Verifique sua conexão com a internet.");
-                    return;
-                }
-
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-                    auth: { persistSession: false }
-                });
-
-                buscarDadosDoBanco();
-            } catch (err) {
-                exibirErro("Erro ao iniciar Supabase: " + err.message);
+            if (nome === 'agenda') {
+                document.getElementById('btn-agenda').classList.add('active');
+                document.getElementById('sec-agenda').classList.add('active');
+            } else {
+                document.getElementById('btn-cli').classList.add('active');
+                document.getElementById('sec-cli').classList.add('active');
             }
         }
 
-        // 3. Puxa os dados do Supabase de forma segura
-        async function buscarDadosDoBanco() {
+        window.onload = function() {
+            carregarDados();
+        };
+
+        async function carregarDados() {
             try {
-                let { data: agendamentos, error } = await supabase
-                    .from('agendamentos')
-                    .select('*')
-                    .order('data', { ascending: true });
+                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': DB_KEY,
+                        'Authorization': `Bearer ${DB_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-                if (error) throw error;
+                if (!res.ok) throw new Error(`Erro do servidor: ${res.status}`);
+                const dados = await res.json();
 
-                if (!agendamentos || agendamentos.length === 0) {
-                    exibirAvisoSemDados();
+                if (!dados || dados.length === 0) {
+                    document.getElementById('lista-agenda').innerHTML = "<p>Nenhum registro encontrado.</p>";
+                    document.getElementById('lista-cli').innerHTML = "<p>Nenhuma cliente encontrada.</p>";
                     return;
                 }
 
-                // Limpa avisos de carregamento se deu certo
-                document.getElementById('status-conexao').innerHTML = "";
-
-                renderizarAgendamentos(agendamentos);
-                renderizarClientes(agendamentos);
+                renderizarAgenda(dados);
+                renderizarClientes(dados);
 
             } catch (err) {
                 console.error(err);
-                exibirErro(err.message || "Erro desconhecido ao carregar dados.");
+                document.getElementById('alertas').innerHTML = `
+                    <div class="status-erro">
+                        <strong>Erro de Conexão:</strong> ${err.message}
+                    </div>
+                `;
+                document.getElementById('lista-agenda').innerHTML = "<p style='color: #ef4444;'>Falha ao carregar.</p>";
+                document.getElementById('lista-cli').innerHTML = "<p style='color: #ef4444;'>Falha ao carregar.</p>";
             }
         }
 
-        // 4. Mostra o erro na tela sem quebrar o layout
-        function exibirErro(msg) {
-            document.getElementById('status-conexao').innerHTML = `
-                <div class="erro-box">
-                    <strong>⚠️ Falha de conexão:</strong><br>
-                    <span>${msg}</span>
-                </div>
-            `;
-            // Atualiza os placeholders
-            document.getElementById('lista-agendamentos').innerHTML = `<div class="aviso" style="color: var(--cor-perigo);">Não foi possível carregar os agendamentos.</div>`;
-            document.getElementById('lista-clientes').innerHTML = `<div class="aviso" style="color: var(--cor-perigo);">Não foi possível carregar as clientes.</div>`;
-        }
-
-        function exibirAvisoSemDados() {
-            const html = `<div class="aviso">Nenhum registro encontrado no banco de dados.</div>`;
-            document.getElementById('lista-agendamentos').innerHTML = html;
-            document.getElementById('lista-clientes').innerHTML = html;
-        }
-
-        // 5. Renderiza a lista de agendamentos
-        function renderizarAgendamentos(lista) {
-            const container = document.getElementById('lista-agendamentos');
+        function renderizarAgenda(dados) {
+            const container = document.getElementById('lista-agenda');
             container.innerHTML = "";
-
-            lista.forEach(item => {
-                const dataFormatada = item.data ? item.data.split('-').reverse().join('/') : '';
-                const statusLower = String(item.status || 'Pendente').toLowerCase();
-                const statusClass = statusLower === 'confirmado' ? 'status-confirmado' : (statusLower === 'cancelado' ? 'status-cancelado' : 'status-pendente');
-                const zapFormatado = item.whatsapp ? item.whatsapp.replace(/[^\d]/g, '') : '';
+            dados.forEach(item => {
+                const status = String(item.status || 'Pendente').toLowerCase();
+                let clStatus = "";
+                if (status === 'confirmado') clStatus = "confirmado";
+                if (status === 'cancelado') clStatus = "cancelado";
+                const dataBR = item.data ? item.data.split('-').reverse().join('/') : '';
 
                 container.innerHTML += `
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="cliente-nome">${item.cliente_nome || 'Sem Nome'}</span>
-                            <span class="status ${statusClass}">${item.status || 'Pendente'}</span>
+                    <div class="card ${clStatus}">
+                        <div class="nome">${item.cliente_nome || 'Sem Nome'}</div>
+                        <div class="info">
+                            <strong>Serviço:</strong> ${item.servico || '-'}<br>
+                            <strong>Data:</strong> ${dataBR} às ${item.horario || '--:--'}<br>
+                            <strong>Status:</strong> ${item.status || 'Pendente'}
                         </div>
-                        <div class="detalhes">
-                            <strong>Serviço:</strong> ${item.servico || 'Não informado'}<br>
-                            <strong>Data/Hora:</strong> ${dataFormatada} às ${item.horario || '--:--'}<br>
-                            <strong>Preço:</strong> ${item.preco || 'R$ 0,00'}<br>
-                            ${zapFormatado ? `<strong>WhatsApp:</strong> <a href="https://wa.me/55${zapFormatado}" target="_blank">Conversar</a>` : ''}
-                        </div>
-                        ${statusLower === 'pendente' ? `
-                        <div class="acoes">
-                            <button class="btn-acao btn-confirmar" onclick="atualizarStatus(${item.id}, 'Confirmado')">Confirmar</button>
-                            <button class="btn-acao btn-cancelar" onclick="atualizarStatus(${item.id}, 'Cancelado')">Cancelar</button>
-                        </div>
+                        ${status === 'pendente' ? `
+                            <button class="btn-acao btn-confirmar" onclick="atualizar(${item.id}, 'Confirmado')">Confirmar</button>
+                            <button class="btn-acao btn-cancelar" onclick="atualizar(${item.id}, 'Cancelar')">Cancelar</button>
                         ` : ''}
                     </div>
                 `;
             });
         }
 
-        // 6. Renderiza a lista de clientes únicas
-        function renderizarClientes(lista) {
-            const container = document.getElementById('lista-clientes');
+        function renderizarClientes(dados) {
+            const container = document.getElementById('lista-cli');
             container.innerHTML = "";
-
-            const nomesUnicos = [...new Set(lista.map(item => item.cliente_nome))].filter(Boolean);
-
-            nomesUnicos.forEach(nome => {
-                const totalAgendados = lista.filter(item => item.cliente_nome === nome).length;
+            const unicos = [...new Set(dados.map(i => i.cliente_nome))].filter(Boolean);
+            unicos.forEach(nome => {
+                const total = dados.filter(i => i.cliente_nome === nome).length;
                 container.innerHTML += `
-                    <div class="card">
-                        <div class="cliente-nome">${nome}</div>
-                        <div class="detalhes" style="margin-top: 5px; margin-bottom: 0;">
-                            Total de visitas: ${totalAgendados}
-                        </div>
+                    <div class="card confirmado" style="border-left-width: 2px;">
+                        <div class="nome">${nome}</div>
+                        <div class="info">Total de visitas: ${total}</div>
                     </div>
                 `;
             });
         }
 
-        // 7. Salva alterações de status
-        async function atualizarStatus(id, novoStatus) {
+        async function atualizar(id, status) {
             try {
-                const { error } = await supabase
-                    .from('agendamentos')
-                    .update({ status: novoStatus })
-                    .eq('id', id);
-
-                if (error) throw error;
-
-                alert(`Agendamento ${novoStatus.toLowerCase()}!`);
-                buscarDadosDoBanco();
+                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': DB_KEY,
+                        'Authorization': `Bearer ${DB_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ status: status })
+                });
+                if (!res.ok) throw new Error("Erro ao atualizar.");
+                alert("Atualizado com sucesso!");
+                carregarDados();
             } catch (err) {
-                alert("Erro ao salvar: " + err.message);
+                alert(err.message);
             }
         }
     </script>
