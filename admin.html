@@ -19,9 +19,9 @@
         .nome { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
         .info { font-size: 13px; color: #9ca3af; line-height: 1.4; }
         .status-erro { background: #7f1d1d; border: 1px solid #f87171; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; }
-        .btn-acao { border: none; padding: 8px 12px; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer; color: white; }
+        .btn-acao { border: none; padding: 12px 18px; border-radius: 6px; font-weight: bold; margin-top: 12px; cursor: pointer; color: white; font-size: 14px; }
         .btn-confirmar { background: #10b981; }
-        .btn-cancelar { background: #ef4444; margin-left: 5px; }
+        .btn-cancelar { background: #ef4444; margin-left: 10px; }
     </style>
 </head>
 <body>
@@ -150,6 +150,7 @@
             });
         }
 
+        // FUNÇÃO DE ATUALIZAÇÃO CORRIGIDA E ADAPTADA PARA O SUPABASE
         async function atualizar(id, status) {
             try {
                 const res = await fetch(`${DB_URL}/rest/v1/agendamentos?id=eq.${id}`, {
@@ -158,15 +159,20 @@
                         'apikey': DB_KEY,
                         'Authorization': `Bearer ${DB_KEY}`,
                         'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
+                        'Prefer': 'return=representation'
                     },
                     body: JSON.stringify({ status: status })
                 });
-                if (!res.ok) throw new Error("Erro ao atualizar.");
-                alert("Atualizado com sucesso!");
-                carregarDados();
+
+                if (!res.ok) {
+                    const txtErro = await res.text();
+                    throw new Error(`Erro (${res.status}): ${txtErro}`);
+                }
+
+                alert(`Agendamento atualizado para ${status}!`);
+                carregarDados(); // Recarrega os dados na tela na hora
             } catch (err) {
-                alert(err.message);
+                alert("Não foi possível salvar: " + err.message);
             }
         }
     </script>
