@@ -5,63 +5,229 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Isadora Nails</title>
     <style>
-        body { background-color: #0b0f19; color: #ffffff; font-family: sans-serif; padding: 15px; margin: 0; }
-        h1 { font-size: 20px; margin-bottom: 5px; }
-        p.sub { color: #8892b0; font-size: 12px; margin: 0 0 20px 0; }
-        .menu { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn { flex: 1; padding: 15px; background: #1e293b; border: 2px solid #334155; color: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center; }
-        .btn.active { background: #2563eb; border-color: #3b82f6; }
-        .secao { display: none; background: #111827; border: 1px solid #1f2937; padding: 15px; border-radius: 8px; }
-        .secao.active { display: block; }
-        .card { background: #1f2937; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid #f59e0b; }
-        .card.confirmado { border-left-color: #10b981; }
-        .card.cancelado { border-left-color: #ef4444; }
-        .nome { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
-        .info { font-size: 13px; color: #9ca3af; line-height: 1.4; }
-        .status-erro { background: #7f1d1d; border: 1px solid #f87171; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; }
-        
-        /* Botões maiores e com área de clique expandida para dedos no celular */
-        .btn-container { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-acao { 
-            flex: 1;
-            border: none; 
-            padding: 16px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: white; 
-            font-size: 15px; 
-            text-align: center;
-            display: block;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        /* Estilo Dark Premium baseado no seu Dashboard real */
+        body { 
+            background-color: #0b0f19; 
+            color: #ffffff; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            padding: 20px 15px; 
+            margin: 0; 
         }
-        .btn-confirmar { background: #10b981; }
-        .btn-cancelar { background: #ef4444; }
+
+        /* Topo com Logo */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #2563eb;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .logo-text h1 { 
+            font-size: 18px; 
+            margin: 0; 
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        
+        .logo-text span { 
+            color: #3b82f6; 
+            font-size: 11px; 
+            text-transform: uppercase;
+            font-weight: bold;
+            display: block;
+            margin-top: -2px;
+        }
+
+        /* Menu de Navegação Superior */
+        .menu-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .menu-btn {
+            flex: 1;
+            padding: 12px 10px;
+            background-color: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .menu-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-color: #3b82f6;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Seções de Conteúdo */
+        .secao {
+            display: none;
+        }
+
+        .secao.active {
+            display: block;
+        }
+
+        .secao-titulo {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+        }
+
+        .secao-sub {
+            color: #64748b;
+            font-size: 13px;
+            margin: 0 0 20px 0;
+        }
+
+        /* Cards de Agendamentos Modernos */
+        .card-agendamento {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Linha lateral de status sutil */
+        .card-agendamento::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #eab308; /* Pendente */
+        }
+
+        .card-agendamento.confirmado::before {
+            background-color: #10b981; /* Confirmado */
+        }
+
+        .card-agendamento.cancelado::before {
+            background-color: #ef4444; /* Cancelado */
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .nome-cliente {
+            font-weight: 600;
+            font-size: 16px;
+            color: #ffffff;
+        }
+
+        .badge-status {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .badge-status.pendente { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+        .badge-status.confirmado { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .badge-status.cancelado { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+        .detalhes-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .detalhes-info div {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-small {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .status-erro {
+            background: #7f1d1d;
+            border: 1px solid #f87171;
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>ISADORA NAILS</h1>
-    <p class="sub">Painel Administrativo Simplificado</p>
+    <!-- Cabeçalho Principal -->
+    <div class="header">
+        <div class="logo-icon">💅</div>
+        <div class="logo-text">
+            <h1>ISADORA</h1>
+            <span>Nails</span>
+        </div>
+    </div>
 
-    <div class="menu">
-        <button id="btn-agenda" class="btn active" onclick="trocarAba('agenda')">Agendamentos</button>
-        <button id="btn-cli" class="btn" onclick="trocarAba('cli')">Clientes</button>
+    <!-- Abas Estilo Aplicativo -->
+    <div class="menu-grid">
+        <button id="btn-agenda" class="menu-btn active" onclick="trocarAba('agenda')">
+            📅 Agendamentos
+        </button>
+        <button id="btn-cli" class="menu-btn" onclick="trocarAba('cli')">
+            👥 Clientes
+        </button>
     </div>
 
     <div id="alertas"></div>
 
+    <!-- Aba 1: Agendamentos -->
     <div id="sec-agenda" class="secao active">
-        <h3 style="margin:0 0 10px 0;">Todos os Pedidos</h3>
+        <h2 class="secao-titulo">Agenda de Clientes</h2>
+        <p class="secao-sub">Visão completa dos próximos atendimentos</p>
+        
         <div id="lista-agenda">
-            <p style="color: #9ca3af;">Conectando ao Supabase...</p>
+            <p style="color: #64748b; text-align: center; padding: 20px;">Buscando sua agenda no banco de dados...</p>
         </div>
     </div>
 
+    <!-- Aba 2: Clientes -->
     <div id="sec-cli" class="secao">
-        <h3 style="margin:0 0 10px 0;">Lista de Clientes</h3>
+        <h2 class="secao-titulo">Minhas Clientes</h2>
+        <p class="secao-sub">Lista de clientes registradas no seu salão</p>
+        
         <div id="lista-cli">
-            <p style="color: #9ca3af;">Carregando clientes...</p>
+            <p style="color: #64748b; text-align: center; padding: 20px;">Carregando histórico...</p>
         </div>
     </div>
 
@@ -104,8 +270,8 @@
                 const dados = await res.json();
 
                 if (!dados || dados.length === 0) {
-                    document.getElementById('lista-agenda').innerHTML = "<p>Nenhum registro encontrado.</p>";
-                    document.getElementById('lista-cli').innerHTML = "<p>Nenhuma cliente encontrada.</p>";
+                    document.getElementById('lista-agenda').innerHTML = "<p style='color: #64748b; text-align: center;'>Nenhum agendamento encontrado.</p>";
+                    document.getElementById('lista-cli').innerHTML = "<p style='color: #64748b; text-align: center;'>Nenhuma cliente cadastrada.</p>";
                     return;
                 }
 
@@ -116,61 +282,42 @@
                 console.error(err);
                 document.getElementById('alertas').innerHTML = `
                     <div class="status-erro">
-                        <strong>Erro de Conexão:</strong> ${err.message}
+                        <strong>Erro ao carregar dados:</strong> ${err.message}
                     </div>
                 `;
-                document.getElementById('lista-agenda').innerHTML = "<p style='color: #ef4444;'>Falha ao carregar.</p>";
-                document.getElementById('lista-cli').innerHTML = "<p style='color: #ef4444;'>Falha ao carregar.</p>";
+                document.getElementById('lista-agenda').innerHTML = "<p style='color: #ef4444; text-align: center;'>Não foi possível carregar.</p>";
+                document.getElementById('lista-cli').innerHTML = "<p style='color: #ef4444; text-align: center;'>Não foi possível carregar.</p>";
             }
         }
 
         function renderizarAgenda(dados) {
             const container = document.getElementById('lista-agenda');
             container.innerHTML = "";
+            
             dados.forEach(item => {
                 const status = String(item.status || 'Pendente').toLowerCase();
                 let clStatus = "";
-                if (status === 'confirmado') clStatus = "confirmado";
-                if (status === 'cancelado') clStatus = "cancelado";
+                let txtBadge = "Pendente";
+                
+                if (status === 'confirmado') { clStatus = "confirmado"; txtBadge = "Confirmado"; }
+                if (status === 'cancelado') { clStatus = "cancelado"; txtBadge = "Cancelado"; }
+                
                 const dataBR = item.data ? item.data.split('-').reverse().join('/') : '';
 
-                // Criamos os botões com IDs específicos para capturar o clique via JavaScript puro
                 container.innerHTML += `
-                    <div class="card ${clStatus}">
-                        <div class="nome">${item.cliente_nome || 'Sem Nome'}</div>
-                        <div class="info">
-                            <strong>Serviço:</strong> ${item.servico || '-'}<br>
-                            <strong>Data:</strong> ${dataBR} às ${item.horario || '--:--'}<br>
-                            <strong>Status:</strong> ${item.status || 'Pendente'}
+                    <div class="card-agendamento ${clStatus}">
+                        <div class="card-header">
+                            <div class="nome-cliente">${item.cliente_nome || 'Sem Nome'}</div>
+                            <span class="badge-status ${status}">${txtBadge}</span>
                         </div>
-                        ${status === 'pendente' ? `
-                            <div class="btn-container">
-                                <button class="btn-acao btn-confirmar" data-id="${item.id}" data-status="Confirmado">
-                                    Confirmar
-                                </button>
-                                <button class="btn-acao btn-cancelar" data-id="${item.id}" data-status="Cancelar">
-                                    Cancelar
-                                </button>
-                            </div>
-                        ` : ''}
+                        <div class="detalhes-info">
+                            <div><span class="icon-small">💅</span> <strong>Serviço:</strong> ${item.servico || '-'}</div>
+                            <div><span class="icon-small">📅</span> <strong>Data:</strong> ${dataBR}</div>
+                            <div><span class="icon-small">🕒</span> <strong>Horário:</strong> ${item.horario || '--:--'}</div>
+                            <div><span class="icon-small">💵</span> <strong>Valor:</strong> ${item.preco || 'R$ 0,00'}</div>
+                        </div>
                     </div>
                 `;
-            });
-
-            // Adiciona o escutador de eventos para cliques/toques físicos nos botões
-            configurarCliquesCelular();
-        }
-
-        function configurarCliquesCelular() {
-            const botoes = document.querySelectorAll('.btn-acao');
-            botoes.forEach(botao => {
-                // Esse evento escuta tanto o clique do mouse quanto o toque rápido de dedos no iPhone
-                botao.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const id = this.getAttribute('data-id');
-                    const status = this.getAttribute('data-status');
-                    atualizarStatus(id, status);
-                });
             });
         }
 
@@ -178,54 +325,18 @@
             const container = document.getElementById('lista-cli');
             container.innerHTML = "";
             const unicos = [...new Set(dados.map(i => i.cliente_nome))].filter(Boolean);
+            
             unicos.forEach(nome => {
                 const total = dados.filter(i => i.cliente_nome === nome).length;
                 container.innerHTML += `
-                    <div class="card confirmado" style="border-left-width: 2px;">
-                        <div class="nome">${nome}</div>
-                        <div class="info">Total de visitas: ${total}</div>
+                    <div class="card-agendamento confirmado" style="padding: 14px;">
+                        <div class="nome-cliente">${nome}</div>
+                        <div style="font-size: 13px; color: #94a3b8; margin-top: 5px;">
+                            👤 Cliente cadastrada • Total de visitas: <strong>${total}</strong>
+                        </div>
                     </div>
                 `;
             });
-        }
-
-        async function atualizarStatus(id, status) {
-            try {
-                // Alerta visual no topo avisando que começou a salvar
-                document.getElementById('alertas').innerHTML = `
-                    <div class="status-erro" style="background: #1e3a8a; border-color: #3b82f6; color: #dbeafe;">
-                        Processando... alterando agendamento para "${status}".
-                    </div>
-                `;
-
-                const urlUpdate = DB_URL + "/rest/v1/agendamentos?id=eq." + id;
-                const res = await fetch(urlUpdate, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': DB_KEY,
-                        'Authorization': 'Bearer ' + DB_KEY,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify({ status: status })
-                });
-
-                if (!res.ok) {
-                    const txtErro = await res.text();
-                    throw new Error("Erro " + res.status + ": " + txtErro);
-                }
-
-                alert("Agendamento atualizado para " + status + "!");
-                document.getElementById('alertas').innerHTML = ""; 
-                carregarDados(); 
-            } catch (err) {
-                alert("Erro ao salvar: " + err.message);
-                document.getElementById('alertas').innerHTML = `
-                    <div class="status-erro">
-                        <strong>Falha ao Salvar:</strong> ${err.message}
-                    </div>
-                `;
-            }
         }
     </script>
 </body>
