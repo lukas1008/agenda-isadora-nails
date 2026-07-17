@@ -22,6 +22,7 @@
             min-height: 100vh;
             padding: 20px 16px;
             box-sizing: border-box;
+            position: relative;
         }
 
         /* Topo e Identidade */
@@ -30,6 +31,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            position: relative;
         }
         .logo-area {
             display: flex;
@@ -39,7 +41,34 @@
         .logo-icon { font-size: 24px; }
         .logo-text { font-weight: 700; font-size: 18px; letter-spacing: 1px; }
         .logo-text span { color: #3b82f6; display: block; font-size: 12px; }
-        .menu-hamburger { font-size: 20px; cursor: pointer; }
+        .menu-container { position: relative; }
+        .menu-hamburger { font-size: 20px; cursor: pointer; padding: 5px; }
+        
+        /* Menu Dropdown do Admin */
+        .admin-dropdown {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background-color: #111422;
+            border: 1px solid #1e2235;
+            border-radius: 8px;
+            min-width: 150px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        .admin-dropdown a {
+            color: #ffffff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .admin-dropdown a:hover {
+            background-color: #1e2235;
+            border-radius: 8px;
+        }
 
         /* Banner Principal */
         .hero-section { position: relative; margin-bottom: 25px; }
@@ -129,13 +158,18 @@
 
     <div class="phone-container">
         
-        <!-- Topo da Marca -->
+        <!-- Topo da Marca com Menu Dropdown Corrigido -->
         <div class="header">
             <div class="logo-area">
                 <span class="logo-icon">💅</span>
                 <div class="logo-text">ISADORA <span>NAILS</span></div>
             </div>
-            <div class="menu-hamburger">☰</div>
+            <div class="menu-container">
+                <div class="menu-hamburger" onclick="alternarMenuAdmin()">☰</div>
+                <div class="admin-dropdown" id="menu-admin">
+                    <a href="#" onclick="fazerLoginAdmin(event)">🔐 Painel ADM</a>
+                </div>
+            </div>
         </div>
 
         <!-- Banner de Boas Vindas -->
@@ -272,14 +306,13 @@
             </div>
         </div>
 
-        <!-- SEÇÃO 4: NOSSO ESPAÇO (LINK DIRETO DO POSTIMAGES) -->
+        <!-- SEÇÃO 4: NOSSO ESPAÇO -->
         <div class="space-box">
             <div class="space-info">
                 <div class="space-title-row">📍 Nosso Espaço</div>
                 <div class="space-text">Ambiente confortável e preparado para te receber com muito carinho.</div>
                 <a href="https://maps.google.com" target="_blank" class="btn-maps">Abrir no Google Maps</a>
             </div>
-            <!-- Link direto e estável gerado pelo PostImages -->
             <img src="https://i.postimg.cc/FK2jhhsW/2fca5ab4-ec17-4a1b-9ed8-cd297a40a7d5.jpg" class="space-img" alt="Nosso Espaço">
         </div>
 
@@ -316,7 +349,36 @@
             const hoje = new Date().toISOString().split('T')[0];
             document.getElementById('data').min = hoje;
             renderizarGradeHorarios([]);
+            
+            // Fecha o menu de admin se clicar fora dele
+            document.addEventListener('click', function(event) {
+                const menuContainer = document.querySelector('.menu-container');
+                if (!menuContainer.contains(event.target)) {
+                    document.getElementById('menu-admin').style.display = 'none';
+                }
+            });
         };
+
+        // Funções de Controle do Menu Admin
+        function alternarMenuAdmin() {
+            const menu = document.getElementById('menu-admin');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function fazerLoginAdmin(event) {
+            event.preventDefault();
+            document.getElementById('menu-admin').style.display = 'none';
+            
+            // Pergunta a senha (coloquei 'admin123' como padrão temporário)
+            const senha = prompt("Digite a senha do painel administrador:");
+            
+            if (senha === "admin123") {
+                // Redireciona diretamente para o painel de tabelas do Supabase
+                window.open("https://supabase.com/dashboard", "_blank");
+            } else if (senha !== null) {
+                alert("❌ Senha incorreta!");
+            }
+        }
 
         function selecionarServico(elemento, nome, preco) {
             document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
