@@ -350,7 +350,6 @@
             document.getElementById('data').min = hoje;
             renderizarGradeHorarios([]);
             
-            // Fecha o menu de admin se clicar fora dele
             document.addEventListener('click', function(event) {
                 const menuContainer = document.querySelector('.menu-container');
                 if (!menuContainer.contains(event.target)) {
@@ -359,24 +358,27 @@
             });
         };
 
-        // Funções de Controle do Menu Admin
         function alternarMenuAdmin() {
             const menu = document.getElementById('menu-admin');
             menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         }
 
+        // Validação usando suas credenciais oficiais do Supabase
         function fazerLoginAdmin(event) {
             event.preventDefault();
             document.getElementById('menu-admin').style.display = 'none';
             
-            // Pergunta a senha (coloquei 'admin123' como padrão temporário)
-            const senha = prompt("Digite a senha do painel administrador:");
+            const emailDigitado = prompt("Digite o e-mail do Administrador:");
+            if (!emailDigitado) return;
             
-            if (senha === "admin123") {
-                // Redireciona diretamente para o painel de tabelas do Supabase
+            const senhaDigitada = prompt("Digite a sua senha:");
+            if (!senhaDigitada) return;
+            
+            if (emailDigitado.trim() === "isadoragomes.luk@gmail.com" && senhaDigitada === "lukisa1008") {
+                alert("🔓 Autenticado com sucesso! Redirecionando para o painel de controle...");
                 window.open("https://supabase.com/dashboard", "_blank");
-            } else if (senha !== null) {
-                alert("❌ Senha incorreta!");
+            } else {
+                alert("❌ E-mail ou Senha incorretos! Tente novamente.");
             }
         }
 
