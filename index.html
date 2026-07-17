@@ -316,7 +316,7 @@
                 <div class="review-left">
                     <span class="review-score">5,0</span>
                     <div class="review-stars">★★★★★</div>
-                    <span class="review-count">+420 clientes completamente substituídas</span>
+                    <span class="review-count">+420 clientes atendidas</span>
                     <button class="btn-ver-avaliacoes">Ver avaliações</button>
                 </div>
                 <div class="review-grid-imgs">
@@ -427,7 +427,7 @@
         // Cache global dos agendamentos baixados do Supabase
         let cacheAgendamentosAdmin = [];
 
-        window.onload = function() {
+        window.onload = async function() {
             const hoje = new Date().toISOString().split('T')[0];
             document.getElementById('data').min = hoje;
             renderizarGradeHorarios([]);
@@ -435,6 +435,18 @@
             document.addEventListener('click', function() {
                 document.getElementById('menu-admin').style.display = 'none';
             });
+
+            // MEMÓRIA ATIVA: Verifica se o usuário já estava logado antes do Recarregamento da Página (F5)
+            if (localStorage.getItem("adm_logado") === "true") {
+                document.getElementById('tela-cliente').style.display = 'none';
+                document.getElementById('painel-adm-tela').style.display = 'block';
+                
+                const containerCards = document.getElementById('lista-cards-adm');
+                containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Sincronizando dados...</p>";
+                
+                await sincronizarDadosBanco();
+                mudarAbaAdm('dashboard');
+            }
         };
 
         function alternarMenuAdmin(event) {
@@ -472,11 +484,13 @@
             const senha = document.getElementById('login-senha').value;
 
             if (email === "isadoragomes.luk@gmail.com" && senha === "lukisa1008") {
+                // Grava na memória permanente do navegador que está logado
+                localStorage.setItem("adm_logado", "true");
+
                 fecharModalLogin();
                 document.getElementById('tela-cliente').style.display = 'none';
                 document.getElementById('painel-adm-tela').style.display = 'block';
                 
-                // Baixa os dados uma vez logo no início do login
                 const containerCards = document.getElementById('lista-cards-adm');
                 containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Carregando dados do painel...</p>";
                 await sincronizarDadosBanco();
@@ -488,13 +502,14 @@
         }
 
         function sairDoPainel() {
+            // Remove o estado de login da memória para que precise logar novamente
+            localStorage.removeItem("adm_logado");
+
             document.getElementById('painel-adm-tela').style.display = 'none';
             document.getElementById('tela-cliente').style.display = 'block';
         }
 
-        // Função Inteligente e Instantânea para Controlar a Troca de Abas do Administrador
         function mudarAbaAdm(aba) {
-            // Atualiza classe ativa visual dos botões de forma imediata
             document.querySelectorAll('.adm-menu-btn').forEach(b => b.classList.remove('active'));
             
             const titulo = document.getElementById('adm-titulo-secao');
@@ -503,7 +518,6 @@
             const subLabelLista = document.getElementById('adm-sub-label-lista');
             const containerCards = document.getElementById('lista-cards-adm');
 
-            // Renderiza com base na Aba clicada de forma instantânea usando o cache local
             if (aba === 'dashboard') {
                 document.getElementById('btn-tab-dashboard').classList.add('active');
                 titulo.innerText = "Dashboard";
@@ -512,7 +526,6 @@
                 subLabelLista.innerText = "🕒 PRÓXIMOS ATENDIMENTOS";
                 subLabelLista.style.display = "flex";
 
-                // Calcular contadores
                 let somaFaturamento = 0;
                 cacheAgendamentosAdmin.forEach(item => {
                     if(item.preco) {
@@ -552,7 +565,6 @@
                 blocoContadores.style.display = "none";
                 subLabelLista.style.display = "none";
 
-                // Dados estáticos da tabela de serviços atuais
                 const listaServicosFixos = [
                     { nome: "Manicure", preco: "R$ 27,00", desc: "Cuidados e esmaltação tradicional" },
                     { nome: "Pedicure", preco: "R$ 33,00", desc: "Cuidados e esmaltação tradicional" },
@@ -574,7 +586,6 @@
             }
         }
 
-        // Renderizador Auxiliar Dinâmico
         function renderizarCardsAdmin(lista, layout) {
             const containerCards = document.getElementById('lista-cards-adm');
             containerCards.innerHTML = "";
