@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Isadora Nails</title>
+    <title>Isadora Nails - Dashboard</title>
     <style>
-        /* Estilo Dark Premium baseado no seu Dashboard real */
+        /* Cores e tema idênticos ao seu print original */
         body { 
             background-color: #0b0f19; 
             color: #ffffff; 
@@ -14,31 +14,25 @@
             margin: 0; 
         }
 
-        /* Topo com Logo */
+        /* Topo do App */
         .header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 25px;
         }
 
         .logo-icon {
-            width: 24px;
-            height: 24px;
-            background: #2563eb;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
+            font-size: 24px;
+            color: #3b82f6;
         }
 
         .logo-text h1 { 
             font-size: 18px; 
             margin: 0; 
             letter-spacing: 1px;
-            font-weight: 700;
+            font-weight: 800;
+            color: #ffffff;
         }
         
         .logo-text span { 
@@ -50,39 +44,57 @@
             margin-top: -2px;
         }
 
-        /* Menu de Navegação Superior */
+        /* Menu de Botões Principais (Estilo Grid do seu Print) */
         .menu-grid {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
         }
 
         .menu-btn {
-            flex: 1;
-            padding: 12px 10px;
-            background-color: #1e293b;
+            padding: 14px;
+            background-color: transparent;
             color: #94a3b8;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            font-size: 13px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            text-align: center;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 10px;
+            text-align: left;
         }
 
+        /* Botões ativos com o degradê roxo/azul do seu print */
         .menu-btn.active {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-color: #3b82f6;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
         }
 
-        /* Seções de Conteúdo */
+        /* Links secundários do menu */
+        .menu-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 0 5px;
+            margin-bottom: 30px;
+        }
+
+        .link-item {
+            color: #94a3b8;
+            font-size: 14px;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Seções */
         .secao {
             display: none;
         }
@@ -91,143 +103,163 @@
             display: block;
         }
 
-        .secao-titulo {
-            font-size: 20px;
+        .titulo-dashboard {
+            font-size: 28px;
             font-weight: 700;
             margin: 0 0 5px 0;
         }
 
-        .secao-sub {
+        .sub-dashboard {
             color: #64748b;
-            font-size: 13px;
-            margin: 0 0 20px 0;
+            font-size: 14px;
+            margin: 0 0 25px 0;
         }
 
-        /* Cards de Agendamentos Modernos */
-        .card-agendamento {
+        /* Cards do Dashboard (Agendamentos e Faturamento) */
+        .card-stat {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .icon-purple { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+        .icon-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* Lista de Clientes Agendadas (Estilo original limpo) */
+        .lista-titulo {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 25px 0 15px 0;
+            color: #94a3b8;
+        }
+
+        .card-cliente {
             background-color: #111827;
             border: 1px solid #1f2937;
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 12px;
-            position: relative;
-            overflow: hidden;
+            border-left: 4px solid #3b82f6; /* Azul Isadora Nails */
         }
 
-        /* Linha lateral de status sutil */
-        .card-agendamento::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background-color: #eab308; /* Pendente */
-        }
-
-        .card-agendamento.confirmado::before {
-            background-color: #10b981; /* Confirmado */
-        }
-
-        .card-agendamento.cancelado::before {
-            background-color: #ef4444; /* Cancelado */
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .nome-cliente {
-            font-weight: 600;
+        .cliente-nome {
+            font-weight: 700;
             font-size: 16px;
-            color: #ffffff;
+            margin-bottom: 8px;
         }
 
-        .badge-status {
-            font-size: 11px;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 6px;
-            text-transform: uppercase;
-        }
-
-        .badge-status.pendente { background: rgba(234, 179, 8, 0.15); color: #facc15; }
-        .badge-status.confirmado { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-        .badge-status.cancelado { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-
-        .detalhes-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        .cliente-detalhes {
             font-size: 13px;
             color: #94a3b8;
+            line-height: 1.5;
         }
 
-        .detalhes-info div {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .icon-small {
-            color: #3b82f6;
-            font-weight: bold;
-        }
-
-        .status-erro {
-            background: #7f1d1d;
-            border: 1px solid #f87171;
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 20px;
+        .cliente-detalhes strong {
+            color: #e2e8f0;
         }
     </style>
 </head>
 <body>
 
-    <!-- Cabeçalho Principal -->
+    <!-- Logo / Topo -->
     <div class="header">
-        <div class="logo-icon">💅</div>
+        <div class="logo-icon">🧴</div>
         <div class="logo-text">
             <h1>ISADORA</h1>
             <span>Nails</span>
         </div>
     </div>
 
-    <!-- Abas Estilo Aplicativo -->
+    <!-- Menu Superior idêntico ao original -->
     <div class="menu-grid">
-        <button id="btn-agenda" class="menu-btn active" onclick="trocarAba('agenda')">
-            📅 Agendamentos
+        <button id="btn-dash" class="menu-btn active" onclick="navegar('dashboard')">
+            📊 Dashboard
         </button>
-        <button id="btn-cli" class="menu-btn" onclick="trocarAba('cli')">
-            👥 Clientes
+        <button id="btn-agenda" class="menu-btn" onclick="navegar('agenda')">
+            📅 Agendamentos
         </button>
     </div>
 
-    <div id="alertas"></div>
+    <!-- Links do menu inferior -->
+    <div class="menu-links">
+        <a href="#" class="link-item" onclick="navegar('clientes')">👥 Clientes</a>
+        <div class="link-item">💅 Serviços</div>
+        <div class="link-item">💼 Financeiro</div>
+        <div class="link-item">📈 Relatórios</div>
+        <div class="link-item" style="grid-column: span 2;">⚙️ Configurações</div>
+    </div>
 
-    <!-- Aba 1: Agendamentos -->
-    <div id="sec-agenda" class="secao active">
-        <h2 class="secao-titulo">Agenda de Clientes</h2>
-        <p class="secao-sub">Visão completa dos próximos atendimentos</p>
-        
-        <div id="lista-agenda">
-            <p style="color: #64748b; text-align: center; padding: 20px;">Buscando sua agenda no banco de dados...</p>
+    <!-- SEÇÃO 1: DASHBOARD -->
+    <div id="sec-dashboard" class="secao active">
+        <h2 class="titulo-dashboard">Dashboard</h2>
+        <p class="sub-dashboard">Visão geral do seu salão</p>
+
+        <!-- Card de Agendamentos -->
+        <div class="card-stat">
+            <div class="stat-icon-box icon-purple">📅</div>
+            <div class="stat-info">
+                <span class="stat-label">Agendamentos</span>
+                <span id="total-agendamentos" class="stat-value">0</span>
+            </div>
+        </div>
+
+        <!-- Card de Faturamento -->
+        <div class="card-stat">
+            <div class="stat-icon-box icon-green">💵</div>
+            <div class="stat-info">
+                <span class="stat-label">Faturamento</span>
+                <span id="total-faturamento" class="stat-value">R$ 0,00</span>
+            </div>
         </div>
     </div>
 
-    <!-- Aba 2: Clientes -->
-    <div id="sec-cli" class="secao">
-        <h2 class="secao-titulo">Minhas Clientes</h2>
-        <p class="secao-sub">Lista de clientes registradas no seu salão</p>
-        
-        <div id="lista-cli">
-            <p style="color: #64748b; text-align: center; padding: 20px;">Carregando histórico...</p>
+    <!-- SEÇÃO 2: LISTA DE AGENDAMENTOS -->
+    <div id="sec-agenda" class="secao">
+        <h2 class="titulo-dashboard">Agendamentos</h2>
+        <p class="sub-dashboard">Lista completa de horários marcados</p>
+        <div id="lista-agendamentos-conteudo">
+            <p style="color: #64748b;">Carregando agendamentos...</p>
+        </div>
+    </div>
+
+    <!-- SEÇÃO 3: LISTA DE CLIENTES -->
+    <div id="sec-clientes" class="secao">
+        <h2 class="titulo-dashboard">Clientes</h2>
+        <p class="sub-dashboard">Histórico de clientes atendidas</p>
+        <div id="lista-clientes-conteudo">
+            <p style="color: #64748b;">Carregando histórico...</p>
         </div>
     </div>
 
@@ -235,104 +267,112 @@
         const DB_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
         const DB_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3";
 
-        function trocarAba(nome) {
+        // Alternar abas do menu
+        function navegar(aba) {
+            document.getElementById('btn-dash').classList.remove('active');
             document.getElementById('btn-agenda').classList.remove('active');
-            document.getElementById('btn-cli').classList.remove('active');
+            
+            document.getElementById('sec-dashboard').classList.remove('active');
             document.getElementById('sec-agenda').classList.remove('active');
-            document.getElementById('sec-cli').classList.remove('active');
+            document.getElementById('sec-clientes').classList.remove('active');
 
-            if (nome === 'agenda') {
+            if (aba === 'dashboard') {
+                document.getElementById('btn-dash').classList.add('active');
+                document.getElementById('sec-dashboard').classList.add('active');
+            } else if (aba === 'agenda') {
                 document.getElementById('btn-agenda').classList.add('active');
                 document.getElementById('sec-agenda').classList.add('active');
-            } else {
-                document.getElementById('btn-cli').classList.add('active');
-                document.getElementById('sec-cli').classList.add('active');
+            } else if (aba === 'clientes') {
+                document.getElementById('sec-clientes').classList.add('active');
             }
         }
 
         window.onload = function() {
-            carregarDados();
+            buscarDadosSupabase();
         };
 
-        async function carregarDados() {
+        async function buscarDadosSupabase() {
             try {
-                const urlCompleta = DB_URL + "/rest/v1/agendamentos?select=*&order=data.asc";
-                const res = await fetch(urlCompleta, {
+                const res = await fetch(`${DB_URL}/rest/v1/agendamentos?select=*&order=data.asc`, {
                     method: 'GET',
                     headers: {
                         'apikey': DB_KEY,
-                        'Authorization': 'Bearer ' + DB_KEY,
+                        'Authorization': `Bearer ${DB_KEY}`,
                         'Content-Type': 'application/json'
                     }
                 });
 
-                if (!res.ok) throw new Error("Erro do servidor: " + res.status);
+                if (!res.ok) throw new Error("Falha ao buscar dados do Supabase");
                 const dados = await res.json();
 
-                if (!dados || dados.length === 0) {
-                    document.getElementById('lista-agenda').innerHTML = "<p style='color: #64748b; text-align: center;'>Nenhum agendamento encontrado.</p>";
-                    document.getElementById('lista-cli').innerHTML = "<p style='color: #64748b; text-align: center;'>Nenhuma cliente cadastrada.</p>";
-                    return;
+                if (dados && dados.length > 0) {
+                    atualizarDashboard(dados);
+                    renderizarAgendamentos(dados);
+                    renderizarClientes(dados);
+                } else {
+                    document.getElementById('lista-agendamentos-conteudo').innerHTML = "<p style='color: #64748b;'>Nenhum registro encontrado.</p>";
                 }
-
-                renderizarAgenda(dados);
-                renderizarClientes(dados);
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('alertas').innerHTML = `
-                    <div class="status-erro">
-                        <strong>Erro ao carregar dados:</strong> ${err.message}
-                    </div>
-                `;
-                document.getElementById('lista-agenda').innerHTML = "<p style='color: #ef4444; text-align: center;'>Não foi possível carregar.</p>";
-                document.getElementById('lista-cli').innerHTML = "<p style='color: #ef4444; text-align: center;'>Não foi possível carregar.</p>";
             }
         }
 
-        function renderizarAgenda(dados) {
-            const container = document.getElementById('lista-agenda');
-            container.innerHTML = "";
-            
-            dados.forEach(item => {
-                const status = String(item.status || 'Pendente').toLowerCase();
-                let clStatus = "";
-                let txtBadge = "Pendente";
-                
-                if (status === 'confirmado') { clStatus = "confirmado"; txtBadge = "Confirmado"; }
-                if (status === 'cancelado') { clStatus = "cancelado"; txtBadge = "Cancelado"; }
-                
-                const dataBR = item.data ? item.data.split('-').reverse().join('/') : '';
+        // Calcula as métricas reais do banco de dados para exibir no Dashboard
+        function atualizarDashboard(dados) {
+            // 1. Total de agendamentos cadastrados
+            document.getElementById('total-agendamentos').innerText = dados.length;
 
+            // 2. Soma do faturamento (converte "R$ 60,00" ou números para cálculo real)
+            let somaFaturamento = 0;
+            dados.forEach(item => {
+                if (item.preco) {
+                    // Limpa o texto "R$" e espaços para somar o valor correto
+                    const valorLimpo = parseFloat(item.preco.replace('R$', '').replace(',', '.').trim());
+                    if (!isNaN(valorLimpo)) {
+                        somaFaturamento += valorLimpo;
+                    }
+                }
+            });
+
+            document.getElementById('total-faturamento').innerText = 
+                somaFaturamento.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // Renderiza a lista de agendamentos com as informações completas das clientes
+        function renderizarAgendamentos(dados) {
+            const container = document.getElementById('lista-agendamentos-conteudo');
+            container.innerHTML = "";
+
+            dados.forEach(item => {
+                const dataBR = item.data ? item.data.split('-').reverse().join('/') : '';
                 container.innerHTML += `
-                    <div class="card-agendamento ${clStatus}">
-                        <div class="card-header">
-                            <div class="nome-cliente">${item.cliente_nome || 'Sem Nome'}</div>
-                            <span class="badge-status ${status}">${txtBadge}</span>
-                        </div>
-                        <div class="detalhes-info">
-                            <div><span class="icon-small">💅</span> <strong>Serviço:</strong> ${item.servico || '-'}</div>
-                            <div><span class="icon-small">📅</span> <strong>Data:</strong> ${dataBR}</div>
-                            <div><span class="icon-small">🕒</span> <strong>Horário:</strong> ${item.horario || '--:--'}</div>
-                            <div><span class="icon-small">💵</span> <strong>Valor:</strong> ${item.preco || 'R$ 0,00'}</div>
+                    <div class="card-cliente">
+                        <div class="cliente-nome">${item.cliente_nome || 'Cliente sem nome'}</div>
+                        <div class="cliente-detalhes">
+                            💅 <strong>Serviço:</strong> ${item.servico || 'Não informado'}<br>
+                            📅 <strong>Data:</strong> ${dataBR}<br>
+                            🕒 <strong>Horário:</strong> ${item.horario || '--:--'}<br>
+                            💵 <strong>Preço:</strong> ${item.preco || 'R$ 0,00'}
                         </div>
                     </div>
                 `;
             });
         }
 
+        // Renderiza a lista única de clientes atendidas
         function renderizarClientes(dados) {
-            const container = document.getElementById('lista-cli');
+            const container = document.getElementById('lista-clientes-conteudo');
             container.innerHTML = "";
             const unicos = [...new Set(dados.map(i => i.cliente_nome))].filter(Boolean);
-            
+
             unicos.forEach(nome => {
-                const total = dados.filter(i => i.cliente_nome === nome).length;
+                const totalAtendimentos = dados.filter(i => i.cliente_nome === nome).length;
                 container.innerHTML += `
-                    <div class="card-agendamento confirmado" style="padding: 14px;">
-                        <div class="nome-cliente">${nome}</div>
-                        <div style="font-size: 13px; color: #94a3b8; margin-top: 5px;">
-                            👤 Cliente cadastrada • Total de visitas: <strong>${total}</strong>
+                    <div class="card-cliente" style="border-left-color: #10b981;">
+                        <div class="cliente-nome">${nome}</div>
+                        <div class="cliente-detalhes">
+                            👤 Cliente do salão • Atendida <strong>${totalAtendimentos}</strong> vezes
                         </div>
                     </div>
                 `;
