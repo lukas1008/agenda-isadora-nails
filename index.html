@@ -556,7 +556,7 @@
 
             } else if (aba === 'servicos') {
                 document.getElementById('btn-tab-servicos').classList.add('active');
-                titulo.innerText = "Services";
+                titulo.innerText = "Serviços";
                 subtitulo.innerText = "Tabela de serviços oferecidos e valores vigentes";
                 blocoContadores.style.display = "none";
                 subLabelLista.style.display = "none";
@@ -709,7 +709,8 @@
             }
 
             const botao = document.getElementById('btn-agendar-main');
-            botao.innerText = "SALVANDO HORÁRIO...";
+            const textoOriginal = botao.innerText;
+            botao.innerText = "RESERVANDO HORÁRIO...";
             botao.disabled = true;
 
             const dataFormatada = dataVal.split('-').reverse().join('/');
@@ -723,27 +724,34 @@
             };
 
             const endpoint = `${DB_URL}/rest/v1/agendamentos`;
-            const payload = JSON.stringify(dadosAgendamento);
 
-            // Salvamento via fetch tradicional e seguro
+            // Mudança crucial: Aguarda o banco responder com sucesso primeiro antes de redirecionar para o WhatsApp
             fetch(endpoint, {
                 method: 'POST',
                 headers: { 
                     'apikey': DB_KEY, 
                     'Authorization': `Bearer ${DB_KEY}`, 
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
+                    'Content-Type': 'application/json'
                 },
-                body: payload
+                body: JSON.stringify(dadosAgendamento)
             })
-            .then(() => console.log("Salvo no banco com sucesso!"))
-            .catch(e => console.error("Erro ao salvar:", e));
-
-            // Cronômetro de segurança (800 milissegundos) para o banco receber tudo antes de mudar de tela
-            setTimeout(function() {
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Erro na gravação do banco");
+                }
+                
+                // Salvo com sucesso absoluto! Adiciona no cache do seu painel e vai pro WhatsApp
+                cacheAgendamentosAdmin.push(dadosAgendamento);
+                
                 const mensagemZap = `Olá Isadora! Gostaria de confirmar meu agendamento:%0A%0A👤 *Nome:* ${nome}%0A💅 *Serviço:* ${nomeServicoSelecionado}%0A📅 *Data:* ${dataFormatada}%0A🕒 *Horário:* ${horarioSelecionado}%0A💵 *Valor:* ${precoServicoSelecionado}`;
                 window.location.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensagemZap}`;
-            }, 800);
+            })
+            .catch(error => {
+                console.error("Falha ao salvar no banco:", error);
+                alert("⚠️ Erro ao registrar o horário no sistema de agendamentos. Verifique se as permissões de acesso (Políticas RLS) estão habilitadas no painel do Supabase.");
+                botao.innerText = textoOriginal;
+                botao.disabled = false;
+            });
         }
     </script>
 </body>
