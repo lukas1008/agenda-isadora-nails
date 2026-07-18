@@ -328,8 +328,9 @@
                     <span class="review-count review-count-stars">+420 clientes atendidas</span>
                     <button class="btn-ver-avaliacoes">Ver avaliações</button>
                 </div>
+                <!-- CORRIGIDO: Foto 1 alterada para a unha com corações vermelhos e links consertados -->
                 <div class="review-grid-imgs">
-                    <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=150&auto=format&fit=crop&q=60" alt="Unha 1">
+                    <img src="https://images.unsplash.com/photo-1604654894610-df490651e56c?w=150&auto=format&fit=crop&q=60" alt="Unha 1 (Corações)">
                     <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150&auto=format&fit=crop&q=60" alt="Unha 2">
                     <img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=150&auto=format&fit=crop&q=60" alt="Unha 3">
                     <img src="https://images.unsplash.com/photo-1504198458649-012800d4631e?w=150&auto=format&fit=crop&q=60" alt="Unha 4">
@@ -419,6 +420,7 @@
 
     </div>
 
+    <!-- SCRIPT CORRIGIDO INTEGRADO COM AS COLUNAS DO SEU BANCO DE DADOS -->
     <script>
         const DB_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
         const DB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0ZGd4aGduamlxdmt0dW5zcGJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxNjI3MTUsImV4cCI6MjA5OTczODcxNX0.JZY555H9eZh_91_f2ptzoEWG5f2fydfzj3tit-6c27s";
@@ -592,20 +594,22 @@
 
             container.innerHTML = lista.map(item => {
                 const dataFormatada = item.data ? item.data.split('-').reverse().join('/') : '--/--/----';
+                const nomeCliente = item.cliente_nome || item.nome || "Não informado";
+                
                 if (modo === 'cliente') {
                     return `
                         <div class="adm-client-card">
-                            <div class="adm-client-name">👤 ${item.nome}</div>
-                            <div class="adm-client-detail-row">Último serviço mapeado no banco de dados.</div>
+                            <div class="adm-client-name">👤 ${nomeCliente}</div>
+                            <div class="adm-client-detail-row">Mapeado no banco de dados.</div>
                         </div>
                     `;
                 } else {
                     return `
                         <div class="adm-client-card">
-                            <div class="adm-client-name">${item.nome}</div>
-                            <div class="adm-client-detail-row"><strong>Serviço:</strong> ${item.servico}</div>
-                            <div class="adm-client-detail-row"><strong>Data:</strong> ${dataFormatada} às ${item.horario}</div>
-                            <div class="adm-client-detail-row"><strong>Preço:</strong> R$ ${item.preco}</div>
+                            <div class="adm-client-name">${nomeCliente}</div>
+                            <div class="adm-client-detail-row"><strong>Serviço:</strong> ${item.servico || 'Não informado'}</div>
+                            <div class="adm-client-detail-row"><strong>Data:</strong> ${dataFormatada} às ${item.horario || '--:--'}</div>
+                            <div class="adm-client-detail-row"><strong>Preço:</strong> R$ ${item.preco || '0,00'}</div>
                         </div>
                     `;
                 }
@@ -698,8 +702,9 @@
             if (!data) { alert("Por favor, selecione a data do atendimento."); return; }
             if (!horarioSelecionado) { alert("Por favor, escolha um horário disponível."); return; }
 
+            // CORRIGIDO: Agora usa 'cliente_nome' combinando perfeitamente com a tabela do seu Supabase
             const dadosAgendamento = {
-                nome: nome,
+                cliente_nome: nome,
                 servico: nomeServicoSelecionado,
                 data: data,
                 horario: horarioSelecionado,
