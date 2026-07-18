@@ -585,6 +585,7 @@
             <div style="margin-top: 24px;">
                 <h3 style="font-size: 14px; margin-bottom: 12px;">Resumo do Agendamento</h3>
                 <div class="resumo-card">
+                    <div class="resumo-card">
                     <div class="resumo-item">
                         <span>Serviço</span>
                         <span id="resumo-servico">-</span>
@@ -632,7 +633,8 @@
     <script>
         // Configurações exatas da sua nuvem do Supabase
         const SUPABASE_URL = "https://htdgxhgnjiqvktunspbx.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_17WMOi7ShX6Mhe_LJT-mwg_Gheub-a3"; // sua chave pública fornecida anteriormente
+        // Chave corrigida automaticamente aqui:
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0ZGd4aGduamlxdmt0dW5zcGJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxNjI3MTUsImV4cCI6MjA5OTczODcxNX0.JZY555H9eZh_91_f2ptzoEWG5f2fydfzj3tit-6c27s"; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let agendamento = {
@@ -744,12 +746,11 @@
                 if (error) throw error;
 
                 alert('Agendamento realizado com sucesso! 🎉');
-                // Redireciona para a home
                 window.location.href = 'index.html';
 
             } catch (err) {
                 console.error(err);
-                alert('Ocorreu um erro ao salvar o agendamento. Tente novamente!');
+                alert('Ocorreu um erro ao salvar o agendamento. Verifique se a sua tabela "agendamentos" possui as colunas idênticas a estas informadas e tente novamente!');
             }
         }
     </script>
