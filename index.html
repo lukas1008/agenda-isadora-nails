@@ -155,7 +155,8 @@
         }
 
         /* Botão Principal */
-        .btn-primary { width: 100%; background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #ffffff; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 25px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
+        .btn-primary { width: 100%; background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #ffffff; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 25px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); transition: background 0.3s ease; }
+        .btn-primary.success-btn { background: linear-gradient(135deg, #15803d, #16a34a); box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4); }
         .alert-message { background-color: #1c1515; border: 1px solid #7f1d1d; color: #f87171; padding: 12px; border-radius: 10px; font-size: 13px; margin-bottom: 15px; display: none; }
 
         /* ESTILOS EXCLUSIVOS DO PAINEL ADM */
@@ -317,6 +318,7 @@
             <p class="section-subtitle">Intervalos de 1:30h (Disponíveis das 13:00 às 19:00)</p>
             <div class="horarios-grid" id="container-horarios"></div>
 
+            <!-- BOTÃO REESTRUTURADO PARA EVITAR TRAVAMENTOS -->
             <button class="btn-primary" id="btn-agendar-main" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
 
             <!-- Avaliações e Espaço -->
@@ -328,12 +330,12 @@
                     <span class="review-count review-count-stars">+420 clientes atendidas</span>
                     <button class="btn-ver-avaliacoes">Ver avaliações</button>
                 </div>
-                <!-- 100% CORRIGIDO: Todas as 4 imagens agora são unhas reais de alta qualidade -->
+                <!-- LINKS ATUALIZADOS COM IMAGENS ESTÁTICAS E SEGURAS DE UNHAS -->
                 <div class="review-grid-imgs">
-                    <img src="https://images.unsplash.com/photo-1604654894610-df490651e56c?w=150&auto=format&fit=crop&q=60" alt="Unha Vermelha">
-                    <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150&auto=format&fit=crop&q=60" alt="Unha Decorada">
-                    <img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=150&auto=format&fit=crop&q=60" alt="Unha Longa">
-                    <img src="https://images.unsplash.com/photo-1632345031435-8797b2d58045?w=150&auto=format&fit=crop&q=60" alt="Unha Delicada Francesinha">
+                    <img src="https://i.postimg.cc/pXf68q6H/unha1.jpg" onerror="this.src='https://images.unsplash.com/photo-1604654894610-df490651e56c?w=150'" alt="Unha">
+                    <img src="https://i.postimg.cc/85zK62b9/unha2.jpg" onerror="this.src='https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150'" alt="Unha">
+                    <img src="https://i.postimg.cc/4N8Gg90L/unha3.jpg" onerror="this.src='https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=150'" alt="Unha">
+                    <img src="https://i.postimg.cc/3wMvD2Y2/unha4.jpg" onerror="this.src='https://images.unsplash.com/photo-1632345031435-8797b2d58045?w=150'" alt="Unha">
                 </div>
             </div>
 
@@ -358,7 +360,7 @@
             </div>
         </div>
 
-        <!-- TELA DO PAINEL ADM FUNCIONAL -->
+        <!-- TELA DO PAINEL ADM -->
         <div id="painel-adm-tela">
             <div class="adm-top-bar">
                 <div class="adm-title-brand">◆ PAINEL ADM</div>
@@ -394,7 +396,6 @@
             </div>
 
             <div class="adm-sub-label" id="adm-sub-label-lista">🕒 PRÓXIMOS ATENDIMENTOS</div>
-
             <div class="adm-list-cards" id="lista-cards-adm"></div>
         </div>
 
@@ -431,6 +432,7 @@
         let nomeServicoSelecionado = "";
         let precoServicoSelecionado = "";
         let horarioSelecionado = "";
+        let linkWhatsappGlobal = "";
         
         let cacheAgendamentosAdmin = [];
 
@@ -446,10 +448,6 @@
             if (localStorage.getItem("adm_logado") === "true") {
                 document.getElementById('tela-cliente').style.display = 'none';
                 document.getElementById('painel-adm-tela').style.display = 'block';
-                
-                const containerCards = document.getElementById('lista-cards-adm');
-                containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Sincronizando dados...</p>";
-                
                 await sincronizarDadosBanco();
                 mudarAbaAdm('dashboard');
             }
@@ -469,8 +467,6 @@
 
         function fecharModalLogin() {
             document.getElementById('modal-login-adm').style.display = 'none';
-            document.getElementById('login-email').value = "";
-            document.getElementById('login-senha').value = "";
         }
 
         async function sincronizarDadosBanco() {
@@ -481,7 +477,7 @@
                 });
                 cacheAgendamentosAdmin = await res.json();
             } catch (e) {
-                console.error("Erro ao sincronizar dados:", e);
+                console.error(e);
             }
         }
 
@@ -491,15 +487,10 @@
 
             if (email === "isadoragomes.luk@gmail.com" && senha === "lukisa1008") {
                 localStorage.setItem("adm_logado", "true");
-
                 fecharModalLogin();
                 document.getElementById('tela-cliente').style.display = 'none';
                 document.getElementById('painel-adm-tela').style.display = 'block';
-                
-                const containerCards = document.getElementById('lista-cards-adm');
-                containerCards.innerHTML = "<p style='text-align:center; color:#64748b;'>Carregando dados do painel...</p>";
                 await sincronizarDadosBanco();
-                
                 mudarAbaAdm('dashboard');
             } else {
                 alert("❌ E-mail ou Senha inválidos!");
@@ -514,7 +505,6 @@
 
         function mudarAbaAdm(aba) {
             document.querySelectorAll('.adm-menu-btn').forEach(b => b.classList.remove('active'));
-            
             const titulo = document.getElementById('adm-titulo-secao');
             const subtitulo = document.getElementById('adm-subtitulo-secao');
             const blocoContadores = document.getElementById('bloco-contadores-adm');
@@ -538,7 +528,6 @@
                 });
                 document.getElementById('total-agendamentos').innerText = cacheAgendamentosAdmin.length;
                 document.getElementById('faturamento-total').innerText = `R$ ${faturamento.toFixed(2).replace('.', ',')}`;
-
                 renderizarCardsAdmin(cacheAgendamentosAdmin, 'completo');
 
             } else if (aba === 'agendamentos') {
@@ -547,41 +536,12 @@
                 subtitulo.innerText = "Lista cronológica de horários reservados";
                 blocoContadores.style.display = "none";
                 subLabelLista.innerText = "📅 CRONOGRAMA DE RESERVAS";
-                subLabelLista.style.display = "flex";
-
                 renderizarCardsAdmin(cacheAgendamentosAdmin, 'completo');
 
             } else if (aba === 'clientes') {
                 document.getElementById('btn-tab-clientes').classList.add('active');
                 titulo.innerText = "Clientes";
-                subtitulo.innerText = "Histórico de clientes agendados no sistema";
-                blocoContadores.style.display = "none";
-                subLabelLista.innerText = "👥 CLIENTES CADASTRADOS";
-                subLabelLista.style.display = "flex";
-
                 renderizarCardsAdmin(cacheAgendamentosAdmin, 'cliente');
-
-            } else if (aba === 'servicos') {
-                document.getElementById('btn-tab-servicos').classList.add('active');
-                titulo.innerText = "Serviços";
-                subtitulo.innerText = "Tabela de serviços oferecidos e valores vigentes";
-                blocoContadores.style.display = "none";
-                subLabelLista.style.display = "none";
-
-                const listaServicosFixos = [
-                    { nome: "Manicure", preco: "R$ 27,00", desc: "Cuidados e esmaltação tradicional" },
-                    { nome: "Pedicure", preco: "R$ 33,00", desc: "Cuidados e esmaltação tradicional" },
-                    { nome: "Manicure + Pedicure", preco: "R$ 60,00", desc: "Pacote completo casadinha" },
-                    { nome: "Unha Postiça", preco: "R$ 30,00", desc: "Alongamento e aplicação rápida" }
-                ];
-                
-                containerCards.innerHTML = listaServicosFixos.map(s => `
-                    <div class="adm-client-card">
-                        <div class="adm-client-name">${s.nome}</div>
-                        <div class="adm-client-detail-row"><strong>Valor:</strong> ${s.preco}</div>
-                        <div class="adm-client-detail-row"><strong>Descrição:</strong> ${s.desc}</div>
-                    </div>
-                `).join('');
             }
         }
 
@@ -600,7 +560,6 @@
                     return `
                         <div class="adm-client-card">
                             <div class="adm-client-name">👤 ${nomeCliente}</div>
-                            <div class="adm-client-detail-row">Mapeado no banco de dados.</div>
                         </div>
                     `;
                 } else {
@@ -635,7 +594,6 @@
             if (diaSemana === 0) {
                 erroDomingo.style.display = "block";
                 renderizarGradeHorarios([]);
-                atualizarPassos();
                 return;
             } else {
                 erroDomingo.style.display = "none";
@@ -677,30 +635,32 @@
         function atualizarPassos() {
             const nome = document.getElementById('nome').value.trim();
             const data = document.getElementById('data').value;
-
             document.querySelectorAll('.step-item').forEach(s => s.classList.remove('active'));
-
             document.getElementById('step-1').classList.add('active');
-
-            if (nomeServicoSelecionado && nome) {
-                document.getElementById('step-2').classList.add('active');
-            }
-            if (data) {
-                document.getElementById('step-3').classList.add('active');
-            }
-            if (horarioSelecionado) {
-                document.getElementById('step-4').classList.add('active');
-            }
+            if (nomeServicoSelecionado && nome) document.getElementById('step-2').classList.add('active');
+            if (data) document.getElementById('step-3').classList.add('active');
+            if (horarioSelecionado) document.getElementById('step-4').classList.add('active');
         }
 
         async function salvarEIrProZap() {
+            const botao = document.getElementById('btn-agendar-main');
+            
+            // Caso o botão já esteja no modo de Sucesso, apenas abre o link salvo
+            if(botao.classList.contains('success-btn')) {
+                window.open(linkWhatsappGlobal, '_blank');
+                return;
+            }
+
             const nome = document.getElementById('nome').value.trim();
             const data = document.getElementById('data').value;
 
             if (!nome) { alert("⚠️ Por favor, digite seu nome completo."); return; }
-            if (!nomeServicoSelecionado) { alert("⚠️ Por favor, selecione um serviço na lista (clique em cima dele)."); return; }
-            if (!data) { alert("⚠️ Por favor, escolha a data do atendimento."); return; }
-            if (!horarioSelecionado) { alert("⚠️ Por favor, escolha um dos horários disponíveis."); return; }
+            if (!nomeServicoSelecionado) { alert("⚠️ Por favor, selecione um serviço na lista."); return; }
+            if (!data) { alert("⚠️ Por favor, escolha a data."); return; }
+            if (!horarioSelecionado) { alert("⚠️ Por favor, escolha o horário."); return; }
+
+            botao.innerText = "SALVANDO HORÁRIO...";
+            botao.disabled = true;
 
             const dadosAgendamento = {
                 cliente_nome: nome,
@@ -726,12 +686,24 @@
                     const dataFormatada = data.split('-').reverse().join('/');
                     const mensagemZap = `Olá Isadora! Gostaria de confirmar um agendamento:\n\n👤 *Nome:* ${nome}\n🖌️ *Serviço:* ${nomeServicoSelecionado}\n📅 *Data:* ${dataFormatada}\n🕒 *Horário:* ${horarioSelecionado}\n💲 *Valor:* R$ ${precoServicoSelecionado.replace('.', ',')}`;
                     
-                    window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensagemZap)}`, '_blank');
+                    linkWhatsappGlobal = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensagemZap)}`;
+                    
+                    // Altera o comportamento do botão para evitar travamentos do navegador
+                    botao.disabled = false;
+                    botao.classList.add('success-btn');
+                    botao.innerText = "ABRIR WHATSAPP ✅";
+                    
+                    // Tenta abrir automaticamente, se o navegador bloquear o botão principal resolve clicando
+                    window.open(linkWhatsappGlobal, '_blank');
                 } else {
-                    alert("Houve um problema ao salvar no sistema. Tente novamente ou verifique as permissões da tabela.");
+                    alert("Problema ao salvar. Verifique se o horário já não foi escolhido por outra pessoa.");
+                    botao.innerText = "CONTINUAR ➔";
+                    botao.disabled = false;
                 }
             } catch (e) {
-                alert("Erro de conexão ao salvar agendamento.");
+                alert("Erro de conexão.");
+                botao.innerText = "CONTINUAR ➔";
+                botao.disabled = false;
             }
         }
     </script>
