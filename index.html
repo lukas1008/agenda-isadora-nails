@@ -144,7 +144,16 @@
         .horarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
         .horario-card { background-color: #111422; border: 1px solid #1e2235; padding: 14px 10px; text-align: center; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; color: #e2e8f0; }
         .horario-card.selected { background: linear-gradient(135deg, #4f46e5, #3b82f6); border-color: transparent; color: #ffffff; }
-        .horario-card.ocupado { background-color: #151722; border-color: #1e2235; color: #334155; text-decoration: line-through; cursor: not-allowed; opacity: 0.3; }
+        
+        /* ESTILO DO HORÁRIO OCUPADO SOLICITADO */
+        .horario-card.ocupado { 
+            background-color: #181111; 
+            border-color: #3a1c1c; 
+            color: #ef4444; 
+            text-decoration: line-through; 
+            cursor: not-allowed; 
+            opacity: 0.4; 
+        }
 
         /* Botão Principal */
         .btn-primary { width: 100%; background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #ffffff; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 25px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
@@ -629,11 +638,13 @@
             turnosExpediente.forEach(hora => {
                 const card = document.createElement('div');
                 card.className = 'horario-card';
-                card.innerText = hora;
 
+                // Se o horário estiver ocupado, mostra riscado com "X" e impede clique
                 if (horariosOcupados.includes(hora)) {
+                    card.innerText = `✕ ${hora}`;
                     card.classList.add('ocupado');
                 } else {
+                    card.innerText = hora;
                     card.onclick = function() {
                         document.querySelectorAll('.horario-card').forEach(c => c.classList.remove('selected'));
                         card.classList.add('selected');
@@ -662,6 +673,8 @@
                 erroDomingo.style.display = 'none';
             }
 
+            // Reseta o horário selecionado se trocar a data para evitar bugs
+            horarioSelecionado = "";
             atualizarPassos();
 
             try {
@@ -725,7 +738,6 @@
 
             const endpoint = `${DB_URL}/rest/v1/agendamentos`;
 
-            // Mudança crucial: Aguarda o banco responder com sucesso primeiro antes de redirecionar para o WhatsApp
             fetch(endpoint, {
                 method: 'POST',
                 headers: { 
@@ -740,11 +752,10 @@
                     throw new Error("Erro na gravação do banco");
                 }
                 
-                // Salvo com sucesso absoluto! Adiciona no cache do seu painel e vai pro WhatsApp
                 cacheAgendamentosAdmin.push(dadosAgendamento);
                 
-                const mensagemZap = `Olá Isadora! Gostaria de confirmar meu agendamento:%0A%0A👤 *Nome:* ${nome}%0A💅 *Serviço:* ${nomeServicoSelecionado}%0A📅 *Data:* ${dataFormatada}%0A🕒 *Horário:* ${horarioSelecionado}%0A💵 *Valor:* ${precoServicoSelecionado}`;
-                window.location.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensagemZap}`;
+                const messageZap = `Olá Isadora! Gostaria de confirmar meu agendamento:%0A%0A👤 *Nome:* ${nome}%0A💅 *Serviço:* ${nomeServicoSelecionado}%0A📅 *Data:* ${dataFormatada}%0A🕒 *Horário:* ${horarioSelecionado}%0A💵 *Valor:* ${precoServicoSelecionado}`;
+                window.location.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${messageZap}`;
             })
             .catch(error => {
                 console.error("Falha ao salvar no banco:", error);
