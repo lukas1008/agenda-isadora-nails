@@ -145,7 +145,6 @@
         .horario-card { background-color: #111422; border: 1px solid #1e2235; padding: 14px 10px; text-align: center; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; color: #e2e8f0; }
         .horario-card.selected { background: linear-gradient(135deg, #4f46e5, #3b82f6); border-color: transparent; color: #ffffff; }
         
-        /* ESTILO DO HORÁRIO OCUPADO SOLICITADO */
         .horario-card.ocupado { 
             background-color: #181111; 
             border-color: #3a1c1c; 
@@ -320,7 +319,7 @@
 
             <button class="btn-primary" id="btn-agendar-main" onclick="salvarEIrProZap()">CONTINUAR ➔</button>
 
-            <!-- Avaliações e Espaço -->
+            <!-- Avaliações e Espaço (Imagens de Maquiagem Removidas) -->
             <h2 class="section-title">⭐ Avaliações</h2>
             <div class="review-box">
                 <div class="review-left">
@@ -333,7 +332,7 @@
                     <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=150&auto=format&fit=crop&q=60" alt="Unha 1">
                     <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150&auto=format&fit=crop&q=60" alt="Unha 2">
                     <img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=150&auto=format&fit=crop&q=60" alt="Unha 3">
-                    <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=150&auto=format&fit=crop&q=60" alt="Unha 4">
+                    <img src="https://images.unsplash.com/photo-1504198458649-012800d4631e?w=150&auto=format&fit=crop&q=60" alt="Unha 4">
                 </div>
             </div>
 
@@ -365,7 +364,6 @@
                 <button class="adm-btn-sair" onclick="sairDoPainel()">🔄 Sair</button>
             </div>
 
-            <!-- Grade de Menu do Painel com funções de Clique -->
             <div class="adm-menu-grid">
                 <div class="adm-menu-btn active" id="btn-tab-dashboard" onclick="mudarAbaAdm('dashboard')">📊 Dashboard</div>
                 <div class="adm-menu-btn" id="btn-tab-agendamentos" onclick="mudarAbaAdm('agendamentos')">📅 Agendamentos</div>
@@ -376,7 +374,6 @@
             <h1 class="adm-section-header" id="adm-titulo-secao">Dashboard</h1>
             <p class="adm-section-subtitle" id="adm-subtitulo-secao">Visão geral do seu salão</p>
 
-            <!-- Blocos de Contadores -->
             <div class="adm-counters-wrapper" id="bloco-contadores-adm">
                 <div class="adm-counter-card">
                     <div class="adm-counter-icon bg-icon-blue">📅</div>
@@ -397,7 +394,6 @@
 
             <div class="adm-sub-label" id="adm-sub-label-lista">🕒 PRÓXIMOS ATENDIMENTOS</div>
 
-            <!-- Lista Dinâmica de Cards Administrativos -->
             <div class="adm-list-cards" id="lista-cards-adm"></div>
         </div>
 
@@ -639,7 +635,6 @@
                 const card = document.createElement('div');
                 card.className = 'horario-card';
 
-                // Se o horário estiver ocupado, mostra riscado com "X" e impede clique
                 if (horariosOcupados.includes(hora)) {
                     card.innerText = `✕ ${hora}`;
                     card.classList.add('ocupado');
@@ -673,7 +668,6 @@
                 erroDomingo.style.display = 'none';
             }
 
-            // Reseta o horário selecionado se trocar a data para evitar bugs
             horarioSelecionado = "";
             atualizarPassos();
 
